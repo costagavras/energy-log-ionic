@@ -4,10 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { UserActivityLevelPage } from './user-activity-level.page';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: UserActivityLevelPage
-  }
+  { path: '', component: UserActivityLevelPage }
 ];
 
 @NgModule({

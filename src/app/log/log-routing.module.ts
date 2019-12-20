@@ -4,10 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LogPage } from './log.page';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: LogPage
-  }
+  { path: '', component: LogPage }
 ];
 
 @NgModule({

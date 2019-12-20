@@ -4,10 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { UserSettingsPage } from './user-settings.page';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: UserSettingsPage
-  }
+  { path: '', component: UserSettingsPage }
 ];
 
 @NgModule({

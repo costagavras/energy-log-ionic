@@ -1,9 +1,24 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>food</ion-title>
+    <ion-title>Food</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <ion-tabs>
+    <ion-tab-bar slot="top">
+      <ion-tab-button tab="food-eat">
+        <ion-icon name="restaurant"></ion-icon>
+        <ion-label>Eating</ion-label>
+      </ion-tab-button>
+      <ion-tab-button tab="food-log">
+        <ion-icon name="stats"></ion-icon>
+        <ion-label>Food log</ion-label>
+      </ion-tab-button>
+      <ion-tab-button tab="food-manage">
+        <ion-icon name="nutrition"></ion-icon>
+        <ion-label>Manage food items</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
 </ion-content>

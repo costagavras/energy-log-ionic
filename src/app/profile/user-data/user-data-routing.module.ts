@@ -4,10 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { UserDataPage } from './user-data.page';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: UserDataPage
-  }
+  { path: '', component: UserDataPage }
 ];
 
 @NgModule({

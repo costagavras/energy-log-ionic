@@ -1,9 +1,28 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>profile</ion-title>
+    <ion-title>Profile</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <ion-tabs>
+    <ion-tab-bar slot="top">
+      <ion-tab-button tab="user-settings">
+        <ion-icon name="build"></ion-icon>
+        <ion-label>User Settings</ion-label>
+      </ion-tab-button>
+      <ion-tab-button tab="user-data">
+        <ion-icon name="body"></ion-icon>
+        <ion-label>User Data</ion-label>
+      </ion-tab-button>
+      <ion-tab-button tab="user-activity-level">
+        <ion-icon name="bicycle"></ion-icon>
+        <ion-label>Activity Level</ion-label>
+      </ion-tab-button>
+      <ion-tab-button tab="user-profile">
+        <ion-icon name="list-box"></ion-icon>
+        <ion-label>User Profile</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
 </ion-content>
