@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
+  isLoading = false;
   // tslint:disable-next-line: variable-name
   private _userIsAuthenticated = false;
 
@@ -15,8 +16,12 @@ export class AuthService {
   constructor(private router: Router) { }
 
   login() {
+    this.isLoading = true;
     this._userIsAuthenticated = true;
-    this.router.navigateByUrl('/home');
+    setTimeout(() => {
+      this.isLoading = false;
+      this.router.navigateByUrl('/home');
+    }, 500);
   }
 
   logout() {
