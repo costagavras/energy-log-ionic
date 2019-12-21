@@ -1,3 +1,13 @@
+.homepage_text {
+  margin-top: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  div {
+    text-align: center;
+  }
+}
+
 .homepage_icon {
   width: 20px;
   vertical-align: sub;
@@ -17,6 +27,18 @@
       animation: rotate360 500ms;
     } 
   }
+}
+
+.contact_info {
+  display: flex;
+  justify-content: space-evenly;
+  p:hover ion-icon {
+    animation: rotate360 500ms;
+  }
+}
+
+.contact_info > p {
+  font-size: 13px;
 }
 
 @keyframes rotate360 {
