@@ -34,7 +34,7 @@
           </ion-item>
         </ion-menu-toggle>
         <ion-menu-toggle>
-          <ion-item lines="none" button>
+          <ion-item lines="none" button (click)="onLogout()">
             <ion-icon name="exit" slot="start"></ion-icon>
             <ion-label>Logout</ion-label>
           </ion-item>
@@ -44,17 +44,23 @@
   </ion-menu>
 
   <ion-header class="first-header">
-    <ion-toolbar>
+    <ion-toolbar class="first-header-toolbar">
       <ion-buttons slot="start">
         <ion-menu-button></ion-menu-button>
         <ion-button fill="solid" routerLink="/home">My Energy Log</ion-button>        
       </ion-buttons>
-      <ion-buttons slot="end">
+      <div>
+        <ion-chip outline>
+          <ion-icon name="contact"></ion-icon>
+          <ion-label>Username</ion-label>
+        </ion-chip>
+      </div>
+      <ion-buttons slot="end" class="horiz-menu-buttons">
         <ion-button routerLink="/profile">Profile</ion-button>
         <ion-button routerLink="/food">Food</ion-button>
         <ion-button routerLink="/training">Training</ion-button>
         <ion-button routerLink="/log">Stats</ion-button>
-        <ion-button fill="outline">Logout</ion-button>
+        <ion-button fill="outline" (click)="onLogout()">Logout</ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>

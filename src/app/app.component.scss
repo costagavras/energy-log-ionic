@@ -1,0 +1,13 @@
+ion-chip {
+  display: block;
+  margin: 0 auto;
+  width: fit-content;
+  background: none;
+
+}
+
+@media (max-width: 640px) {
+  .horiz-menu-buttons {
+    display: none;
+  }
+}

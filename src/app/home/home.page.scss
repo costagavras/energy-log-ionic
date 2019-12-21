@@ -1,8 +1,8 @@
 .homepage_text {
-  margin-top: 56px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: calc(100vh - 98px);
   div {
     text-align: center;
   }
