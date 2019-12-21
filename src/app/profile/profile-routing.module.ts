@@ -11,7 +11,8 @@ const routes: Routes = [
       { path: 'user-data', loadChildren: () => import('./user-data/user-data.module').then( m => m.UserDataPageModule) },
       // tslint:disable-next-line: max-line-length
       { path: 'user-activity-level', loadChildren: () => import('./user-activity-level/user-activity-level.module').then( m => m.UserActivityLevelPageModule) },
-      { path: 'user-profile', loadChildren: () => import('./user-profile/user-profile.module').then( m => m.UserProfilePageModule) }
+      { path: 'user-profile', loadChildren: () => import('./user-profile/user-profile.module').then( m => m.UserProfilePageModule) },
+      { path: '', redirectTo: '/profile/user-settings', pathMatch: 'full'}
     ]
   },
 ];

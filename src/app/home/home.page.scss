@@ -1,0 +1,41 @@
+.homepage_icon {
+  width: 20px;
+  vertical-align: sub;
+  padding-right: 5px;
+}
+
+.ic4 {
+  vertical-align: baseline;
+}
+
+.app_built {
+  padding-top: 20px;
+  line-height: 1.5em;
+  p:hover {
+    animation: tremble 500ms ease-out forwards;
+    img {
+      animation: rotate360 500ms;
+    } 
+  }
+}
+
+@keyframes rotate360 {
+  from {
+    transform: rotateZ(0);
+  }
+  to {
+    transform: rotateZ(360deg);
+  }
+}
+
+@keyframes tremble {
+  0% {
+    transform: translateY(0);
+  }
+  33% {
+    transform: translateY(-0.5rem);
+  }
+  100% {
+    transform: translateY(-0.2rem);
+  }
+}

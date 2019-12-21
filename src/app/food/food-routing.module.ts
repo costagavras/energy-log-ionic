@@ -8,7 +8,8 @@ const routes: Routes = [
     children: [
       { path: 'food-eat', loadChildren: () => import('./food-eat/food-eat.module').then( m => m.FoodEatPageModule) },
       { path: 'food-log', loadChildren: () => import('./food-log/food-log.module').then( m => m.FoodLogPageModule) },
-      { path: 'food-manage', loadChildren: () => import('./food-manage/food-manage.module').then( m => m.FoodManagePageModule) }
+      { path: 'food-manage', loadChildren: () => import('./food-manage/food-manage.module').then( m => m.FoodManagePageModule) },
+      { path: '', redirectTo: '/food/food-eat', pathMatch: 'full' }
     ]
   },
 ];
