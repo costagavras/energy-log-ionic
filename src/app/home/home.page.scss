@@ -32,13 +32,17 @@
 .contact_info {
   display: flex;
   justify-content: space-evenly;
+  & > p {
+    font-size: 15px;
+  }
+  p ion-icon {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+  }
   p:hover ion-icon {
     animation: rotate360 500ms;
   }
-}
-
-.contact_info > p {
-  font-size: 13px;
 }
 
 @keyframes rotate360 {
