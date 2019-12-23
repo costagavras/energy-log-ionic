@@ -1,9 +1,30 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>user-settings</ion-title>
+    <ion-title class="ion-text-center">Units</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  user-setting content
+  <form [formGroup]="unitsFormGroup" class="form_units">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-sm="3" offset="5">
+            <ion-radio-group formControlName="units" required>
+              <ion-item lines="none">
+                <ion-label>Metric</ion-label>
+                <ion-radio slot="start" value="metric" checked (ionSelect)="unitChange('metric')"></ion-radio>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-label>Imperial</ion-label>
+                <ion-radio slot="start" value="imperial" (ionSelect)="unitChange('imperial')"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+            <ion-item lines="none">
+              <ion-button type="submit" (click)="unitSelect()">
+                Save & continue&nbsp;<ion-icon name="arrow-forward"></ion-icon></ion-button>
+            </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>

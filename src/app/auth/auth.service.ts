@@ -8,7 +8,7 @@ import { LoadingController } from '@ionic/angular';
 export class AuthService {
   isLoading = false;
   // tslint:disable-next-line: variable-name
-  private _userIsAuthenticated = false;
+  private _userIsAuthenticated = true;
 
   get userIsAuthenticated() {
     return this._userIsAuthenticated;
