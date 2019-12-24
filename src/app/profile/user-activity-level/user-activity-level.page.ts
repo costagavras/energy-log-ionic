@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./user-activity-level.page.scss'],
 })
 export class UserActivityLevelPage implements OnInit {
+  activities = ['agricultural work (planting, weeding, gathering)', 'costruction', 'cooking', 'eating', 'exercising', 'reading'];
 
   constructor() { }
 

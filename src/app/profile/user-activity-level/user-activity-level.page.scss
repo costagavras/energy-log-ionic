@@ -1,0 +1,29 @@
+ion-row {
+  width: 100%;
+  align-items: baseline;
+}
+
+ion-item {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.activity-label {
+  max-width: fit-content;
+}
+
+ion-input {
+  background: lightgray;
+}
+
+@media (min-width: 768px) {
+  ion-item {
+    width: 60%;
+  }
+
+}
+@media (min-width: 1200px) {
+  ion-item {
+    width: 40%;
+  }
+}
