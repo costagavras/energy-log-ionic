@@ -1,5 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-settings',
@@ -10,7 +11,7 @@ export class UserSettingsPage implements OnInit, OnDestroy {
   @Output() tabSelected = new EventEmitter<void>();
   unitsFormGroup: FormGroup;
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
     this.unitsFormGroup = new FormGroup({
@@ -18,7 +19,7 @@ export class UserSettingsPage implements OnInit, OnDestroy {
     });
   }
 
-  unitSelect() {
+  onSave() {
     this.tabSelected.emit();
     console.log(this.unitsFormGroup.value.units);
     // this.profileService.unitsSelected(this.unitsFormGroup.value.units); // if save button is clicked
@@ -28,6 +29,7 @@ export class UserSettingsPage implements OnInit, OnDestroy {
     //     userId: this.fbUser.uid
     //   });
     // }
+    this.router.navigateByUrl('profile/user-data');
   }
 
   unitChange(units: string) {

@@ -8,7 +8,7 @@
   <form [formGroup]="unitsFormGroup" class="form_units">
     <ion-grid>
       <ion-row>
-        <ion-col size-sm="3" offset="5">
+        <ion-col size-sm="3" offset-xs="4" offset-sm="5">
             <ion-radio-group formControlName="units" required>
               <ion-item lines="none">
                 <ion-label>Metric</ion-label>
@@ -20,7 +20,7 @@
               </ion-item>
             </ion-radio-group>
             <ion-item lines="none">
-              <ion-button type="submit" (click)="unitSelect()">
+              <ion-button type="submit" (click)="onSave()">
                 Save & continue&nbsp;<ion-icon name="arrow-forward"></ion-icon></ion-button>
             </ion-item>
         </ion-col>

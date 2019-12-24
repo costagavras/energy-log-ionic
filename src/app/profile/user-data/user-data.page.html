@@ -1,9 +1,134 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>user-data</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
+  <form [formGroup]="userDataFormGroup" class="form_units" #formUserData>
+    <ion-grid>
+      <ion-row>
+        <ion-col size-xs="10" size-sm="6" size-md="4" offset-xs="1" offset-sm="3" offset-md="4">
 
+          <ion-item>
+            <ion-label position="floating">Name</ion-label>
+            <ion-input type="text" formControlName="nameCtrl"></ion-input>
+          </ion-item>
+          <ion-row *ngIf="name.hasError('required') && name.touched">
+            <ion-col>
+              <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Name is missing!</ion-label>
+            </ion-col>
+          </ion-row>
+            
+          <ion-item>
+            <ion-radio-group formControlName="genderCtrl">
+              <ion-item lines="none">
+                <ion-label>Female</ion-label>
+                <ion-radio slot="end" value="female"></ion-radio>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-label>Male</ion-label>
+                <ion-radio slot="end" value="male"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Age</ion-label>
+            <ion-input type="number" formControlName="ageCtrl"></ion-input>
+          </ion-item>
+          <ion-row *ngIf="age.hasError('required') && age.touched">
+            <ion-col>
+              <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Age is missing!</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="age.hasError('min') || age.hasError('max')">
+            <ion-col>
+              <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Age is invalid!</ion-label>
+            </ion-col>
+          </ion-row>
+
+          <ion-item *ngIf="units === 'metric'">
+            <ion-label position="floating">Height, cm</ion-label>
+            <ion-input type="number" formControlName="heightCmCtrl"></ion-input>
+          </ion-item>
+          <ion-row *ngIf="units === 'metric' && heightCm.hasError('required') && heightCm.touched">
+            <ion-col>
+              <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Height is missing!</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="units === 'metric' && (heightCm.hasError('min') || heightCm.hasError('max'))">
+            <ion-col>
+              <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Height is invalid!</ion-label>
+            </ion-col>
+          </ion-row>
+
+          <ion-item *ngIf="units === 'imperial'">
+            <ion-label position="floating">Height, ft</ion-label>
+            <ion-input type="number" formControlName="heightFtCtrl"></ion-input>
+          </ion-item>
+          <ion-row *ngIf="units === 'imperial' && heightFt.hasError('required') && heightFt.touched">
+            <ion-col>
+              <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Height is missing!</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="units === 'imperial' && (heightFt.hasError('min') || heightFt.hasError('max'))">
+            <ion-col>
+              <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Height is invalid!</ion-label>
+            </ion-col>
+          </ion-row>
+
+          <ion-item *ngIf="units === 'imperial'">
+            <ion-label position="floating">Height, in</ion-label>
+            <ion-input type="number" formControlName="heightInCtrl"></ion-input>
+          </ion-item>
+          <ion-row *ngIf="units === 'imperial' && heightIn.hasError('required') && heightIn.touched">
+            <ion-col>
+              <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Height is missing!</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="units === 'imperial' && (heightIn.hasError('min') || heightIn.hasError('max'))">
+            <ion-col>
+              <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Height is invalid!</ion-label>
+            </ion-col>
+          </ion-row>
+
+          <ion-item *ngIf="units === 'metric'">
+            <ion-label position="floating">Weight, kg</ion-label>
+            <ion-input type="number" formControlName="weightKgCtrl"></ion-input>
+          </ion-item>
+          <ion-row *ngIf="units === 'metric' && weightKg.hasError('required') && weightKg.touched">
+            <ion-col>
+              <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Weight is missing!</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="units === 'metric' && (weightKg.hasError('min') || weightKg.hasError('max'))">
+            <ion-col>
+              <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Weight is invalid!</ion-label>
+            </ion-col>
+          </ion-row>
+
+          <ion-item *ngIf="units === 'imperial'">
+            <ion-label position="floating">Weight, lb</ion-label>
+            <ion-input type="number" formControlName="weightLbCtrl"></ion-input>
+          </ion-item>
+          <ion-row *ngIf="units === 'imperial' && weightLb.hasError('required') && weightLb.touched">
+            <ion-col>
+              <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Weight is missing!</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="units === 'imperial' && (weightLb.hasError('min') || weightLb.hasError('max'))">
+            <ion-col>
+              <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Weight is invalid!</ion-label>
+            </ion-col>
+          </ion-row>
+
+          <ion-item lines="none">
+            <ion-button type="button" (click)="formUserData.reset()">Reset</ion-button>
+            <ion-button *ngIf="units === 'metric'" type="submit" (click)="onSave()" 
+              [disabled]="name.invalid || age.invalid || heightCm.invalid || weightKg.invalid">
+              Save & continue&nbsp;<ion-icon name="arrow-forward"></ion-icon></ion-button>
+            <ion-button *ngIf="units === 'imperial'" type="submit" (click)="onSave()" 
+              [disabled]="name.invalid || age.invalid || heightFt.invalid || heightIn.invalid || weightLb.invalid">
+              Save & continue&nbsp;<ion-icon name="arrow-forward"></ion-icon></ion-button>
+          </ion-item>
+
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -13,6 +13,7 @@ import { UserDataPage } from './user-data.page';
     CommonModule,
     FormsModule,
     IonicModule,
+    ReactiveFormsModule,
     UserDataPageRoutingModule
   ],
   declarations: [UserDataPage]
