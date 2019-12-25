@@ -9,7 +9,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./user-data.page.scss'],
 })
 export class UserDataPage implements OnInit, OnDestroy {
-  @Output() tabSelected = new EventEmitter<void>();
 
   userDataFormGroup: FormGroup;
 
@@ -81,10 +80,6 @@ export class UserDataPage implements OnInit, OnDestroy {
       this.height = Math.round(this.userDataFormGroup.value.heightFtCtrl * 30.4 + this.userDataFormGroup.value.heightInCtrl * 2.54);
       this.weight = Math.round(this.userDataFormGroup.value.weightLbCtrl * 0.454);
     }
-  }
-
-  tabSelect() {
-    this.tabSelected.emit();
   }
 
   ngOnDestroy() {

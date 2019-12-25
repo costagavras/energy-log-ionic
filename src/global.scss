@@ -38,3 +38,10 @@
 .ion-invalid.ion-touched ion-label {
   color: var(--ion-color-danger);
 }
+
+.buttons {
+  display: flex;
+  justify-content: space-around;
+  // width: 50%;
+  // margin: 0 auto;
+}
