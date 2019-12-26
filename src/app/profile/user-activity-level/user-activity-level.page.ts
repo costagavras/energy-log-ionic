@@ -9,8 +9,6 @@ import { Router } from '@angular/router';
 })
 export class UserActivityLevelPage implements OnInit {
   listActivities = ['agricultural work (planting, weeding, gathering)', 'costruction', 'cooking', 'eating', 'exercising', 'reading'];
-  minValue = 0;
-  maxValue = 24;
   total: any = 0;
   userActivityFormGroup: FormGroup;
 

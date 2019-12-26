@@ -1,9 +1,95 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>user-profile</ion-title>
+    <ion-title>Calculated parameters</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6" offset-xs="2" offset-lg="3">
+        <ion-item lines="none">
+          <ion-label>User name</ion-label>
+        </ion-item>
+      </ion-col>
+      <ion-col size="3">
+          <ion-chip>Costa</ion-chip>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6" offset-xs="2" offset-lg="3">
+        <ion-item lines="none">
+          <ion-label>Age</ion-label>
+        </ion-item>
+      </ion-col>
+      <ion-col size="3">
+          <ion-chip>39</ion-chip>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6" offset-xs="2" offset-lg="3">
+        <ion-item lines="none">
+          <ion-label>Gender</ion-label>
+        </ion-item>
+      </ion-col>
+      <ion-col size="3">
+          <ion-chip>male</ion-chip>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6" offset-xs="2" offset-lg="3">
+        <ion-item lines="none">
+          <ion-label>Height</ion-label>
+        </ion-item>
+      </ion-col>
+      <ion-col size="3">
+          <ion-chip>170</ion-chip>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6" offset-xs="2" offset-lg="3">
+        <ion-item lines="none">
+          <ion-label>Weight</ion-label>
+        </ion-item>
+      </ion-col>
+      <ion-col size="3">
+          <ion-chip>65</ion-chip>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6" offset-xs="2" offset-lg="3">
+        <ion-item lines="none">
+          <ion-label>Body Mass Index (BMI)</ion-label>
+        </ion-item>
+      </ion-col>
+      <ion-col size="3">
+          <ion-chip>22.5</ion-chip>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6" offset-xs="2" offset-lg="3">
+        <ion-item lines="none">
+          <ion-label>Basal Metabolic Rate (BMR)</ion-label>
+        </ion-item>
+      </ion-col>
+      <ion-col size="3">
+          <ion-chip>1523</ion-chip>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6" offset-xs="2" offset-lg="3">
+        <ion-item lines="none">
+          <ion-label>Activity Level</ion-label>
+        </ion-item>
+      </ion-col>
+      <ion-col size="3">
+          <ion-chip>3.5</ion-chip>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <div class="buttons">
+    <ion-button type="button" (click)="deleteUser()">Reset</ion-button>
+    <ion-button type="button" (click)="goBack()"
+    ><ion-icon name="arrow-back"></ion-icon>&nbsp;Update User</ion-button>
+  </div>
 </ion-content>
