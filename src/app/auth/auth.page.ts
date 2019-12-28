@@ -14,10 +14,12 @@ export class AuthPage implements OnInit {
   constructor(public authService: AuthService) { }
 
   ngOnInit() {
+    this.authService.isLogin = this.isLogin;
   }
 
   onSwitchAuthMode() {
     this.isLogin = !this.isLogin;
+    this.authService.isLogin = this.isLogin;
   }
 
   onSubmit(form: NgForm) {
