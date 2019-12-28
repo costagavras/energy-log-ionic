@@ -27,16 +27,8 @@ export class AuthPage implements OnInit {
     const email = form.value.email;
     const password = form.value.password;
 
-    if (this.isLogin) {
-      // Send a request to login servers
-    } else {
-      // send a request to signup servers
-    }
+    this.authService.authenticate(email, password);
     form.reset();
-  }
-
-  onLogin() {
-    this.authService.login();
   }
 
   onLogout() {
