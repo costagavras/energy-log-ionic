@@ -5,8 +5,9 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
 
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, from } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { Plugins } from '@capacitor/core';
 
 import { User } from './user.model';
 
@@ -28,6 +29,7 @@ export class AuthService {
   isLogin: boolean;
   // tslint:disable-next-line: variable-name
   private _user = new BehaviorSubject<User>(null);
+  private activeLogoutTimer: any;
 
   get userIsAuthenticated() {
     // whether the user is authenticated or not depends whether the token is valid or not;
@@ -54,7 +56,6 @@ export class AuthService {
       })
     );
   }
-
 
   constructor(private router: Router,
               private loadingController: LoadingController,
@@ -95,6 +96,42 @@ export class AuthService {
       });
   }
 
+  autoLogin() {
+    return from(Plugins.Storage.get({key: 'authData'})).pipe(
+      map(storedData => {
+        if (!storedData || !storedData.value) {
+          return null;
+        }
+        const parsedData = JSON.parse(storedData.value) as {token: string; tokenExpirationDate: string; userId: string; email: string};
+        const expirationTime = new Date(parsedData.tokenExpirationDate);
+        if (expirationTime <= new Date()) {
+          return null;
+        }
+        const user = new User(parsedData.userId, parsedData.email, parsedData.token, expirationTime);
+        return user;
+    }),
+      tap(user => {
+        if (user) {
+          this._user.next(user);
+          // this.autoLogout(user.tokenDuration);
+        }
+      }),
+      map(user => {
+        return !!user;
+      })
+    );
+  }
+
+  private autoLogout(duration: number) {
+    if (this.activeLogoutTimer) {
+      clearTimeout(this.activeLogoutTimer);
+    }
+    this.activeLogoutTimer = setTimeout(() => {
+      this.logout();
+    }, duration);
+  }
+
+
   private showAlert(message: string) {
     this.alertCtrl.create({
       header: 'Authenticatoin failed',
@@ -133,11 +170,17 @@ private setUserData(userData: AuthResponseData) {
 );
   this._user.next(user);
   // this.autoLogout(user.tokenDuration);
-  // this.storeAuthData(userData.localId, userData.idToken, expirationTime.toISOString(), userData.email);
+  this.storeAuthData(userData.localId, userData.idToken, expirationTime.toISOString(), userData.email);
 }
+
+  private storeAuthData(userId: string, token: string, tokenExpirationDate: string, email: string) {
+    const data = JSON.stringify({userId: userId, token: token, tokenExpirationDate: tokenExpirationDate, email: email});
+    Plugins.Storage.set({key: 'authData', value: data});
+  }
 
   logout() {
     this._user.next(null);
+    Plugins.Storage.remove({key: 'authData'});
     this.router.navigateByUrl('/auth');
   }
 }

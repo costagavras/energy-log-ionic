@@ -1,33 +1,43 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { Platform } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from './auth/auth.service';
+import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss']
 })
-export class AppComponent {
-  constructor(
-    private platform: Platform,
-    private splashScreen: SplashScreen,
-    private statusBar: StatusBar,
-    private authService: AuthService
-  ) {
-    // this.initializeApp();
-  }
+export class AppComponent implements OnInit, OnDestroy {
 
-  initializeApp() {
-    this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
-    });
+  isLoggedIn = false;
+  appSubscription: Subscription;
+  private previousAuthState = false;
+
+  constructor(public authService: AuthService,
+              private router: Router) {}
+
+  ngOnInit() {
+    this.appSubscription = this.authService.userIsAuthenticated
+        .subscribe(isAuthenticated => {
+          if (!isAuthenticated && this.previousAuthState !== isAuthenticated) {
+              this.router.navigateByUrl('/auth');
+              this.isLoggedIn = false;
+          } else if (isAuthenticated) {
+              this.isLoggedIn = true;
+          }
+          this.previousAuthState = isAuthenticated;
+        });
   }
 
   onLogout() {
     this.authService.logout();
+  }
+
+  ngOnDestroy() {
+    if (this.appSubscription) {
+      this.appSubscription.unsubscribe();
+    }
   }
 }

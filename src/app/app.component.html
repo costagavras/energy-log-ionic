@@ -33,7 +33,7 @@
             <ion-label>Stats</ion-label>
           </ion-item>
         </ion-menu-toggle>
-        <ion-menu-toggle>
+        <ion-menu-toggle *ngIf="isLoggedIn">
           <ion-item lines="none" button (click)="onLogout()">
             <ion-icon name="exit" slot="start"></ion-icon>
             <ion-label>Logout</ion-label>
@@ -60,7 +60,9 @@
         <ion-button routerLink="/food">Food</ion-button>
         <ion-button routerLink="/training">Training</ion-button>
         <ion-button routerLink="/log">Stats</ion-button>
-        <ion-button fill="outline" (click)="onLogout()">Logout</ion-button>
+        <ion-button fill="outline" (click)="onLogout()" *ngIf="isLoggedIn">
+          Logout
+        </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
