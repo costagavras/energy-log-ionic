@@ -13,13 +13,20 @@ export class User {
     return this._token;
   }
 
+  get tokenDuration() {
+    if (!this.token) {
+      return 0;
+    }
+    return this.tokenExpirationDate.getTime() - new Date().getTime();
+  }
+
 }
 
 export interface User {
   email?: string;
   userId?: string;
   name?: string;
-  gender?: string;
+  gender?: string; 
   age?: number;
   weight?: number;
   height?: number;

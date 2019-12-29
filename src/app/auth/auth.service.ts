@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController, AlertController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
@@ -24,7 +24,7 @@ export interface AuthResponseData {
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
   isLoading = false;
   isLogin: boolean;
   // tslint:disable-next-line: variable-name
@@ -74,7 +74,6 @@ export class AuthService {
           authObs = this.signup(email, password);
         }
         authObs.subscribe(resData => {
-          console.log(resData);
           this.isLoading = false;
           loadingEl.dismiss();
           this.router.navigateByUrl('/home');
@@ -113,7 +112,7 @@ export class AuthService {
       tap(user => {
         if (user) {
           this._user.next(user);
-          // this.autoLogout(user.tokenDuration);
+          this.autoLogout(user.tokenDuration);
         }
       }),
       map(user => {
@@ -135,6 +134,7 @@ export class AuthService {
   private showAlert(message: string) {
     this.alertCtrl.create({
       header: 'Authenticatoin failed',
+      // tslint:disable-next-line: object-literal-shorthand
       message: message,
       buttons: ['Okay']
     })
@@ -169,18 +169,28 @@ private setUserData(userData: AuthResponseData) {
     expirationTime,
 );
   this._user.next(user);
-  // this.autoLogout(user.tokenDuration);
+  this.autoLogout(user.tokenDuration); // from user model
   this.storeAuthData(userData.localId, userData.idToken, expirationTime.toISOString(), userData.email);
 }
 
   private storeAuthData(userId: string, token: string, tokenExpirationDate: string, email: string) {
+    // tslint:disable-next-line: object-literal-shorthand
     const data = JSON.stringify({userId: userId, token: token, tokenExpirationDate: tokenExpirationDate, email: email});
     Plugins.Storage.set({key: 'authData', value: data});
   }
 
   logout() {
+    if (this.activeLogoutTimer) {
+      clearTimeout(this.activeLogoutTimer);
+    }
     this._user.next(null);
     Plugins.Storage.remove({key: 'authData'});
     this.router.navigateByUrl('/auth');
+  }
+
+  ngOnDestroy() {
+    if (this.activeLogoutTimer) {
+      clearTimeout(this.activeLogoutTimer);
+    }
   }
 }
