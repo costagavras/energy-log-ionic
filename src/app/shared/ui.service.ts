@@ -2,7 +2,9 @@ import { Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class UIService {
   loadingStateChanged = new Subject<boolean>();
 
@@ -14,7 +16,6 @@ export class UIService {
         duration: durationToast
       });
       toast.present();
-    }
   }
 
 

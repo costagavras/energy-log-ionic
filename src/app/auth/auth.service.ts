@@ -57,6 +57,18 @@ export class AuthService implements OnDestroy {
     );
   }
 
+  get user() {
+    return this._user.asObservable().pipe(
+      map(user => {
+        if (user) {
+          return user;
+        } else {
+          return null;
+        }
+      })
+    );
+  }
+
   constructor(private router: Router,
               private loadingController: LoadingController,
               private http: HttpClient,
@@ -143,7 +155,7 @@ export class AuthService implements OnDestroy {
 
   signup(email: string, password: string) {
     return this.http.post<AuthResponseData>(
-      `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.firebaseAPIKey}`,
+      `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.firebase.apiKey}`,
     // tslint:disable-next-line: object-literal-shorthand
     { email: email, password: password, returnSecureToken: true }
     )
@@ -152,7 +164,7 @@ export class AuthService implements OnDestroy {
 
   login(email: string, password: string) {
     // tslint:disable-next-line: max-line-length
-    return this.http.post<AuthResponseData>(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.firebaseAPIKey}`,
+    return this.http.post<AuthResponseData>(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.firebase.apiKey}`,
     // tslint:disable-next-line: object-literal-shorthand
     { email: email, password: password, returnSecureToken: true }
     )

@@ -22,11 +22,11 @@ export class User {
 
 }
 
-export interface User {
+export interface UserProfile {
   email?: string;
   userId?: string;
   name?: string;
-  gender?: string; 
+  gender?: string;
   age?: number;
   weight?: number;
   height?: number;

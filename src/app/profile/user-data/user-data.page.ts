@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, EventEmitter, Output } from '@angular/cor
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { ProfileService } from '../profile.service';
 
 @Component({
   selector: 'app-user-data',
@@ -21,9 +22,20 @@ export class UserDataPage implements OnInit, OnDestroy {
   weight: number;
   private anthropometrySubs: Subscription[] = [];
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,
+              private profileService: ProfileService) { }
 
   ngOnInit() {
+
+
+    this.anthropometrySubs.push(this.profileService.unitsUserSelected
+      .subscribe(
+        units => {
+          this.units = units;
+          console.log(this.units);
+        }
+      ));
+
     this.userDataFormGroup = new FormGroup({
       nameCtrl: new FormControl('', {validators: [Validators.required]}),
       genderCtrl: new FormControl('female', {validators: [Validators.required]}),
