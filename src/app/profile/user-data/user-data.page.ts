@@ -1,8 +1,10 @@
-import { Component, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { ProfileService } from '../profile.service';
+import { User } from '../../auth/user.model';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-user-data',
@@ -15,24 +17,29 @@ export class UserDataPage implements OnInit, OnDestroy {
 
   bmi = 0;
   bmr = 0;
-  loadLinkToActivityLevel = false;
-  fbUser;
-  units = 'imperial';
+  loggedUser: User;
+  units = 'metric';
   height: number;
   weight: number;
   private anthropometrySubs: Subscription[] = [];
 
   constructor(private router: Router,
-              private profileService: ProfileService) { }
+              private profileService: ProfileService,
+              private authService: AuthService) { }
 
   ngOnInit() {
 
+    this.anthropometrySubs.push(this.authService.user
+      .subscribe(user => {
+        this.loggedUser = user;
+        this.profileService.getUserData(this.loggedUser.id);
+      })
+    );
 
     this.anthropometrySubs.push(this.profileService.unitsUserSelected
       .subscribe(
         units => {
           this.units = units;
-          console.log(this.units);
         }
       ));
 
@@ -46,6 +53,24 @@ export class UserDataPage implements OnInit, OnDestroy {
       weightKgCtrl: new FormControl('', {validators: [Validators.required, Validators.min(20), Validators.max(320)]}),
       weightLbCtrl: new FormControl('', {validators: [Validators.required, Validators.min(50), Validators.max(750)]})
     });
+
+    this.anthropometrySubs.push(this.profileService.userProfileData
+      .subscribe(
+        userProfileData => {
+          this.userDataFormGroup.patchValue({name: typeof userProfileData.name !== 'undefined' ? userProfileData.name : null });
+          this.userDataFormGroup.patchValue({gender: typeof userProfileData.gender !== 'undefined' ? userProfileData.gender : null });
+          this.userDataFormGroup.patchValue({age: typeof userProfileData.age !== 'undefined' ? userProfileData.age : null });
+          this.userDataFormGroup.patchValue({heightCm: typeof userProfileData.height !== 'undefined' ? userProfileData.height : null });
+          this.userDataFormGroup.patchValue({
+            heightFt: typeof userProfileData.height !== 'undefined' ? Math.floor(userProfileData.height / 30.4) : null });
+          this.userDataFormGroup.patchValue({
+            heightIn: typeof userProfileData.height !== 'undefined' ?
+            Math.round((userProfileData.height - Math.floor(userProfileData.height / 30.4) * 30.4) / 2.54) : null });
+          this.userDataFormGroup.patchValue({weightKg: typeof userProfileData.weight !== 'undefined' ? userProfileData.weight : null });
+          this.userDataFormGroup.patchValue({
+            weightLb: typeof userProfileData.weight !== 'undefined' ? Math.round(userProfileData.weight / 0.454) : null });
+        }));
+
   }
 
   get name() { return this.userDataFormGroup.get('nameCtrl'); }
@@ -80,7 +105,6 @@ export class UserDataPage implements OnInit, OnDestroy {
     //   bmi: this.bmi,
     //   bmr: this.bmr,
     // });
-    // this.loadLinkToActivityLevel = true;
     this.router.navigateByUrl('profile/user-activity-level');
   }
 

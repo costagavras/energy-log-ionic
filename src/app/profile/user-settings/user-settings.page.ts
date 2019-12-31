@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ProfileService } from '../profile.service';
 import { Subscription } from 'rxjs';
-import { AuthService } from 'src/app/auth/auth.service';
+import { AuthService } from '../../auth/auth.service';
 import { User } from '../../auth/user.model';
 
 @Component({
@@ -15,7 +15,7 @@ export class UserSettingsPage implements OnInit, OnDestroy {
   unitsFormGroup: FormGroup;
 
   loggedUser: User;
-  userCreated: boolean;
+  userCreated = false;
   private appSettingSubs: Subscription[] = [];
 
   constructor(private router: Router,
@@ -31,28 +31,27 @@ export class UserSettingsPage implements OnInit, OnDestroy {
       })
     );
 
+    this.unitsFormGroup = new FormGroup({
+      units: new FormControl('metric', {validators: [Validators.required]}) // default value, if provile not created
+    });
+
+    // doesn't come to here if user not created
     this.appSettingSubs.push(this.profileService.userProfileData
       .subscribe(
         userProfileData => {
-          console.log(userProfileData);
           this.unitsFormGroup.patchValue({units: typeof userProfileData.units !== 'undefined' ? userProfileData.units : 'metric' });
           this.profileService.unitsSelected(this.unitsFormGroup.value.units); // sends to UserData current state with no buttons touched
           typeof userProfileData !== 'undefined' ? this.userCreated = true : this.userCreated = false;
         }));
-
-    this.unitsFormGroup = new FormGroup({
-      units: new FormControl('', {validators: [Validators.required]})
-    });
   }
 
   onSave() {
-    // console.log(this.unitsFormGroup.value.units);
     this.profileService.unitsSelected(this.unitsFormGroup.value.units); // if save button is clicked
     if (this.userCreated) {
-      // this.profileService.addOrUpdateUser({
-      //   units: this.unitsFormGroup.value.units,
-      //   userId: this.fbUser.uid
-      // });
+      this.profileService.addOrUpdateUser({
+        units: this.unitsFormGroup.value.units,
+        userId: this.loggedUser.id
+      });
     }
     this.router.navigateByUrl('profile/user-data');
   }

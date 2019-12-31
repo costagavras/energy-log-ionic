@@ -33,28 +33,35 @@ private userExistsSub: Subscription;
   }
 
   getUserData(userId: string) {
-    this.profileServiceSubs.push(
-      this.db.collection('users').doc(userId).valueChanges()
-      .subscribe((userData: UserProfile) => {
-        this.userProfileData.next(userData); // event emitter via Subject
-        this.userProfile = userData;
-      }, error => {
-        this.uiService.showToast('Fetching user info failed, please try again later', 3000);
-        return null;
-    }));
-    return this.userProfile;
+    const userRef = this.db.collection('users').doc(userId);
+    userRef.get().toPromise()
+      .then(userPath => {
+        if (userPath.exists) {
+          this.profileServiceSubs.push(
+            this.db.collection('users').doc(userId).valueChanges()
+            .subscribe((userData: UserProfile) => {
+              this.userProfileData.next(userData); // event emitter via Subject
+              this.userProfile = userData;
+            }, error => {
+              this.uiService.showToast('Fetching user info failed, please try again later', 3000);
+          }));
+          return this.userProfile;
+        }
+      }).catch(err => {
+          console.log('Error getting document', err);
+        });
   }
 
-  getUserStampData(userId) {
-    this.profileServiceSubs.push(
-      this.db.collection('users/' + userId + '/userStamp').valueChanges()
-      .subscribe((userStamps: UserStamp[]) => {
-        this.userStampsCollection.next(userStamps);
-      }, error => {
-        this.uiService.showToast('Fetching user info failed, please try again later', 3000);
-      }
-    ));
-  }
+  // getUserStampData(userId) {
+  //   this.profileServiceSubs.push(
+  //     this.db.collection('users/' + userId + '/userStamp').valueChanges()
+  //     .subscribe((userStamps: UserStamp[]) => {
+  //       this.userStampsCollection.next(userStamps);
+  //     }, error => {
+  //       this.uiService.showToast('Fetching user info failed, please try again later', 3000);
+  //     }
+  //   ));
+  // }
 
   // getFirebaseUser() {
   //   return firebase.auth().currentUser;

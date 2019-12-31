@@ -23,8 +23,8 @@ export class User {
 }
 
 export interface UserProfile {
+  userId: string;
   email?: string;
-  userId?: string;
   name?: string;
   gender?: string;
   age?: number;
