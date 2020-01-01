@@ -57,18 +57,18 @@ export class UserDataPage implements OnInit, OnDestroy {
     this.anthropometrySubs.push(this.profileService.userProfileData
       .subscribe(
         userProfileData => {
-          this.userDataFormGroup.patchValue({name: typeof userProfileData.name !== 'undefined' ? userProfileData.name : null });
-          this.userDataFormGroup.patchValue({gender: typeof userProfileData.gender !== 'undefined' ? userProfileData.gender : null });
-          this.userDataFormGroup.patchValue({age: typeof userProfileData.age !== 'undefined' ? userProfileData.age : null });
-          this.userDataFormGroup.patchValue({heightCm: typeof userProfileData.height !== 'undefined' ? userProfileData.height : null });
+          this.userDataFormGroup.patchValue({nameCtrl: typeof userProfileData.name !== 'undefined' ? userProfileData.name : null });
+          this.userDataFormGroup.patchValue({genderCtrl: typeof userProfileData.gender !== 'undefined' ? userProfileData.gender : null });
+          this.userDataFormGroup.patchValue({ageCtrl: typeof userProfileData.age !== 'undefined' ? userProfileData.age : null });
+          this.userDataFormGroup.patchValue({heightCmCtrl: typeof userProfileData.height !== 'undefined' ? userProfileData.height : null });
           this.userDataFormGroup.patchValue({
-            heightFt: typeof userProfileData.height !== 'undefined' ? Math.floor(userProfileData.height / 30.4) : null });
+            heightFtCtrl: typeof userProfileData.height !== 'undefined' ? Math.floor(userProfileData.height / 30.4) : null });
           this.userDataFormGroup.patchValue({
-            heightIn: typeof userProfileData.height !== 'undefined' ?
+            heightInCtrl: typeof userProfileData.height !== 'undefined' ?
             Math.round((userProfileData.height - Math.floor(userProfileData.height / 30.4) * 30.4) / 2.54) : null });
-          this.userDataFormGroup.patchValue({weightKg: typeof userProfileData.weight !== 'undefined' ? userProfileData.weight : null });
+          this.userDataFormGroup.patchValue({weightKgCtrl: typeof userProfileData.weight !== 'undefined' ? userProfileData.weight : null });
           this.userDataFormGroup.patchValue({
-            weightLb: typeof userProfileData.weight !== 'undefined' ? Math.round(userProfileData.weight / 0.454) : null });
+            weightLbCtrl: typeof userProfileData.weight !== 'undefined' ? Math.round(userProfileData.weight / 0.454) : null });
         }));
 
   }
@@ -83,28 +83,28 @@ export class UserDataPage implements OnInit, OnDestroy {
   get heightIn() { return this.userDataFormGroup.get('heightInCtrl'); }
 
   calculate_BMI_BMR() {
-    // this.calculateHeightWeight();
-    // this.bmi = this.profileService.calcBMI(this.weight, this.height / 100);
-    // this.bmr = this.profileService.calcBMR(
-    //   this.genderFormGroup.value.gender, this.ageFormGroup.value.age, this.weight, this.height);
+    this.calculateHeightWeight();
+    this.bmi = this.profileService.calcBMI(this.weight, this.height / 100);
+    this.bmr = this.profileService.calcBMR(
+      this.userDataFormGroup.value.genderCtrl, this.userDataFormGroup.value.ageCtrl, this.weight, this.height);
   }
 
   onSave() {
     console.log(this.userDataFormGroup.value);
 
     this.calculate_BMI_BMR();
-    // this.profileService.addOrUpdateUser({
-    //   email: this.fbUser.email,
-    //   userId: this.fbUser.uid,
-    //   name: this.nameFormGroup.value.name,
-    //   gender: this.genderFormGroup.value.gender,
-    //   age: this.ageFormGroup.value.age,
-    //   weight: this.weight,
-    //   height: this.height,
-    //   units: this.units,
-    //   bmi: this.bmi,
-    //   bmr: this.bmr,
-    // });
+    this.profileService.addOrUpdateUser({
+      email: this.loggedUser.userEmail,
+      userId: this.loggedUser.id,
+      name: this.userDataFormGroup.value.nameCtrl,
+      gender: this.userDataFormGroup.value.genderCtrl,
+      age: this.userDataFormGroup.value.ageCtrl,
+      weight: this.weight,
+      height: this.height,
+      units: this.units,
+      bmi: this.bmi,
+      bmr: this.bmr,
+    });
     this.router.navigateByUrl('profile/user-activity-level');
   }
 

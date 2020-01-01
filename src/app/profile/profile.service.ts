@@ -95,14 +95,14 @@ private userExistsSub: Subscription;
   // }
 
 
-  // calcBMI(weight, height) {
-  //   return Math.round((weight / (height * height)) * 10) / 10;
-  // }
+  calcBMI(weight, height) {
+    return Math.round((weight / (height * height)) * 10) / 10;
+  }
 
-  // calcBMR(gender, age, weight, height) {
-  //   // Mifflin St Jeor
-  //   return Math.round(10 * weight + 6.25 * height - 5 * age + (gender === 'female' ? - 161 : + 5) );
-  // }
+  calcBMR(gender, age, weight, height) {
+    // Mifflin St Jeor
+    return Math.round(10 * weight + 6.25 * height - 5 * age + (gender === 'female' ? - 161 : + 5) );
+  }
 
   // calcRMR(actList, actHours) {
   //   let i = 0;
