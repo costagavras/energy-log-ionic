@@ -84,14 +84,31 @@ export class UserDataPage implements OnInit, OnDestroy {
 
   calculate_BMI_BMR() {
     this.calculateHeightWeight();
-    this.bmi = this.profileService.calcBMI(this.weight, this.height / 100);
-    this.bmr = this.profileService.calcBMR(
+    this.bmi = this.calcBMI(this.weight, this.height / 100);
+    this.bmr = this.calcBMR(
       this.userDataFormGroup.value.genderCtrl, this.userDataFormGroup.value.ageCtrl, this.weight, this.height);
   }
 
-  onSave() {
-    console.log(this.userDataFormGroup.value);
+  calculateHeightWeight() {
+    if (this.units === 'metric') {
+      this.height = this.userDataFormGroup.value.heightCmCtrl;
+      this.weight = this.userDataFormGroup.value.weightKgCtrl;
+    } else  {
+      this.height = Math.round(this.userDataFormGroup.value.heightFtCtrl * 30.4 + this.userDataFormGroup.value.heightInCtrl * 2.54);
+      this.weight = Math.round(this.userDataFormGroup.value.weightLbCtrl * 0.454);
+    }
+  }
 
+  calcBMI(weight, height) {
+    return Math.round((weight / (height * height)) * 10) / 10;
+  }
+
+  calcBMR(gender, age, weight, height) {
+    // Mifflin St Jeor
+    return Math.round(10 * weight + 6.25 * height - 5 * age + (gender === 'female' ? - 161 : + 5) );
+  }
+
+  onSave() {
     this.calculate_BMI_BMR();
     this.profileService.addOrUpdateUser({
       email: this.loggedUser.userEmail,
@@ -106,16 +123,6 @@ export class UserDataPage implements OnInit, OnDestroy {
       bmr: this.bmr,
     });
     this.router.navigateByUrl('profile/user-activity-level');
-  }
-
-  calculateHeightWeight() {
-    if (this.units === 'metric') {
-      this.height = this.userDataFormGroup.value.heightCmCtrl;
-      this.weight = this.userDataFormGroup.value.weightKgCtrl;
-    } else  {
-      this.height = Math.round(this.userDataFormGroup.value.heightFtCtrl * 30.4 + this.userDataFormGroup.value.heightInCtrl * 2.54);
-      this.weight = Math.round(this.userDataFormGroup.value.weightLbCtrl * 0.454);
-    }
   }
 
   ngOnDestroy() {
