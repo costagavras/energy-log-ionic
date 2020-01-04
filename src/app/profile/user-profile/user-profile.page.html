@@ -1,10 +1,10 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title class="ion-text-center">Calculated parameters</ion-title>
+    <ion-title class="ion-text-center">Completed profile</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf="loggedUserProfile">
   <ion-grid>
     <ion-row>
       <ion-col size="6" offset-xs="2" offset-lg="3">
@@ -13,7 +13,7 @@
         </ion-item>
       </ion-col>
       <ion-col size="3">
-          <ion-chip>Costa</ion-chip>
+          <ion-chip>{{ loggedUserProfile?.name || 'N/A' }}</ion-chip>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -23,7 +23,7 @@
         </ion-item>
       </ion-col>
       <ion-col size="3">
-          <ion-chip>39</ion-chip>
+          <ion-chip>{{loggedUserProfile.age || 'N/A' }}</ion-chip>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -33,7 +33,7 @@
         </ion-item>
       </ion-col>
       <ion-col size="3">
-          <ion-chip>male</ion-chip>
+          <ion-chip>{{loggedUserProfile.gender || 'N/A' }}</ion-chip>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -43,7 +43,7 @@
         </ion-item>
       </ion-col>
       <ion-col size="3">
-          <ion-chip>170</ion-chip>
+          <ion-chip>{{loggedUserProfile.height || 'N/A' }}</ion-chip>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -53,7 +53,7 @@
         </ion-item>
       </ion-col>
       <ion-col size="3">
-          <ion-chip>65</ion-chip>
+          <ion-chip>{{loggedUserProfile.weight || 'N/A' }}</ion-chip>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -63,7 +63,7 @@
         </ion-item>
       </ion-col>
       <ion-col size="3">
-          <ion-chip>22.5</ion-chip>
+          <ion-chip>{{loggedUserProfile.bmi || 'N/A' }}</ion-chip>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -73,7 +73,7 @@
         </ion-item>
       </ion-col>
       <ion-col size="3">
-          <ion-chip>1523</ion-chip>
+          <ion-chip>{{loggedUserProfile.bmr || 'N/A' }}</ion-chip>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -83,12 +83,12 @@
         </ion-item>
       </ion-col>
       <ion-col size="3">
-          <ion-chip>3.5</ion-chip>
+          <ion-chip>{{loggedUserProfile.activityLevel || 'N/A' }}</ion-chip>
       </ion-col>
     </ion-row>
   </ion-grid>
   <div class="buttons">
-    <ion-button type="button" (click)="deleteUser()">Reset</ion-button>
+    <ion-button *ngIf="loggedUserProfile" type="button" color="danger" (click)="deleteUser(loggedUserProfile)">Delete User</ion-button>
     <ion-button type="button" (click)="goBack()"
     ><ion-icon name="arrow-back"></ion-icon>&nbsp;Update User</ion-button>
   </div>

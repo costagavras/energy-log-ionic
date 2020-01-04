@@ -109,24 +109,24 @@ private userExistsSub: Subscription;
     });
   }
 
-  // deleteProfile(user: UserProfile) {
-  //   const collectionExRef = this.db.collection('users').doc(user.userId).collection('finishedExercises').ref;
-  //   this.deleteCollection(this.db, collectionExRef, 100);
+  deleteProfile(user: UserProfile) {
+    const collectionExRef = this.db.collection('users').doc(user.userId).collection('finishedExercises').ref;
+    this.deleteCollection(this.db, collectionExRef, 100);
 
-  //   const collectionFoodRef = this.db.collection('users').doc(user.userId).collection('finishedFoodItems').ref;
-  //   this.deleteCollection(this.db, collectionFoodRef, 100);
+    const collectionFoodRef = this.db.collection('users').doc(user.userId).collection('finishedFoodItems').ref;
+    this.deleteCollection(this.db, collectionFoodRef, 100);
 
-  //   const collectionStampRef = this.db.collection('users').doc(user.userId).collection('userStamp').ref;
-  //   this.deleteCollection(this.db, collectionStampRef, 100);
+    const collectionStampRef = this.db.collection('users').doc(user.userId).collection('userStamp').ref;
+    this.deleteCollection(this.db, collectionStampRef, 100);
 
-  //   this.db.collection('users').doc(user.userId).delete()
-  //         .then(() => {
-  //           this.router.navigate(['/']);
-  //           this.uiService.showToast(user.name + ' is now gone!', 3000);
-  //         }).catch(error => {
-  //           console.log(error);
-  //         });
-  // }
+    this.db.collection('users').doc(user.userId).delete()
+          .then(() => {
+            this.router.navigate(['/']);
+            this.uiService.showToast(user.name + ' is now gone!', 3000);
+          }).catch(error => {
+            console.log(error);
+          });
+  }
 
   // deleteUserAccount() {
   //   this.fbUser = firebase.auth().currentUser;
@@ -141,44 +141,44 @@ private userExistsSub: Subscription;
   //   }
   // }
 
-  // deleteCollection(db, collectionRef, batchSize) {
-  //   const query = collectionRef.limit(batchSize);
+  deleteCollection(db, collectionRef, batchSize) {
+    const query = collectionRef.limit(batchSize);
 
-  //   return new Promise((resolve, reject) => {
-  //       this.deleteQueryBatch(db, query, batchSize, resolve, reject);
-  //   });
-  // }
+    return new Promise((resolve, reject) => {
+        this.deleteQueryBatch(db, query, batchSize, resolve, reject);
+    });
+  }
 
-  // deleteQueryBatch(db, query, batchSize, resolve, reject) {
-  //   query.get()
-  //       .then((snapshot) => {
-  //           // When there are no documents left, we are done
-  //           if (snapshot.size === 0) {
-  //               return 0;
-  //           }
+  deleteQueryBatch(db, query, batchSize, resolve, reject) {
+    query.get()
+        .then((snapshot) => {
+            // When there are no documents left, we are done
+            if (snapshot.size === 0) {
+                return 0;
+            }
 
-  //           // Delete documents in a batch
-  //           const batch = firebase.firestore().batch();
-  //           snapshot.docs.forEach((doc) => {
-  //               batch.delete(doc.ref);
-  //           });
+            // Delete documents in a batch
+            const batch = firebase.firestore().batch();
+            snapshot.docs.forEach((doc) => {
+                batch.delete(doc.ref);
+            });
 
-  //           return batch.commit().then(() => {
-  //               return snapshot.size;
-  //           });
-  //       }).then((numDeleted) => {
-  //       if (numDeleted === 0) {
-  //           resolve();
-  //           return;
-  //       }
+            return batch.commit().then(() => {
+                return snapshot.size;
+            });
+        }).then((numDeleted) => {
+        if (numDeleted === 0) {
+            resolve();
+            return;
+        }
 
-  //       // Replacing Recurse on the next process tick, to avoid exploding the stack.
-  //       setTimeout(() => {
-  //           this.deleteQueryBatch(db, query, batchSize, resolve, reject);
-  //       }, 0);
-  //   })
-  //       .catch(reject);
-  // }
+        // Replacing Recurse on the next process tick, to avoid exploding the stack.
+        setTimeout(() => {
+            this.deleteQueryBatch(db, query, batchSize, resolve, reject);
+        }, 0);
+    })
+        .catch(reject);
+  }
 
   cancelSubscriptions() {
     if (this.profileServiceSubs) {

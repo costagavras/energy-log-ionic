@@ -29,10 +29,10 @@ export class UserDataPage implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.anthropometrySubs.push(this.authService.user
+    this.anthropometrySubs.push(this.authService.user // getter, not event emitter
       .subscribe(user => {
         this.loggedUser = user;
-        this.profileService.getUserData(this.loggedUser.id);
+        this.profileService.getUserData(this.loggedUser.id); // event emitter for sub at line 57;
       })
     );
 

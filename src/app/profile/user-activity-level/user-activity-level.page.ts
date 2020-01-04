@@ -27,10 +27,10 @@ export class UserActivityLevelPage implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.activityLevelSubs.push(this.authService.user
+    this.activityLevelSubs.push(this.authService.user // getter, not event emitter
       .subscribe(user => {
         this.loggedUser = user;
-        this.profileService.getUserData(this.loggedUser.id);
+        this.profileService.getUserData(this.loggedUser.id); // event emitter for sub at line 47;
       })
     );
 
@@ -76,6 +76,7 @@ export class UserActivityLevelPage implements OnInit, OnDestroy {
       i++;
     }
     const coefficientRMR = Math.round((totalActivitiesHoursProduct / totalActivityHoursFiltered) * 100) / 100;
+    // adding properties to loggedUserProfile object()
     this.profileService.addOrUpdateUser({ ...this.loggedUserProfile, activityLevel: coefficientRMR });
   }
 
