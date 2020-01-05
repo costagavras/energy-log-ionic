@@ -32,8 +32,8 @@
   </form>
   <div class="buttons">
     <ion-button type="button" (click)="formActivityLevel.reset()">Reset</ion-button>
-    <ion-button type="submit" (click)="onSave(formActivityLevel)"
-    [disabled]="!userActivityFormGroup.valid || total !== 24"
+    <ion-button type="submit" (click)="onSave()"
+    [disabled]="(!userActivityFormGroup.valid || total !== 24) || !loggedUserProfile"
     >Save & continue&nbsp;<ion-icon name="arrow-forward"></ion-icon></ion-button>
   </div>
 </ion-content> 

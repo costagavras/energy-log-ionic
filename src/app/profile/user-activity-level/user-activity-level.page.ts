@@ -13,7 +13,7 @@ import { User, UserProfile } from '../../auth/user.model';
   styleUrls: ['./user-activity-level.page.scss'],
 })
 export class UserActivityLevelPage implements OnInit, OnDestroy {
-  // listActivities = ['agricultural work (planting, weeding, gathering)', 'costruction', 'cooking', 'eating', 'exercising', 'reading'];
+
   listActivities = [];
   total: any = 0;
   userActivityFormGroup: FormGroup;
@@ -33,6 +33,8 @@ export class UserActivityLevelPage implements OnInit, OnDestroy {
         this.profileService.getUserData(this.loggedUser.id); // event emitter for sub at line 47;
       })
     );
+
+    console.log('user-activity-level ran1');
 
     // need it to activate event emitter in the service
     this.profileService.getActivitiesList();
@@ -91,7 +93,9 @@ export class UserActivityLevelPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    console.log('user-activity-level ran2');
     if (this.activityLevelSubs) {
+      console.log('user-activity-level ran3');
       this.activityLevelSubs.forEach(sub => sub.unsubscribe());
     }
   }

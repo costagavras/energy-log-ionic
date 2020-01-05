@@ -31,29 +31,37 @@ export class UserSettingsPage implements OnInit, OnDestroy {
       })
     );
 
+    console.log('user-settings ran1');
+
     this.unitsFormGroup = new FormGroup({
-      units: new FormControl('metric', {validators: [Validators.required]}) // default value, if provile not created
+      units: new FormControl('metric', {validators: [Validators.required]}) // default value, if profile not created
     });
 
     // doesn't come to here if user not created
     this.appSettingSubs.push(this.profileService.userProfileData
       .subscribe(
         userProfileData => {
-          this.unitsFormGroup.patchValue({units: typeof userProfileData.units !== 'undefined' ? userProfileData.units : 'metric' });
-          this.profileService.unitsSelected(this.unitsFormGroup.value.units); // sends to UserData current state with no buttons touched
-          typeof userProfileData !== 'undefined' ? this.userCreated = true : this.userCreated = false;
-        }));
+          if (userProfileData) {
+            this.unitsFormGroup.patchValue({units: typeof userProfileData.units !== 'undefined' ? userProfileData.units : 'metric' });
+            this.profileService.unitsSelected(this.unitsFormGroup.value.units); // sends to UserData current state with no buttons touched
+            typeof userProfileData !== 'undefined' ? this.userCreated = true : this.userCreated = false;
+         }
+        }
+      )
+    );
   }
 
   onSave() {
-    this.profileService.unitsSelected(this.unitsFormGroup.value.units); // if save button is clicked
     if (this.userCreated) {
       this.profileService.addOrUpdateUser({
         units: this.unitsFormGroup.value.units,
         userId: this.loggedUser.id
       });
     }
-    this.router.navigateByUrl('profile/user-data');
+    this.router.navigateByUrl('profile/user-data')
+      .then(() => {
+        this.profileService.unitsSelected(this.unitsFormGroup.value.units); // if save button is clicked
+      });
   }
 
   unitChange(units: string) {
@@ -61,7 +69,9 @@ export class UserSettingsPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    console.log('user-settings ran2');
     if (this.appSettingSubs) {
+      console.log('user-settings ran3');
       this.appSettingSubs.forEach(sub => sub.unsubscribe());
     }
   }

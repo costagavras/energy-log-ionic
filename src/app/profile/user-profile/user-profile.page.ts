@@ -29,6 +29,8 @@ export class UserProfilePage implements OnInit, OnDestroy {
       })
     );
 
+    console.log('user-profile ran1');
+
     this.profileSubs.push(this.profileService.userProfileData
       .subscribe(
         userProfileData => {
@@ -46,7 +48,9 @@ export class UserProfilePage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    console.log('user-profile ran2');
     if (this.profileSubs) {
+      console.log('user-profile ran3');
       this.profileSubs.forEach(sub => sub.unsubscribe());
     }
   }

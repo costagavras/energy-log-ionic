@@ -18,7 +18,7 @@ export class UserDataPage implements OnInit, OnDestroy {
   bmi = 0;
   bmr = 0;
   loggedUser: User;
-  units = 'metric';
+  units: string;
   height: number;
   weight: number;
   private anthropometrySubs: Subscription[] = [];
@@ -36,12 +36,16 @@ export class UserDataPage implements OnInit, OnDestroy {
       })
     );
 
+    console.log('user-data ran1');
+
     this.anthropometrySubs.push(this.profileService.unitsUserSelected
       .subscribe(
         units => {
           this.units = units;
+          console.log(units);
         }
-      ));
+      )
+    );
 
     this.userDataFormGroup = new FormGroup({
       nameCtrl: new FormControl('', {validators: [Validators.required]}),
@@ -57,20 +61,25 @@ export class UserDataPage implements OnInit, OnDestroy {
     this.anthropometrySubs.push(this.profileService.userProfileData
       .subscribe(
         userProfileData => {
-          this.userDataFormGroup.patchValue({nameCtrl: typeof userProfileData.name !== 'undefined' ? userProfileData.name : null });
-          this.userDataFormGroup.patchValue({genderCtrl: typeof userProfileData.gender !== 'undefined' ? userProfileData.gender : null });
-          this.userDataFormGroup.patchValue({ageCtrl: typeof userProfileData.age !== 'undefined' ? userProfileData.age : null });
-          this.userDataFormGroup.patchValue({heightCmCtrl: typeof userProfileData.height !== 'undefined' ? userProfileData.height : null });
-          this.userDataFormGroup.patchValue({
-            heightFtCtrl: typeof userProfileData.height !== 'undefined' ? Math.floor(userProfileData.height / 30.4) : null });
-          this.userDataFormGroup.patchValue({
-            heightInCtrl: typeof userProfileData.height !== 'undefined' ?
-            Math.round((userProfileData.height - Math.floor(userProfileData.height / 30.4) * 30.4) / 2.54) : null });
-          this.userDataFormGroup.patchValue({weightKgCtrl: typeof userProfileData.weight !== 'undefined' ? userProfileData.weight : null });
-          this.userDataFormGroup.patchValue({
-            weightLbCtrl: typeof userProfileData.weight !== 'undefined' ? Math.round(userProfileData.weight / 0.454) : null });
-        }));
-
+          if (userProfileData) {
+            this.userDataFormGroup.patchValue({nameCtrl: typeof userProfileData.name !== 'undefined' ? userProfileData.name : null });
+            this.userDataFormGroup.patchValue({genderCtrl: typeof userProfileData.gender !== 'undefined' ? userProfileData.gender : null });
+            this.userDataFormGroup.patchValue({ageCtrl: typeof userProfileData.age !== 'undefined' ? userProfileData.age : null });
+            this.userDataFormGroup.patchValue({
+              heightCmCtrl: typeof userProfileData.height !== 'undefined' ? userProfileData.height : null });
+            this.userDataFormGroup.patchValue({
+              heightFtCtrl: typeof userProfileData.height !== 'undefined' ? Math.floor(userProfileData.height / 30.4) : null });
+            this.userDataFormGroup.patchValue({
+              heightInCtrl: typeof userProfileData.height !== 'undefined' ?
+              Math.round((userProfileData.height - Math.floor(userProfileData.height / 30.4) * 30.4) / 2.54) : null });
+            this.userDataFormGroup.patchValue({
+              weightKgCtrl: typeof userProfileData.weight !== 'undefined' ? userProfileData.weight : null });
+            this.userDataFormGroup.patchValue({
+              weightLbCtrl: typeof userProfileData.weight !== 'undefined' ? Math.round(userProfileData.weight / 0.454) : null });
+          }
+        }
+      )
+    );
   }
 
   get name() { return this.userDataFormGroup.get('nameCtrl'); }
@@ -126,7 +135,9 @@ export class UserDataPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    console.log('user-data ran2');
     if (this.anthropometrySubs) {
+      console.log('user-data ran3');
       this.anthropometrySubs.forEach(sub => sub.unsubscribe());
     }
   }

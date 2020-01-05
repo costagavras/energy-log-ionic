@@ -4,7 +4,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf="units">
   <form [formGroup]="userDataFormGroup" class="form_units" #formUserData>
     <ion-grid>
       <ion-row>

@@ -20,7 +20,7 @@
               </ion-item>
           </ion-radio-group>
           <div>
-            <ion-button type="submit" (click)="onSave()">
+            <ion-button type="submit" (click)="onSave()" [disabled]="!loggedUser">
               Save & continue&nbsp;<ion-icon name="arrow-forward"></ion-icon></ion-button>
           </div>
         </ion-col>
