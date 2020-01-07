@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { FormGroup, NgForm, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { ProfileService } from '../profile.service';
@@ -27,18 +27,6 @@ export class UserActivityLevelPage implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.activityLevelSubs.push(this.authService.user // getter, not event emitter
-      .subscribe(user => {
-        this.loggedUser = user;
-        this.profileService.getUserData(this.loggedUser.id); // event emitter for sub at line 47;
-      })
-    );
-
-    console.log('user-activity-level ran1');
-
-    // need it to activate event emitter in the service
-    this.profileService.getActivitiesList();
-
     this.activityLevelSubs.push(this.profileService.activitiesList
       .subscribe(actList => {
         this.listActivities = actList;
@@ -46,12 +34,31 @@ export class UserActivityLevelPage implements OnInit, OnDestroy {
       })
     );
 
+  }
+
+  ionViewWillEnter() {
+
+    this.profileService.getActivitiesList();
+
     this.activityLevelSubs.push(this.profileService.userProfileData
       .subscribe(
         userProfileData => {
           this.loggedUserProfile = userProfileData;
       })
     );
+
+    this.activityLevelSubs.push(this.authService.user // getter, not event emitter
+      .subscribe(user => {
+        this.loggedUser = user;
+        this.profileService.getUserData(this.loggedUser.id); // event emitter for sub;
+      })
+    );
+
+  }
+
+  ionViewDidEnter() {
+
+    this.profileService.getUserData(this.loggedUser.id); // event emitter for sub;
   }
 
   makeForm(activities) {
@@ -85,6 +92,10 @@ export class UserActivityLevelPage implements OnInit, OnDestroy {
   onSave() {
     this.calcRMR(this.listActivities, Object.values(this.userActivityFormGroup.value));
     this.router.navigateByUrl('profile/user-profile');
+    // this.userActivityFormGroup.reset();
+    //   .then(() => {
+    //     this.profileService.getUserData(this.loggedUser.id); // if save button is clicked
+    // });
   }
 
   sumHours() {
@@ -92,10 +103,19 @@ export class UserActivityLevelPage implements OnInit, OnDestroy {
     this.total = Object.values(this.userActivityFormGroup.value).reduce((a: number, b: number) => +a + +b, 0);
   }
 
-  ngOnDestroy() {
-    console.log('user-activity-level ran2');
+  ionViewDidLeave() {
+    this.profileService.getUserData(this.loggedUser.id);
     if (this.activityLevelSubs) {
-      console.log('user-activity-level ran3');
+      this.activityLevelSubs.forEach(sub => sub.unsubscribe());
+    }
+  }
+
+  // ionViewWillLeave() {
+  //   this.profileService.cancelSubscriptions();
+  // }
+
+  ngOnDestroy() {
+    if (this.activityLevelSubs) {
       this.activityLevelSubs.forEach(sub => sub.unsubscribe());
     }
   }

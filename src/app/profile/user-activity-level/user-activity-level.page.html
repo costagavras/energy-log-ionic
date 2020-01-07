@@ -1,10 +1,12 @@
 <ion-header>
   <ion-toolbar>
     <ion-title class="ion-text-center">Allocate&nbsp;<ion-chip><ion-label>{{ 24 - total }}</ion-label></ion-chip> hours to activity</ion-title>
+    <!-- <p *ngIf="userActivityFormGroup">Form is loaded</p>
+    <p *ngIf="loggedUserProfile">UserProfile is loaded</p> -->
   </ion-toolbar>
 </ion-header>
 
-<ion-content *ngIf="userActivityFormGroup">
+<ion-content *ngIf="userActivityFormGroup && loggedUserProfile">
   <form [formGroup]="userActivityFormGroup" class="form_activity_level" #formActivityLevel>
     <ion-grid>
       <ion-item *ngFor="let item of listActivities | keyvalue; let i = index">
@@ -33,7 +35,7 @@
   <div class="buttons">
     <ion-button type="button" (click)="formActivityLevel.reset()">Reset</ion-button>
     <ion-button type="submit" (click)="onSave()"
-    [disabled]="(!userActivityFormGroup.valid || total !== 24) || !loggedUserProfile"
+    [disabled]="(!userActivityFormGroup.valid || total !== 24)"
     >Save & continue&nbsp;<ion-icon name="arrow-forward"></ion-icon></ion-button>
   </div>
 </ion-content> 

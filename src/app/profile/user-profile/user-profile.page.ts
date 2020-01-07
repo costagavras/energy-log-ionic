@@ -21,15 +21,16 @@ export class UserProfilePage implements OnInit, OnDestroy {
               private profileService: ProfileService,
               private authService: AuthService) { }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  ionViewWillEnter() {
+
     this.profileSubs.push(this.authService.user // getter, not event emitter
       .subscribe(user => {
         this.loggedUser = user;
-        this.profileService.getUserData(this.loggedUser.id); // event emitter for sub at line 57;
+        this.profileService.getUserData(this.loggedUser.id); // event emitter for sub;
       })
     );
-
-    console.log('user-profile ran1');
 
     this.profileSubs.push(this.profileService.userProfileData
       .subscribe(
@@ -37,6 +38,7 @@ export class UserProfilePage implements OnInit, OnDestroy {
           this.loggedUserProfile = userProfileData;
       })
     );
+
   }
 
   goBack() {
@@ -47,10 +49,18 @@ export class UserProfilePage implements OnInit, OnDestroy {
     this.profileService.deleteProfile(user);
   }
 
-  ngOnDestroy() {
-    console.log('user-profile ran2');
+  ionViewDidLeave() {
     if (this.profileSubs) {
-      console.log('user-profile ran3');
+      this.profileSubs.forEach(sub => sub.unsubscribe());
+    }
+  }
+
+  // ionViewWillLeave() {
+  //   this.profileService.cancelSubscriptions();
+  // }
+
+  ngOnDestroy() {
+    if (this.profileSubs) {
       this.profileSubs.forEach(sub => sub.unsubscribe());
     }
   }

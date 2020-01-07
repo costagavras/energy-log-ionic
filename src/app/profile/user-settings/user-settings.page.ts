@@ -24,14 +24,12 @@ export class UserSettingsPage implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.appSettingSubs.push(this.authService.user
+    this.appSettingSubs.push(this.authService.user // getter
       .subscribe(user => {
         this.loggedUser = user;
         this.profileService.getUserData(this.loggedUser.id);
       })
     );
-
-    console.log('user-settings ran1');
 
     this.unitsFormGroup = new FormGroup({
       units: new FormControl('metric', {validators: [Validators.required]}) // default value, if profile not created
@@ -58,20 +56,30 @@ export class UserSettingsPage implements OnInit, OnDestroy {
         userId: this.loggedUser.id
       });
     }
-    this.router.navigateByUrl('profile/user-data')
-      .then(() => {
-        this.profileService.unitsSelected(this.unitsFormGroup.value.units); // if save button is clicked
-      });
+    this.router.navigateByUrl('profile/user-data');
+      // .then(() => {
+      //   this.profileService.unitsSelected(this.unitsFormGroup.value.units); // if save button is clicked;
+      // });
   }
 
   unitChange(units: string) {
     this.profileService.unitsSelected(units); // if radio button is clicked
   }
 
-  ngOnDestroy() {
-    console.log('user-settings ran2');
+  ionViewDidLeave() {
+    this.profileService.unitsSelected(this.unitsFormGroup.value.units);
+    this.userCreated = false;
     if (this.appSettingSubs) {
-      console.log('user-settings ran3');
+      this.appSettingSubs.forEach(sub => sub.unsubscribe());
+    }
+  }
+
+  ionViewWillLeave() {
+    this.profileService.cancelSubscriptions();
+  }
+
+  ngOnDestroy() {
+    if (this.appSettingSubs) {
       this.appSettingSubs.forEach(sub => sub.unsubscribe());
     }
   }

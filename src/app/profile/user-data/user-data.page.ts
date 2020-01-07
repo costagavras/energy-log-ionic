@@ -18,7 +18,7 @@ export class UserDataPage implements OnInit, OnDestroy {
   bmi = 0;
   bmr = 0;
   loggedUser: User;
-  units: string;
+  units = 'metric'; // needed to initialize the view with ngIf === metric
   height: number;
   weight: number;
   private anthropometrySubs: Subscription[] = [];
@@ -28,24 +28,6 @@ export class UserDataPage implements OnInit, OnDestroy {
               private authService: AuthService) { }
 
   ngOnInit() {
-
-    this.anthropometrySubs.push(this.authService.user // getter, not event emitter
-      .subscribe(user => {
-        this.loggedUser = user;
-        this.profileService.getUserData(this.loggedUser.id); // event emitter for sub at line 57;
-      })
-    );
-
-    console.log('user-data ran1');
-
-    this.anthropometrySubs.push(this.profileService.unitsUserSelected
-      .subscribe(
-        units => {
-          this.units = units;
-          console.log(units);
-        }
-      )
-    );
 
     this.userDataFormGroup = new FormGroup({
       nameCtrl: new FormControl('', {validators: [Validators.required]}),
@@ -57,6 +39,24 @@ export class UserDataPage implements OnInit, OnDestroy {
       weightKgCtrl: new FormControl('', {validators: [Validators.required, Validators.min(20), Validators.max(320)]}),
       weightLbCtrl: new FormControl('', {validators: [Validators.required, Validators.min(50), Validators.max(750)]})
     });
+
+  }
+
+  ionViewWillEnter() {
+
+    this.anthropometrySubs.push(this.profileService.unitsUserSelected
+      .subscribe(units => {
+          this.units = units;
+        }
+      )
+    );
+
+    this.anthropometrySubs.push(this.authService.user // getter, not event emitter
+      .subscribe(user => {
+        this.loggedUser = user;
+        this.profileService.getUserData(this.loggedUser.id); // event emitter for sub at line 57;
+      })
+    );
 
     this.anthropometrySubs.push(this.profileService.userProfileData
       .subscribe(
@@ -80,6 +80,7 @@ export class UserDataPage implements OnInit, OnDestroy {
         }
       )
     );
+
   }
 
   get name() { return this.userDataFormGroup.get('nameCtrl'); }
@@ -132,12 +133,26 @@ export class UserDataPage implements OnInit, OnDestroy {
       bmr: this.bmr,
     });
     this.router.navigateByUrl('profile/user-activity-level');
+    //   .then(() => {
+    //     this.profileService.getUserData(this.loggedUser.id); // if save button is clicked
+    // });
+    this.userDataFormGroup.reset();
+  }
+
+  ionViewDidLeave() {
+    this.profileService.getUserData(this.loggedUser.id); // if save button is clicked
+    this.profileService.getActivitiesList();
+    if (this.anthropometrySubs) {
+      this.anthropometrySubs.forEach(sub => sub.unsubscribe());
+    }
+  }
+
+  ionViewWillLeave() {
+    this.profileService.cancelSubscriptions();
   }
 
   ngOnDestroy() {
-    console.log('user-data ran2');
     if (this.anthropometrySubs) {
-      console.log('user-data ran3');
       this.anthropometrySubs.forEach(sub => sub.unsubscribe());
     }
   }
