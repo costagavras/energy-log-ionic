@@ -7,6 +7,7 @@ import * as firebase from 'firebase/app';
 import { Subject, Subscription } from 'rxjs';
 import { UIService } from '../shared/ui.service';
 import { Router } from '@angular/router';
+import { take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -16,13 +17,13 @@ export class ProfileService {
 userProfileData = new Subject<UserProfile>();
 activitiesList = new Subject<any>();
 unitsUserSelected = new Subject<string>();
+dataSaved = new Subject<boolean>();
 userStampsCollection = new Subject<UserStamp[]>();
 userProfile: UserProfile;
 fbUser;
 units: string;
 
 private profileServiceSubs: Subscription[] = [];
-private userExistsSub: Subscription;
 
   constructor(private db: AngularFirestore,
               private router: Router,
@@ -95,21 +96,26 @@ private userExistsSub: Subscription;
   }
 
   addOrUpdateUser(userData: UserProfile) {
-    this.userExistsSub = this.db.collection('users').doc(userData.userId).snapshotChanges()
-      .subscribe(doc => {
+    this.db.collection('users').doc(userData.userId).snapshotChanges()
+      .pipe(take(1)).toPromise().then(doc => {
         if (doc.payload.exists) {
-          this.db.collection('users').doc(userData.userId).update(userData);
-          this.uiService.showToast(doc.payload.data()['name'] + ' successfully updated', 3000);
-          this.userExistsSub.unsubscribe();
+          this.db.collection('users').doc(userData.userId).update(userData)
+            .then(() => {
+              this.uiService.showToast(doc.payload.data()['name'] + ' successfully updated', 3000);
+              this.dataSaved.next(true);
+            });
         } else {
-          this.db.collection('users').doc(userData.userId).set(userData);
-          this.uiService.showToast(userData.name + ' was successfully created', 3000);
-          this.userExistsSub.unsubscribe();
+          this.db.collection('users').doc(userData.userId).set(userData)
+            .then(() => {
+              this.uiService.showToast(userData.name + ' was successfully created', 3000);
+              this.dataSaved.next(true);
+            });
         }
     });
   }
 
   deleteProfile(user: UserProfile) {
+ 
     const collectionExRef = this.db.collection('users').doc(user.userId).collection('finishedExercises').ref;
     this.deleteCollection(this.db, collectionExRef, 100);
 
@@ -121,6 +127,7 @@ private userExistsSub: Subscription;
 
     this.db.collection('users').doc(user.userId).delete()
           .then(() => {
+            console.log('user deleted');
             this.router.navigate(['/']);
             this.uiService.showToast(user.name + ' is now gone!', 3000);
           }).catch(error => {

@@ -18,6 +18,7 @@ export class UserDataPage implements OnInit, OnDestroy {
   bmi = 0;
   bmr = 0;
   loggedUser: User;
+  dataSaved = false;
   units = 'metric'; // needed to initialize the view with ngIf === metric
   height: number;
   weight: number;
@@ -120,7 +121,20 @@ export class UserDataPage implements OnInit, OnDestroy {
 
   onSave() {
     this.calculate_BMI_BMR();
-    this.profileService.addOrUpdateUser({
+    this.anthropometrySubs.push(this.profileService.dataSaved // have to sub before emit event
+      .subscribe(dataOk => {
+          this.dataSaved = dataOk;
+          if (this.dataSaved) {
+            this.router.navigateByUrl('profile/user-activity-level');
+            //   .then(() => {
+            //     this.profileService.getUserData(this.loggedUser.id); // if save button is clicked
+            // });
+            this.userDataFormGroup.reset();
+          }
+        }
+      )
+    );
+    this.profileService.addOrUpdateUser({ // emit event dataSaved in profileService
       email: this.loggedUser.userEmail,
       userId: this.loggedUser.id,
       name: this.userDataFormGroup.value.nameCtrl,
@@ -132,11 +146,6 @@ export class UserDataPage implements OnInit, OnDestroy {
       bmi: this.bmi,
       bmr: this.bmr,
     });
-    this.router.navigateByUrl('profile/user-activity-level');
-    //   .then(() => {
-    //     this.profileService.getUserData(this.loggedUser.id); // if save button is clicked
-    // });
-    this.userDataFormGroup.reset();
   }
 
   ionViewDidLeave() {

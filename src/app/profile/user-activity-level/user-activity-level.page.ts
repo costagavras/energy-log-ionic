@@ -56,11 +56,6 @@ export class UserActivityLevelPage implements OnInit, OnDestroy {
 
   }
 
-  ionViewDidEnter() {
-
-    this.profileService.getUserData(this.loggedUser.id); // event emitter for sub;
-  }
-
   makeForm(activities) {
     const formDataObject = {};
     let i = 0;
@@ -92,7 +87,6 @@ export class UserActivityLevelPage implements OnInit, OnDestroy {
   onSave() {
     this.calcRMR(this.listActivities, Object.values(this.userActivityFormGroup.value));
     this.router.navigateByUrl('profile/user-profile');
-    // this.userActivityFormGroup.reset();
     //   .then(() => {
     //     this.profileService.getUserData(this.loggedUser.id); // if save button is clicked
     // });
