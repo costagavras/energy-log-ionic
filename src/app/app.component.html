@@ -52,7 +52,7 @@
       <div>
         <ion-chip color="primary">
           <ion-icon name="contact"></ion-icon>
-          <ion-label>Username</ion-label>
+          <ion-label>{{ loggedUserProfile?.name || 'No Profile User' }}</ion-label>
         </ion-chip>
       </div>
       <ion-buttons slot="end" ion-hide-md class="horiz-menu-buttons">

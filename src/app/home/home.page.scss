@@ -45,6 +45,22 @@
   }
 }
 
+.deleteUserBtn {
+  margin-left: 20px;
+  // background: #f04141;
+  &:hover {
+    background-color: var(--ion-color-primary-tint);
+  }
+}
+
+ion-card-content {
+  background-color: lightsteelblue;
+  ion-card-title {
+    font-weight: bold;
+    padding-bottom: 10px;
+  }
+}
+
 @keyframes rotate360 {
   from {
     transform: rotateZ(0);

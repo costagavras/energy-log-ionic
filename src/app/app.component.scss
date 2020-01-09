@@ -5,6 +5,12 @@ ion-chip {
   background: none;
 }
 
+.horiz-menu-buttons {
+  ion-button:hover {
+    background-color: var(--ion-color-primary-tint);
+  }
+}
+
 @media (max-width: 640px) {
   .horiz-menu-buttons {
     display: none;
