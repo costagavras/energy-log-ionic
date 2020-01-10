@@ -7,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TrainingNewPage implements OnInit {
 
+  // maxDate: Date;
+  today = new Date();
+
   constructor() { }
 
   ngOnInit() {
