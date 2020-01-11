@@ -25,17 +25,17 @@ export class UserProfilePage implements OnInit, OnDestroy {
 
   ionViewWillEnter() {
 
-    this.profileSubs.push(this.authService.user // getter, not event emitter
-      .subscribe(user => {
-        this.loggedUser = user;
-        this.profileService.getUserData(this.loggedUser.id); // event emitter for sub;
-      })
-    );
-
     this.profileSubs.push(this.profileService.userProfileData
       .subscribe(
         userProfileData => {
           this.loggedUserProfile = userProfileData;
+      })
+    );
+
+    this.profileSubs.push(this.authService.user // getter, not event emitter
+      .subscribe(user => {
+        this.loggedUser = user;
+        this.profileService.getUserData(this.loggedUser.id); // event emitter for sub;
       })
     );
 
@@ -54,10 +54,6 @@ export class UserProfilePage implements OnInit, OnDestroy {
       this.profileSubs.forEach(sub => sub.unsubscribe());
     }
   }
-
-  // ionViewWillLeave() {
-  //   this.profileService.cancelSubscriptions();
-  // }
 
   ngOnDestroy() {
     if (this.profileSubs) {

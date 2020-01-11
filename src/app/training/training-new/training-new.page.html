@@ -5,23 +5,42 @@
 </ion-header>
 
 <ion-content>
-  <ion-card>
-    <ion-card-header>
-      <ion-card-subtitle class="ion-text-center">Date of exercise</ion-card-subtitle>
-      <ion-item class="ion-text-center">
-        <!-- <ion-label position="floating">Select date</ion-label> -->
-        <ion-datetime 
-          displayFormat="DDD, DD MMM, YYYY" 
-          placeholder="Select Date"
-          value="1995-04-15"
-          ></ion-datetime>
-      </ion-item>
-      <ion-card-title class="ion-text-center">Completed Exercise</ion-card-title>
-    </ion-card-header>
-  
-    <ion-card-content>
-      
-    </ion-card-content>
-  </ion-card>
-  
+  <form #f="ngForm">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-subtitle class="ion-text-center">Date of exercise</ion-card-subtitle>
+        <ion-item class="ion-text-center">
+          <!-- <ion-label position="floating">Select date</ion-label> -->
+          <ion-datetime 
+            displayFormat="DDDD, DD MMM, YYYY" 
+            picker-format="DDD MMM YY"
+            placeholder="Select Date"
+            [ngModel]="today"
+            [max]="today"
+            name="date-exercise"
+            required
+            (dateChange)="trainingService.filterDate($event)"
+            ></ion-datetime>
+        </ion-item>
+        <ion-card-title class="ion-text-center">Completed Exercise</ion-card-title>
+      </ion-card-header>
+    
+      <ion-card-content>
+        <ion-segment (ionChange)="segmentChanged($event)">
+          <ion-segment-button value="timeEx" checked>
+            <ion-label>Time-based</ion-label>
+            <ion-icon name="time"></ion-icon>
+          </ion-segment-button>
+          <ion-segment-button value="qtyEx">
+            <ion-label>Quantity-based</ion-label>
+            <ion-icon name="calculator"></ion-icon>
+          </ion-segment-button>
+          <ion-segment-button value="measuredEx">
+            <ion-label>Measured-output</ion-label>
+            <ion-icon name="speedometer"></ion-icon>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-card-content>
+    </ion-card>
+  </form>
 </ion-content>

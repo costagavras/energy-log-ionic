@@ -81,3 +81,17 @@ ion-card-content {
     transform: translateY(-0.2rem);
   }
 }
+
+@media (max-width: 576px) {
+  .app_built {
+    padding-top: 10px;
+    line-height: 1em;
+  }
+
+  ion-card-content {
+    padding: 8px 4px;
+    ion-button {
+      width: 46%;
+    }
+  }
+}

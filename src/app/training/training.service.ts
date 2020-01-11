@@ -159,9 +159,10 @@ export class TrainingService {
   //   }));
   // }
 
-  // filterDate(event: MatDatepickerInputEvent<Date>) {
-  //   this.dateFilter.next(event.value);
-  // }
+  filterDate(event) {
+    console.log(event);
+    // this.dateFilter.next(event.);
+  }
 
   // private addDataToDatabase(exercise: Exercise, userStamp: UserStamp) {
   //   const userFirebaseId = this.profileService.getFirebaseUser().uid;
