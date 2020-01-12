@@ -13,9 +13,19 @@ ion-datetime {
   margin: 0 auto;
 }
 
+ion-select {
+  background: rgba(0,0,0,.04);
+}
+
+ion-input, .ion-native {
+  background: rgba(0,0,0,.04);
+}
+
+
+
 @media (max-width: 576px) {
   ion-item {
-    width: 60%;
+    width: 80%;
     margin: 0 auto;
   }
 }

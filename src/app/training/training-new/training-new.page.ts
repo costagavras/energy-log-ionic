@@ -21,6 +21,8 @@ export class TrainingNewPage implements OnInit, OnDestroy {
   private loggedUser: User;
   loggedUserProfile: UserProfile;
   userWeight: number;
+  exerciseType = 'timeEx';
+  minValue = 0;
 
   constructor(private profileService: ProfileService,
               public trainingService: TrainingService,
@@ -71,7 +73,7 @@ export class TrainingNewPage implements OnInit, OnDestroy {
   }
 
   segmentChanged(event: any) {
-    console.log('Segment changed', event);
+    this.exerciseType = event.target.value;
   }
 
   formatLabel(value: number) {

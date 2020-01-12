@@ -26,7 +26,7 @@
       </ion-card-header>
     
       <ion-card-content>
-        <ion-segment (ionChange)="segmentChanged($event)">
+        <ion-segment (ionChange)="segmentChanged($event)" scrollable>
           <ion-segment-button value="timeEx" checked>
             <ion-label>Time-based</ion-label>
             <ion-icon name="time"></ion-icon>
@@ -42,5 +42,81 @@
         </ion-segment>
       </ion-card-content>
     </ion-card>
+    <ion-card *ngIf="exerciseType === 'timeEx'">
+      <ion-card-header>
+        <ion-card-title class="ion-text-center">Input exercise and time in minutes</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-item>
+                <ion-select ngModel name="exercisesTime" [required]="exerciseTimeInput.touched" #exerciseTimeInput="ngModel" placeholder="Choose exercise">
+                  <ion-select-option *ngFor="let exercise of exercisesTime" 
+                    [value]="exercise.id"
+                    >{{ exercise.name }}
+                  </ion-select-option>
+                </ion-select>
+              </ion-item>
+              <ion-row *ngIf="exerciseTimeInput.hasError('required') && exerciseTimeInput.touched">
+                <ion-col>
+                  <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Field must not be empty.</ion-label>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-item>
+                <ion-label position="floating">Time, min</ion-label>
+                <ion-input ngModel type="number" name="time" [required]="timeInput.touched" [min]="minValue" #timeInput="ngModel"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="timeInput.hasError('required') && timeInput.touched">
+            <ion-col>
+              <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Field must not be empty.</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-item-divider></ion-item-divider>
+          <ion-row>
+            <ion-col>
+              <ion-button type="Submit" 
+                (click)="trainingService.saveExercise(f.value.date, f.value.exerciseTime, f.value.time, userWeight, 'exTime', 0)" 
+                [disabled]="exerciseTimeInput.invalid || exerciseTimeInput.untouched || timeInput.untouched || timeInput.invalid">Save!
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+    
+    <ion-card *ngIf="exerciseType === 'qtyEx'">
+      <ion-item>
+        <ion-icon name="pin" slot="start"></ion-icon>
+        <ion-label>ion-item in a card, icon left, button right</ion-label>
+        <ion-button fill="outline" slot="end">View</ion-button>
+      </ion-item>
+      <ion-card-content>
+        This is content, without any paragraph or header tags,
+        within an ion-card-content element.
+      </ion-card-content>
+    </ion-card>
+    <ion-card *ngIf="exerciseType === 'measuredEx'">
+      <ion-card-header>
+        <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
+        <ion-card-title>Card Title</ion-card-title>
+      </ion-card-header>
+    
+      <ion-card-content>
+        Keep close to Nature's heart... and break clear away, once in awhile,
+        and climb a mountain or spend a week in the woods. Wash your spirit clean.
+      </ion-card-content>
+    </ion-card>
+    
   </form>
 </ion-content>
+
+
+
+
