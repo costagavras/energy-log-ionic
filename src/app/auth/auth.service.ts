@@ -170,6 +170,11 @@ export class AuthService implements OnDestroy {
     .pipe(tap(this.setUserData.bind(this)));
   }
 
+  deleteUser(token: string) {
+    return this.http.post<AuthResponseData>(`https://identitytoolkit.googleapis.com/v1/accounts:delete?key=${environment.firebase.apiKey}`,
+    {idToken: token });
+  }
+
 
 private setUserData(userData: AuthResponseData) {
   const expirationTime = new Date(new Date().getTime() + (+userData.expiresIn * 1000));

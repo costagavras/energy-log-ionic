@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { ProfileService } from '../profile/profile.service';
 import { AuthService } from '../auth/auth.service';
 import { User, UserProfile } from '../auth/user.model';
+import { UIService } from '../shared/ui.service';
 
 @Component({
   selector: 'app-home',
@@ -17,14 +18,17 @@ export class HomePage implements OnInit, OnDestroy {
   homeSubscriptions: Subscription[] = [];
 
   constructor(private authService: AuthService,
-              public profileService: ProfileService) { }
+              public profileService: ProfileService,
+              private uiService: UIService) { }
 
   ngOnInit() {
 
     this.homeSubscriptions.push(this.authService.user // getter, not event emitter
       .subscribe(user => {
         this.loggedUser = user;
-        this.profileService.getUserData(this.loggedUser.id); // event emitter for sub;
+        if (this.loggedUser !== null) {
+          this.profileService.getUserData(this.loggedUser.id); // event emitter for sub;
+        }
       })
     );
 
@@ -34,6 +38,27 @@ export class HomePage implements OnInit, OnDestroy {
       })
     );
 
+  }
+
+  deleteUserAccount() {
+    if (this.loggedUser) {
+      // this.ngOnDestroy();
+      this.authService.deleteUser(this.loggedUser.token)
+      .toPromise().then(() => {
+          // this._user.next(null);
+          this.authService.logout();
+          this.uiService.showToast('This account is now gone!', 3000);
+        }).catch(errorResponse => {
+          const errorMsg = errorResponse.error.error.message;
+          let message = 'Could not delete the user, please try again.';
+          if (errorMsg === 'CREDENTIAL_TOO_OLD_LOGIN_AGAIN' || errorMsg === 'INVALID_ID_TOKEN') {
+            message = 'Please, logout and sign in again to delete the user account';
+          } else if (errorMsg === 'USER_NOT_FOUND') {
+            message = 'The user has been successfully deleted!';
+          }
+          this.uiService.showToast(message, 3000);
+        });
+    }
   }
 
   ngOnDestroy() {

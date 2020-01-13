@@ -41,7 +41,9 @@ export class AppComponent implements OnInit, OnDestroy {
               this.appSubscriptions.push(this.authService.user // getter, not event emitter
                 .subscribe(user => {
                   this.loggedUser = user;
-                  this.profileService.getUserData(this.loggedUser.id); // event emitter for sub;
+                  if (this.loggedUser !== null) {
+                    this.profileService.getUserData(this.loggedUser.id); // event emitter for sub;
+                  }
                 })
             );
           }
