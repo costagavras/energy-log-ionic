@@ -41,7 +41,9 @@ export class TrainingNewPage implements OnInit, OnDestroy {
     this.newTrainingSubs.push(this.authService.user // getter, not event emitter
       .subscribe(user => {
         this.loggedUser = user;
-        this.profileService.getUserData(this.loggedUser.id); // event emitter for sub;
+        if (this.loggedUser !== null) {
+          this.profileService.getUserData(this.loggedUser.id); // event emitter for sub;
+        }
       })
     );
 
@@ -52,23 +54,23 @@ export class TrainingNewPage implements OnInit, OnDestroy {
         })
     );
 
-    // this.newTrainingSubs.push(this.trainingService.exercisesTimeChanged
-    //   .subscribe(
-    //     exercises => (this.exercisesTime = exercises)
-    //   ));
-    // this.trainingService.fetchAvailableExercisesTime();
+    this.newTrainingSubs.push(this.trainingService.exercisesTimeChanged
+      .subscribe(
+        exercises => (this.exercisesTime = exercises)
+      ));
+    this.trainingService.fetchAvailableExercisesTime();
 
-    // this.newTrainingSubs.push(this.trainingService.exercisesQtyChanged
-    // .subscribe(
-    //   exercises => (this.exercisesQty = exercises)
-    // ));
-    // this.trainingService.fetchAvailableExercisesQty();
+    this.newTrainingSubs.push(this.trainingService.exercisesQtyChanged
+    .subscribe(
+      exercises => (this.exercisesQty = exercises)
+    ));
+    this.trainingService.fetchAvailableExercisesQty();
 
-    // this.newTrainingSubs.push(this.trainingService.exercisesCalChanged
-    // .subscribe(
-    //   exercises => (this.exercisesCal = exercises)
-    // ));
-    // this.trainingService.fetchAvailableExercisesCal();
+    this.newTrainingSubs.push(this.trainingService.exercisesCalChanged
+    .subscribe(
+      exercises => (this.exercisesCal = exercises)
+    ));
+    this.trainingService.fetchAvailableExercisesCal();
 
   }
 
