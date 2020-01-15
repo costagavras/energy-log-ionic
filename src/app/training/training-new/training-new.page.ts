@@ -23,6 +23,11 @@ export class TrainingNewPage implements OnInit, OnDestroy {
   userWeight: number;
   exerciseType = 'timeEx';
   minValue = 0;
+  maxSlider = 25;
+  minSlider = 0;
+  stepSlider = 1;
+  tickIntervalSlider = 1;
+  returnWeight = '0';
 
   constructor(private profileService: ProfileService,
               public trainingService: TrainingService,
@@ -78,9 +83,9 @@ export class TrainingNewPage implements OnInit, OnDestroy {
     this.exerciseType = event.target.value;
   }
 
-  formatLabel(value: number) {
-    const returnString = value + 'kg ' + Math.round(value / 0.454) + 'lb';
-    return returnString;
+  formatLabel(event: any) {
+    this.returnWeight = event.target.value + 'kg / ' + Math.round(event.target.value / 0.454) + 'lb';
+    console.log(this.returnWeight);
   }
 
   ngOnDestroy() {
