@@ -4,7 +4,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Subject, Subscription } from 'rxjs';
 
 import { Exercise } from './exercise.model';
-import { User } from '../auth/user.model';
+import { UserProfile, UserStamp } from '../auth/user.model';
 import { ProfileService } from '../profile/profile.service';
 import { UIService } from '../shared/ui.service';
 import { map } from 'rxjs/operators';
@@ -26,8 +26,6 @@ export class TrainingService {
   private chosenExercise: Exercise;
 
   private trainingServiceSubs: Subscription[] = [];
-
-  userData: User;
 
   constructor(private db: AngularFirestore,
               private uiService: UIService,
@@ -107,45 +105,44 @@ export class TrainingService {
       }));
   }
 
-  // async saveExercise(exerciseDate: Date, selectedId: string, volume: number, userWeight: number, param: string, addWeight: number) {
-  //   let durationValue = 0;
-  //   let caloriesOutValue = 0;
-  //   let quantityValue = 0;
-  //   await this.getUserInfo();
-  //   if (param === 'exTime') {
-  //     this.chosenExercise = this.availableExercisesTime.find(ex => ex.id === selectedId);
-  //     durationValue = volume;
-  //     caloriesOutValue = Math.round(volume * this.chosenExercise.caloriesOut * userWeight);
-  //     quantityValue = 0;
-  //   } else if (param === 'exQty') {
-  //     this.chosenExercise = this.availableExercisesQty.find(ex => ex.id === selectedId);
-  //     durationValue = 0;
-  //     caloriesOutValue = Math.round(volume * this.chosenExercise.caloriesOut * (userWeight + addWeight));
-  //     quantityValue = volume;
-  //   } else if (param === 'exCal') {
-  //     this.chosenExercise = this.availableExercisesCal.find(ex => ex.id === selectedId);
-  //     durationValue = 0;
-  //     caloriesOutValue = volume;
-  //     quantityValue = 0;
-  //   }
-  //   this.addDataToDatabase({
-  //     ...this.chosenExercise,
-  //     duration: durationValue,
-  //     quantity: quantityValue,
-  //     caloriesOut: caloriesOutValue,
-  //     dateStr: new Date(exerciseDate.setHours(12, 0, 0, 0)).toISOString().substring(0, 10),
-  //     date: new Date(exerciseDate.setHours(12, 0, 0, 0))
-  //   }, {
-  //     date: new Date(exerciseDate.setHours(12, 0, 0, 0)),
-  //     dateStr: new Date(exerciseDate.setHours(12, 0, 0, 0)).toISOString().substring(0, 10),
-  //     age: this.userData.age,
-  //     weight: this.userData.weight,
-  //     bmi: this.userData.bmi,
-  //     bmr: this.userData.bmr,
-  //     activityLevel: this.userData.activityLevel
-  //   });
-
-  // }
+  saveExercise(exerciseDate: Date, selectedId: string, volume: number, userData: UserProfile, param: string, addWeight: number) {
+    let durationValue = 0;
+    let caloriesOutValue = 0;
+    let quantityValue = 0;
+    // await this.getUserInfo();
+    if (param === 'exTime') {
+      this.chosenExercise = this.availableExercisesTime.find(ex => ex.id === selectedId);
+      durationValue = volume;
+      caloriesOutValue = Math.round(volume * this.chosenExercise.caloriesOut * userData.weight);
+      quantityValue = 0;
+    } else if (param === 'exQty') {
+      this.chosenExercise = this.availableExercisesQty.find(ex => ex.id === selectedId);
+      durationValue = 0;
+      caloriesOutValue = Math.round(volume * this.chosenExercise.caloriesOut * (userData.weight + addWeight));
+      quantityValue = volume;
+    } else if (param === 'exCal') {
+      this.chosenExercise = this.availableExercisesCal.find(ex => ex.id === selectedId);
+      durationValue = 0;
+      caloriesOutValue = volume;
+      quantityValue = 0;
+      this.addDataToDatabase({
+        ...this.chosenExercise,
+        duration: durationValue,
+        quantity: quantityValue,
+        caloriesOut: caloriesOutValue,
+        dateStr: new Date(exerciseDate.setHours(12, 0, 0, 0)).toISOString().substring(0, 10),
+        date: new Date(exerciseDate.setHours(12, 0, 0, 0))
+      }, {
+        date: new Date(exerciseDate.setHours(12, 0, 0, 0)),
+        dateStr: new Date(exerciseDate.setHours(12, 0, 0, 0)).toISOString().substring(0, 10),
+        age: userData.age,
+        weight: userData.weight,
+        bmi: userData.bmi,
+        bmr: userData.bmr,
+        activityLevel: userData.activityLevel
+      }, userData.userId);
+    }
+  }
 
   // fetchCompletedExercises() {
   //   this.uiService.loadingStateChanged.next(true);
@@ -162,22 +159,21 @@ export class TrainingService {
   //   }));
   // }
 
-  filterDate(event) {
+    filterDate(event) {
     console.log(event);
     // this.dateFilter.next(event.);
   }
 
-  // private addDataToDatabase(exercise: Exercise, userStamp: UserStamp) {
-  //   const userFirebaseId = this.profileService.getFirebaseUser().uid;
-  //   this.db.collection('users').doc(userFirebaseId).collection('finishedExercises').add(exercise)
-  //   .then(docRef => {
-  //     this.db.collection('users').doc(userFirebaseId).collection('finishedExercises').doc(docRef.id).update({
-  //       id: docRef.id
-  //     });
-  //     // this.uiService.showSnackbar(exercise.name + 'was successfully added', null, 3000);
-  //   });
-  //   this.db.collection('users').doc(userFirebaseId).collection('userStamp').doc(userStamp.dateStr).set(userStamp);
-  // }
+  private addDataToDatabase(exercise: Exercise, userStamp: UserStamp, userFirebaseId: string) {
+    this.db.collection('users').doc(userFirebaseId).collection('finishedExercises').add(exercise)
+    .then(docRef => {
+      this.db.collection('users').doc(userFirebaseId).collection('finishedExercises').doc(docRef.id).update({
+        id: docRef.id
+      });
+      // this.uiService.showSnackbar(exercise.name + 'was successfully added', null, 3000);
+    });
+    this.db.collection('users').doc(userFirebaseId).collection('userStamp').doc(userStamp.dateStr).set(userStamp);
+  }
 
   // // called from the template
   // private deleteDataFromDatabase(exercise: Exercise) {

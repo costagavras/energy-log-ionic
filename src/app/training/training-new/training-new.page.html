@@ -4,8 +4,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <form #f_Time="ngForm">
+<ion-content *ngIf="loggedUserProfile">
+  <form #f="ngForm">
     <ion-card>
       <ion-card-header>
         <ion-card-subtitle class="ion-text-center">Date of exercise</ion-card-subtitle>
@@ -93,7 +93,7 @@
             <ion-item-divider>
               <ion-col offset-xs="8" offset-md="9" offset-lg="10">
                 <ion-button type="Submit" 
-                (click)="trainingService.saveExercise(f.value.date, f.value.exerciseTime, f.value.time, userWeight, 'exTime', 0)" 
+                (click)="trainingService.saveExercise(f.value.date, f.value.exerciseTime, f.value.time, loggedUserProfile, 'exTime', 0)" 
                 [disabled]="exerciseTimeInput.invalid || exerciseTimeInput.untouched || timeInput.untouched || timeInput.invalid">Save!
                 </ion-button>
               </ion-col>
@@ -152,19 +152,17 @@
             </ion-col>
           </ion-row>
 
-          <ion-row>
-            <ion-col class="ion-align-self-center" size-xs="6" offset-xs="3" size-md="4" offset-md="4">
-              <ion-label >Weighted (0 - 25 kgs/55 lbs)?</ion-label>
-              <ion-chip outline color="primary">
-                <ion-label>{{ returnWeight }}</ion-label>
-              </ion-chip>
+          <ion-row style="padding-top: 8px;"> 
+            <ion-col style="text-align: center;" size-xs="10" offset-xs="1" size-md="4" offset-md="4">
+              <ion-label class="weightedLabel">Weight added:&nbsp;<ion-chip class="weightedChip" outline color="primary">{{ returnWeight }}</ion-chip></ion-label>
               <ion-item>
                 <ion-range ngModel 
-                  name="slider" 
+                  name="slider"
+                  #sliderInput 
                   [min]="minSlider"
                   [max]="maxSlider"
                   [step]="stepSlider"
-                  (ionChange)="formatLabel($event)"
+                  (ionChange)="formatLabel(sliderInput.value)"
                   pin 
                   snaps 
                   color="danger">
@@ -179,7 +177,7 @@
             <ion-item-divider>
               <ion-col offset-xs="8" offset-md="9" offset-lg="10">
                 <ion-button type="Submit" 
-                (click)="trainingService.saveExercise(f.value.date, f.value.exerciseTime, f.value.time, userWeight, 'exTime', 0)" 
+                (click)="trainingService.saveExercise(f.value.date, f.value.exerciseTime, f.value.time, loggedUserProfile, 'exQty', f.value.slider)" 
                 [disabled]="exerciseQtyInput.invalid || exerciseQtyInput.untouched || qtyInput.untouched || qtyInput.invalid">Save!
                 </ion-button>
               </ion-col>
@@ -196,13 +194,64 @@
     <!-- 3rd card -->
     <ion-card *ngIf="exerciseType === 'measuredEx'">
       <ion-card-header>
-        <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-        <ion-card-title>Card Title</ion-card-title>
+        <ion-card-title class="ion-text-center">Input exercise and calories</ion-card-title>
       </ion-card-header>
     
       <ion-card-content>
-        Keep close to Nature's heart... and break clear away, once in awhile,
-        and climb a mountain or spend a week in the woods. Wash your spirit clean.
+
+        <ion-grid>
+
+          <ion-row>
+            <ion-col size-md="10" offset-md="1" size-xl="6" offset-xl="3">
+              <ion-item>
+                <ion-select ngModel name="exercisesCal" [required]="exerciseCalInput.touched" #exerciseCalInput="ngModel" placeholder="Choose exercise">
+                  <ion-select-option *ngFor="let exercise of exercisesCal" 
+                    [value]="exercise.id"
+                    >{{ exercise.name }}
+                  </ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="exerciseCalInput.hasError('required') && exerciseCalInput.touched">
+            <ion-col offset-md="1" offset-xl="3">
+              <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Field must not be empty.</ion-label>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size-xs="6" offset-xs="3" size-md="4" offset-md="4" size-xl="2" offset-xl="5">
+              <ion-item>
+                <ion-input ngModel 
+                  type="number"   
+                  name="qty" 
+                  [required]="calInput.touched" 
+                  [min]="minValue" 
+                  #calInput="ngModel"
+                  placeholder="Calories">
+                </ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="calInput.hasError('required') && calInput.touched">
+            <ion-col offset-xs="3" offset-md="4" offset-xl="5">
+              <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Field must not be empty.</ion-label>
+            </ion-col>
+          </ion-row>
+              
+          <ion-row>
+            <ion-item-divider>
+              <ion-col offset-xs="8" offset-md="9" offset-lg="10">
+                <ion-button type="Submit" 
+                (click)="trainingService.saveExercise(f.value.date, f.value.exerciseTime, f.value.time, loggedUserProfile, 'exCal', 0)" 
+                [disabled]="exerciseCalInput.invalid || exerciseCalInput.untouched || calInput.untouched || calInput.invalid">Save!
+                </ion-button>
+              </ion-col>
+            </ion-item-divider>
+          </ion-row>
+              
+        </ion-grid>  
+
       </ion-card-content>
     </ion-card>
     

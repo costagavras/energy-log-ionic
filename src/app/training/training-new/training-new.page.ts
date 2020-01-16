@@ -27,7 +27,7 @@ export class TrainingNewPage implements OnInit, OnDestroy {
   minSlider = 0;
   stepSlider = 1;
   tickIntervalSlider = 1;
-  returnWeight = '0';
+  returnWeight = '0kg / 0lb';
 
   constructor(private profileService: ProfileService,
               public trainingService: TrainingService,
@@ -50,13 +50,6 @@ export class TrainingNewPage implements OnInit, OnDestroy {
           this.profileService.getUserData(this.loggedUser.id); // event emitter for sub;
         }
       })
-    );
-
-    this.newTrainingSubs.push(this.profileService.userProfileData
-      .subscribe(
-        userProfileData => {
-          this.userWeight = userProfileData.weight;
-        })
     );
 
     this.newTrainingSubs.push(this.trainingService.exercisesTimeChanged
@@ -83,9 +76,11 @@ export class TrainingNewPage implements OnInit, OnDestroy {
     this.exerciseType = event.target.value;
   }
 
-  formatLabel(event: any) {
-    this.returnWeight = event.target.value + 'kg / ' + Math.round(event.target.value / 0.454) + 'lb';
-    console.log(this.returnWeight);
+  formatLabel(value: number) {
+    if (isNaN(value)) {
+      value = 0;
+    }
+    this.returnWeight = value + 'kg / ' + Math.round(value / 0.454) + 'lb';
   }
 
   ngOnDestroy() {
