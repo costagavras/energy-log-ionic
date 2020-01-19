@@ -31,17 +31,6 @@ export class TrainingService {
               private uiService: UIService,
               private profileService: ProfileService) {}
 
-  // getUserInfo() {
-  //   this.profileService.getUserData();
-  //   return new Promise (resolve => {
-  //     this.trainingServiceSubs.push(this.profileService.userProfileData
-  //       .subscribe((userData: User) => {
-  //         this.userData = userData;
-  //         resolve(this.userData);
-  //     }));
-  //   });
-  // }
-
   fetchAvailableExercisesTime() {
     this.trainingServiceSubs.push(
       this.db.collection<Exercise>('availableExercisesTime', ref => ref.orderBy('name', 'asc')).snapshotChanges()
@@ -70,7 +59,6 @@ export class TrainingService {
     this.trainingServiceSubs.push(
       this.db.collection<Exercise>('availableExercisesQty', ref => ref.orderBy('name', 'asc')).snapshotChanges()
       .pipe(map(docArray => {
-        // throw(new Error());
         return docArray.map(doc => {
           return {
             id: doc.payload.doc.id,
@@ -105,11 +93,10 @@ export class TrainingService {
       }));
   }
 
-  saveExercise(exerciseDate: Date, selectedId: string, volume: number, userData: UserProfile, param: string, addWeight: number) {
+  saveExercise(exerciseDate: string, selectedId: string, volume: number, userData: UserProfile, param: string, addWeight: number) {
     let durationValue = 0;
     let caloriesOutValue = 0;
     let quantityValue = 0;
-    // await this.getUserInfo();
     if (param === 'exTime') {
       this.chosenExercise = this.availableExercisesTime.find(ex => ex.id === selectedId);
       durationValue = volume;
@@ -125,43 +112,41 @@ export class TrainingService {
       durationValue = 0;
       caloriesOutValue = volume;
       quantityValue = 0;
-      this.addDataToDatabase({
-        ...this.chosenExercise,
-        duration: durationValue,
-        quantity: quantityValue,
-        caloriesOut: caloriesOutValue,
-        dateStr: new Date(exerciseDate.setHours(12, 0, 0, 0)).toISOString().substring(0, 10),
-        date: new Date(exerciseDate.setHours(12, 0, 0, 0))
-      }, {
-        date: new Date(exerciseDate.setHours(12, 0, 0, 0)),
-        dateStr: new Date(exerciseDate.setHours(12, 0, 0, 0)).toISOString().substring(0, 10),
-        age: userData.age,
-        weight: userData.weight,
-        bmi: userData.bmi,
-        bmr: userData.bmr,
-        activityLevel: userData.activityLevel
-      }, userData.userId);
     }
+    this.addDataToDatabase({
+      ...this.chosenExercise,
+      duration: durationValue,
+      quantity: quantityValue,
+      caloriesOut: caloriesOutValue,
+      dateStr: exerciseDate.substring(0, 10),
+      date: new Date(new Date(exerciseDate).setHours(12, 0, 0, 0))
+    }, {
+      date: new Date(new Date(exerciseDate).setHours(12, 0, 0, 0)),
+      dateStr: exerciseDate.substring(0, 10),
+      age: userData.age,
+      weight: userData.weight,
+      bmi: userData.bmi,
+      bmr: userData.bmr,
+      activityLevel: userData.activityLevel
+    }, userData.userId);
   }
 
-  // fetchCompletedExercises() {
-  //   this.uiService.loadingStateChanged.next(true);
-  //   const userFirebaseId = this.profileService.getFirebaseUser().uid;
+  fetchCompletedExercises(userFirebaseId) {
 
-  //   this.trainingServiceSubs.push(
-  //     this.db.collection<Exercise>('users/' + userFirebaseId + '/finishedExercises', ref => ref.orderBy('date', 'desc')).valueChanges()
-  //   .subscribe((exercises: Exercise[]) => {
-  //     this.uiService.loadingStateChanged.next(false);
-  //     this.finishedExercisesChanged.next(exercises);
-  //   }, error => {
-  //     this.uiService.loadingStateChanged.next(false);
-  //     this.uiService.showSnackbar('Fetching exercises failed, please try again later', null, 3000);
-  //   }));
-  // }
+    this.trainingServiceSubs.push(
+      this.db.collection<Exercise>('users/' + userFirebaseId + '/finishedExercises', ref => ref.orderBy('date', 'desc')).valueChanges()
+    .subscribe((exercises: Exercise[]) => {
+      // this.uiService.loadingStateChanged.next(false);
+      this.finishedExercisesChanged.next(exercises);
+    }, error => {
+      // this.uiService.loadingStateChanged.next(false);
+      this.uiService.showToast('Fetching exercises failed, please try again later', 3000);
+    }));
+  }
 
     filterDate(event) {
     console.log(event);
-    // this.dateFilter.next(event.);
+    this.dateFilter.next(event);
   }
 
   private addDataToDatabase(exercise: Exercise, userStamp: UserStamp, userFirebaseId: string) {
@@ -170,7 +155,7 @@ export class TrainingService {
       this.db.collection('users').doc(userFirebaseId).collection('finishedExercises').doc(docRef.id).update({
         id: docRef.id
       });
-      // this.uiService.showSnackbar(exercise.name + 'was successfully added', null, 3000);
+      this.uiService.showToast('Exercise added', 1000);
     });
     this.db.collection('users').doc(userFirebaseId).collection('userStamp').doc(userStamp.dateStr).set(userStamp);
   }

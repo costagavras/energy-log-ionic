@@ -16,7 +16,7 @@
             placeholder="Select Date"
             [ngModel]="today"
             [max]="today"
-            name="date-exercise"
+            name="dateExercise"
             required
             (ionChange)="trainingService.filterDate($event)"
             ></ion-datetime>
@@ -54,9 +54,8 @@
           <ion-row>
             <ion-col size-md="10" offset-md="1" size-xl="6" offset-xl="3">
               <ion-item>
-                <ion-select ngModel name="exercisesTime" [required]="exerciseTimeInput.touched" #exerciseTimeInput="ngModel" placeholder="Choose exercise">
-                  <ion-select-option *ngFor="let exercise of exercisesTime" 
-                    [value]="exercise.id"
+                <ion-select ngModel name="exerciseTime" [required]="exerciseTimeInput.touched" #exerciseTimeInput="ngModel" placeholder="Choose exercise">
+                  <ion-select-option *ngFor="let exercise of exercisesTime" [value]="exercise.id"
                     >{{ exercise.name }}
                   </ion-select-option>
                 </ion-select>
@@ -93,7 +92,7 @@
             <ion-item-divider>
               <ion-col offset-xs="8" offset-md="9" offset-lg="10">
                 <ion-button type="Submit" 
-                (click)="trainingService.saveExercise(f.value.date, f.value.exerciseTime, f.value.time, loggedUserProfile, 'exTime', 0)" 
+                (click)="trainingService.saveExercise(f.value.dateExercise, f.value.exerciseTime, f.value.time, loggedUserProfile, 'exTime', 0)" 
                 [disabled]="exerciseTimeInput.invalid || exerciseTimeInput.untouched || timeInput.untouched || timeInput.invalid">Save!
                 </ion-button>
               </ion-col>
@@ -117,9 +116,8 @@
           <ion-row>
             <ion-col size-md="10" offset-md="1" size-xl="6" offset-xl="3">
               <ion-item>
-                <ion-select ngModel name="exercisesQty" [required]="exerciseQtyInput.touched" #exerciseQtyInput="ngModel" placeholder="Choose exercise">
-                  <ion-select-option *ngFor="let exercise of exercisesQty" 
-                    [value]="exercise.id"
+                <ion-select ngModel name="exerciseQty" [required]="exerciseQtyInput.touched" #exerciseQtyInput="ngModel" placeholder="Choose exercise">
+                  <ion-select-option *ngFor="let exercise of exercisesQty" [value]="exercise.id"
                     >{{ exercise.name }}
                   </ion-select-option>
                 </ion-select>
@@ -177,7 +175,7 @@
             <ion-item-divider>
               <ion-col offset-xs="8" offset-md="9" offset-lg="10">
                 <ion-button type="Submit" 
-                (click)="trainingService.saveExercise(f.value.date, f.value.exerciseTime, f.value.time, loggedUserProfile, 'exQty', f.value.slider)" 
+                (click)="trainingService.saveExercise(f.value.dateExercise, f.value.exerciseQty, f.value.qty, loggedUserProfile, 'exQty', f.value.slider)" 
                 [disabled]="exerciseQtyInput.invalid || exerciseQtyInput.untouched || qtyInput.untouched || qtyInput.invalid">Save!
                 </ion-button>
               </ion-col>
@@ -204,9 +202,8 @@
           <ion-row>
             <ion-col size-md="10" offset-md="1" size-xl="6" offset-xl="3">
               <ion-item>
-                <ion-select ngModel name="exercisesCal" [required]="exerciseCalInput.touched" #exerciseCalInput="ngModel" placeholder="Choose exercise">
-                  <ion-select-option *ngFor="let exercise of exercisesCal" 
-                    [value]="exercise.id"
+                <ion-select ngModel name="exerciseCal" [required]="exerciseCalInput.touched" #exerciseCalInput="ngModel" placeholder="Choose exercise">
+                  <ion-select-option *ngFor="let exercise of exercisesCal" [value]="exercise.id"
                     >{{ exercise.name }}
                   </ion-select-option>
                 </ion-select>
@@ -224,7 +221,7 @@
               <ion-item>
                 <ion-input ngModel 
                   type="number"   
-                  name="qty" 
+                  name="cal" 
                   [required]="calInput.touched" 
                   [min]="minValue" 
                   #calInput="ngModel"
@@ -243,7 +240,7 @@
             <ion-item-divider>
               <ion-col offset-xs="8" offset-md="9" offset-lg="10">
                 <ion-button type="Submit" 
-                (click)="trainingService.saveExercise(f.value.date, f.value.exerciseTime, f.value.time, loggedUserProfile, 'exCal', 0)" 
+                (click)="trainingService.saveExercise(f.value.dateExercise, f.value.exerciseCal, f.value.cal, loggedUserProfile, 'exCal', 0)" 
                 [disabled]="exerciseCalInput.invalid || exerciseCalInput.untouched || calInput.untouched || calInput.invalid">Save!
                 </ion-button>
               </ion-col>

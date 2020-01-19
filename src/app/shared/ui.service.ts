@@ -6,7 +6,7 @@ import { ToastController } from '@ionic/angular';
   providedIn: 'root'
 })
 export class UIService {
-  loadingStateChanged = new Subject<boolean>();
+  // loadingStateChanged = new Subject<boolean>();
 
   constructor(private toastController: ToastController) {}
 

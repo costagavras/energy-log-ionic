@@ -29,6 +29,14 @@ export class TrainingNewPage implements OnInit, OnDestroy {
   tickIntervalSlider = 1;
   returnWeight = '0kg / 0lb';
 
+  displayedColumns = ['date', 'name', 'calories', 'duration', 'quantity', 'actions'];
+  // initial date filter setting
+  filteredDay = new Date();
+  startFilteredDay = this.filteredDay.setHours(0, 0, 0, 0);
+  endFilteredDay = this.filteredDay.setHours(24, 0, 0, -1);
+  dataSource: any;
+  totalCalories: number;
+
   constructor(private profileService: ProfileService,
               public trainingService: TrainingService,
               private authService: AuthService) { }
@@ -40,6 +48,7 @@ export class TrainingNewPage implements OnInit, OnDestroy {
       .subscribe(
         userProfileData => {
           this.loggedUserProfile = userProfileData;
+          this.updateFilteredDate();
       })
     );
 
@@ -70,6 +79,28 @@ export class TrainingNewPage implements OnInit, OnDestroy {
     ));
     this.trainingService.fetchAvailableExercisesCal();
 
+    // subscription when filter date changes
+    this.newTrainingSubs.push(this.trainingService.dateFilter
+    .subscribe((date: Date) => {
+        this.filteredDay = date; // comes from datepicker change event formatted as 0:0:00
+        this.startFilteredDay = this.filteredDay.setHours(0, 0, 0, 0);
+        this.endFilteredDay = this.filteredDay.setHours(24, 0, 0, -1);
+        this.updateFilteredDate();
+      }));
+
+  }
+
+  updateFilteredDate() {
+    // this.newTrainingSubs.push(this.trainingService.finishedExercisesChanged
+    // .subscribe((exercises: Exercise[]) => {
+    //   // this.dataSource.data = exercises;
+    //   this.dataSource.data = exercises.filter(val => {
+    //     return val.date['seconds'] * 1000 >= this.startFilteredDay &&
+    //     val.date['seconds'] * 1000  <= this.endFilteredDay;
+    //   });
+    //   this.totalCalories = this.dataSource.data.map(ex => ex.caloriesOut).reduce((acc, value) => acc + value, 0);
+    // }));
+    this.trainingService.fetchCompletedExercises(this.loggedUserProfile.userId);
   }
 
   segmentChanged(event: any) {
