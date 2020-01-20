@@ -160,12 +160,11 @@ export class TrainingService {
     this.db.collection('users').doc(userFirebaseId).collection('userStamp').doc(userStamp.dateStr).set(userStamp);
   }
 
-  // // called from the template
-  // private deleteDataFromDatabase(exercise: Exercise) {
-  //   const userFirebaseId = this.profileService.getFirebaseUser().uid;
-  //   this.db.collection('users').doc(userFirebaseId).collection('finishedExercises').doc(exercise.id).delete();
-  //   this.uiService.showSnackbar(exercise.name + ' was successfully deleted', null, 3000);
-  // }
+  // called from the template
+  private deleteDataFromDatabase(exercise: Exercise, userFirebaseId) {
+    this.db.collection('users').doc(userFirebaseId).collection('finishedExercises').doc(exercise.id).delete();
+    this.uiService.showToast(exercise.name + ' was successfully deleted', 3000);
+  }
 
   cancelSubscriptions() {
     if (this.trainingServiceSubs) {

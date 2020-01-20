@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { TrainingNewPageRoutingModule } from './training-new-routing.module';
 
 import { TrainingNewPage } from './training-new.page';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    TrainingNewPageRoutingModule
+    TrainingNewPageRoutingModule,
+    NgxDatatableModule
   ],
   declarations: [TrainingNewPage]
 })

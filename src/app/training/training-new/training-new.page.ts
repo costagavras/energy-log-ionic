@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { Exercise } from '../exercise.model';
 import { Subscription } from 'rxjs';
 import { ProfileService } from '../../profile/profile.service';
@@ -28,14 +28,17 @@ export class TrainingNewPage implements OnInit, OnDestroy {
   stepSlider = 1;
   tickIntervalSlider = 1;
   returnWeight = '0kg / 0lb';
-
-  displayedColumns = ['date', 'name', 'calories', 'duration', 'quantity', 'actions'];
   // initial date filter setting
   filteredDay = new Date();
   startFilteredDay = this.filteredDay.setHours(0, 0, 0, 0);
   endFilteredDay = this.filteredDay.setHours(24, 0, 0, -1);
-  dataSource: any;
+  // table styling
+  tableData: Exercise[];
+  displayedColumns = ['date', 'name', 'calories', 'duration', 'quantity', 'actions'];
   totalCalories: number;
+  tableClass = 'dark';
+  tableStyle = 'dark';
+
 
   constructor(private profileService: ProfileService,
               public trainingService: TrainingService,
@@ -91,20 +94,30 @@ export class TrainingNewPage implements OnInit, OnDestroy {
   }
 
   updateFilteredDate() {
-    // this.newTrainingSubs.push(this.trainingService.finishedExercisesChanged
-    // .subscribe((exercises: Exercise[]) => {
-    //   // this.dataSource.data = exercises;
-    //   this.dataSource.data = exercises.filter(val => {
-    //     return val.date['seconds'] * 1000 >= this.startFilteredDay &&
-    //     val.date['seconds'] * 1000  <= this.endFilteredDay;
-    //   });
-    //   this.totalCalories = this.dataSource.data.map(ex => ex.caloriesOut).reduce((acc, value) => acc + value, 0);
-    // }));
+    this.newTrainingSubs.push(this.trainingService.finishedExercisesChanged
+    .subscribe((exercises: Exercise[]) => {
+      // this.dataSource.data = exercises;
+      this.tableData = exercises.filter(val => {
+        return val.date['seconds'] * 1000 >= this.startFilteredDay &&
+        val.date['seconds'] * 1000  <= this.endFilteredDay;
+      });
+      this.totalCalories = this.tableData.map(ex => ex.caloriesOut).reduce((acc, value) => acc + value, 0);
+    }));
     this.trainingService.fetchCompletedExercises(this.loggedUserProfile.userId);
   }
 
   segmentChanged(event: any) {
     this.exerciseType = event.target.value;
+  }
+
+  switchStyle() {
+    if (this.tableClass === 'dark') {
+      this.tableClass = 'bootstrap';
+      this.tableStyle = 'light';
+    } else {
+      this.tableClass = 'dark';
+      this.tableStyle = 'dark';
+    }
   }
 
   formatLabel(value: number) {

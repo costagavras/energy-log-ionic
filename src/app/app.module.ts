@@ -8,8 +8,6 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-// import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-// import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -25,8 +23,6 @@ import { AppRoutingModule } from './app-routing.module';
     AngularFirestoreModule, // imports firebase/firestore, only needed for database features
   ],
   providers: [
-    // StatusBar,
-    // SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
