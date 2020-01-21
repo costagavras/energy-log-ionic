@@ -255,11 +255,17 @@
   </form>
   
   <ion-item class="ion-padding">
-    <ion-buttons slot="start">
+    <ion-input slot="start" 
+      type="text" 
+      placeholder="Type to filter..."
+      (keyup)="doFilter($event.target.value)">
+    </ion-input>
+    <ion-buttons slot="end">
       <ion-button fill="solid" expand="block" (click)="switchStyle()">{{ tableStyle }}</ion-button>
     </ion-buttons>
   </ion-item>
   <ngx-datatable 
+    #myTable
     [rows]="tableData" 
     [ngClass]="tableClass" 
     [rowHeight]="'auto'" 
@@ -268,7 +274,6 @@
     [summaryRow]="true"
     [summaryPosition]="'bottom'"
     [summaryHeight]='50'
-    [limit]="10"
     >
     <ngx-datatable-column name="Date" prop="dateStr"></ngx-datatable-column>
     <ngx-datatable-column name="Name" prop="name"></ngx-datatable-column>
@@ -280,7 +285,9 @@
         <ion-button size="small" fill="outline" (click)="trainingService.deleteDataFromDatabase(row, loggedUserProfile.userId)"><ion-icon name="trash"></ion-icon></ion-button>
       </ng-template>
     </ngx-datatable-column>
+    <ngx-datatable-footer></ngx-datatable-footer>
   </ngx-datatable>
+  <ion-item>Hello!</ion-item>
 
 </ion-content>
 

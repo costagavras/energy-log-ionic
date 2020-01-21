@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Exercise } from '../exercise.model';
 import { Subscription } from 'rxjs';
 import { ProfileService } from '../../profile/profile.service';
@@ -30,12 +30,13 @@ export class TrainingNewPage implements OnInit, OnDestroy {
   returnWeight = '0kg / 0lb';
   // initial date filter setting
   filteredDay = new Date();
-  startFilteredDay: number;
-  endFilteredDay: number;
+  startFilteredDay = new Date(this.filteredDay).setHours(0, 0, 0, 0);
+  endFilteredDay = new Date(this.filteredDay).setHours(24, 0, 0, -1);
   // table styling
   tableData: Exercise[];
+  tableDataFilter: Exercise[];
   displayedColumns = ['date', 'name', 'calories', 'duration', 'quantity', 'actions'];
-  totalCalories: number;
+  // totalCalories: number;
   tableClass = 'dark';
   tableStyle = 'dark';
 
@@ -100,7 +101,8 @@ export class TrainingNewPage implements OnInit, OnDestroy {
         return val.date['seconds'] * 1000 >= this.startFilteredDay &&
         val.date['seconds'] * 1000  <= this.endFilteredDay;
       });
-      this.totalCalories = this.tableData.map(ex => ex.caloriesOut).reduce((acc, value) => acc + value, 0);
+      // this.totalCalories = this.tableData.map(ex => ex.caloriesOut).reduce((acc, value) => acc + value, 0);
+      this.tableDataFilter = this.tableData;
     }));
     this.trainingService.fetchCompletedExercises(this.loggedUserProfile.userId);
   }
@@ -116,6 +118,19 @@ export class TrainingNewPage implements OnInit, OnDestroy {
     } else {
       this.tableClass = 'dark';
       this.tableStyle = 'dark';
+    }
+  }
+
+  doFilter(filterValue: string) {
+    const filteredValue = filterValue.trim().toLowerCase();
+    const filteredData = [...this.tableDataFilter].filter(val => {
+      return val.name.toLowerCase().indexOf(filteredValue) !== -1 || !filteredValue;
+    });
+
+    if (filterValue) {
+      this.tableData = filteredData;
+    } else {
+      this.tableData = this.tableDataFilter;
     }
   }
 
