@@ -144,9 +144,8 @@ export class TrainingService {
     }));
   }
 
-    filterDate(event) {
-    console.log(event);
-    this.dateFilter.next(event);
+  filterDate(date) {
+    this.dateFilter.next(date);
   }
 
   private addDataToDatabase(exercise: Exercise, userStamp: UserStamp, userFirebaseId: string) {

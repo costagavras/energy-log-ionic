@@ -30,8 +30,8 @@ export class TrainingNewPage implements OnInit, OnDestroy {
   returnWeight = '0kg / 0lb';
   // initial date filter setting
   filteredDay = new Date();
-  startFilteredDay = this.filteredDay.setHours(0, 0, 0, 0);
-  endFilteredDay = this.filteredDay.setHours(24, 0, 0, -1);
+  startFilteredDay: number;
+  endFilteredDay: number;
   // table styling
   tableData: Exercise[];
   displayedColumns = ['date', 'name', 'calories', 'duration', 'quantity', 'actions'];
@@ -86,8 +86,8 @@ export class TrainingNewPage implements OnInit, OnDestroy {
     this.newTrainingSubs.push(this.trainingService.dateFilter
     .subscribe((date: Date) => {
         this.filteredDay = date; // comes from datepicker change event formatted as 0:0:00
-        this.startFilteredDay = this.filteredDay.setHours(0, 0, 0, 0);
-        this.endFilteredDay = this.filteredDay.setHours(24, 0, 0, -1);
+        this.startFilteredDay = new Date(this.filteredDay).setHours(0, 0, 0, 0);
+        this.endFilteredDay = new Date(this.filteredDay).setHours(24, 0, 0, -1);
         this.updateFilteredDate();
       }));
 
@@ -96,7 +96,6 @@ export class TrainingNewPage implements OnInit, OnDestroy {
   updateFilteredDate() {
     this.newTrainingSubs.push(this.trainingService.finishedExercisesChanged
     .subscribe((exercises: Exercise[]) => {
-      // this.dataSource.data = exercises;
       this.tableData = exercises.filter(val => {
         return val.date['seconds'] * 1000 >= this.startFilteredDay &&
         val.date['seconds'] * 1000  <= this.endFilteredDay;
