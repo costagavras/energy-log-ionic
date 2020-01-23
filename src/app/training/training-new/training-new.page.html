@@ -257,12 +257,26 @@
   <ion-item class="ion-padding">
     <ion-input slot="start" 
       type="text" 
-      placeholder="Type to filter..."
+      placeholder="Filter by name..."
       (keyup)="doFilter($event.target.value)">
     </ion-input>
     <ion-buttons slot="end">
       <ion-button fill="solid" expand="block" (click)="switchStyle()">{{ tableStyle }}</ion-button>
     </ion-buttons>
+  </ion-item>
+  <ion-grid>
+    <ion-row>
+      <ion-col *ngFor="let col of allColumns">
+        <ion-item>
+          <ion-checkbox [id]="col.name" (click)="toggle(col)" checked="isChecked(col)" slot="end"></ion-checkbox>
+           &nbsp;<ion-label>{{ col.name }}</ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-item>
+    <ion-list>
+    </ion-list>
   </ion-item>
   <ngx-datatable 
     #myTable
@@ -273,18 +287,21 @@
     [columnMode]="'force'" 
     [summaryRow]="true"
     [summaryPosition]="'bottom'"
-    [summaryHeight]='50'
-    >
-    <ngx-datatable-column name="Date" prop="dateStr"></ngx-datatable-column>
+    [summaryHeight]='50'>
+    <!-- <ngx-datatable-column name="Date" prop="dateStr"></ngx-datatable-column>
     <ngx-datatable-column name="Name" prop="name"></ngx-datatable-column>
     <ngx-datatable-column name="Calories" prop="caloriesOut"></ngx-datatable-column>
     <ngx-datatable-column name="Duration" prop="duration"></ngx-datatable-column>
-    <ngx-datatable-column name="Quantity" prop="quantity"></ngx-datatable-column>
-    <ngx-datatable-column name="Actions" prop="actions" sortable="false">
-      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+    <ngx-datatable-column name="Quantity" prop="quantity"></ngx-datatable-column> -->
+    <ngx-datatable-column *ngFor="let col of columns" [name]="col.name" [prop]="col.prop"> 
+      <ng-template *ngIf="col.name == 'Actions'" let-row="row" let-value="value" ngx-datatable-cell-template>
         <ion-button size="small" fill="outline" (click)="trainingService.deleteDataFromDatabase(row, loggedUserProfile.userId)"><ion-icon name="trash"></ion-icon></ion-button>
       </ng-template>
     </ngx-datatable-column>
+
+
+    <!-- <ngx-datatable-column name="Actions" prop="actions"> -->
+    <!-- </ngx-datatable-column> -->
     <ngx-datatable-footer></ngx-datatable-footer>
   </ngx-datatable>
   <ion-item>Hello!</ion-item>

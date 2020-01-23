@@ -35,7 +35,22 @@ export class TrainingNewPage implements OnInit, OnDestroy {
   // table styling
   tableData: Exercise[];
   tableDataFilter: Exercise[];
-  displayedColumns = ['date', 'name', 'calories', 'duration', 'quantity', 'actions'];
+  columns = [
+              { name: 'Date', prop: 'dateStr'},
+              { name: 'Name', prop: 'name'},
+              { name: 'Calories', prop: 'caloriesOut'},
+              { name: 'Duration', prop: 'duration'},
+              { name: 'Quantity', prop: 'quantity'},
+              { name: 'Actions', prop: 'actions'}
+            ];
+  allColumns = [
+              { name: 'Date', prop: 'dateStr'},
+              { name: 'Name', prop: 'name'},
+              { name: 'Calories', prop: 'caloriesOut'},
+              { name: 'Duration', prop: 'duration'},
+              { name: 'Quantity', prop: 'quantity'},
+              { name: 'Actions', prop: 'actions'}
+            ];
   // totalCalories: number;
   tableClass = 'dark';
   tableStyle = 'dark';
@@ -132,6 +147,27 @@ export class TrainingNewPage implements OnInit, OnDestroy {
     } else {
       this.tableData = this.tableDataFilter;
     }
+  }
+
+  toggle(col) {
+    const isChecked = this.isChecked(col);
+
+    if (isChecked) {
+      this.columns = this.columns.filter(c => {
+        return c.name !== col.name;
+      });
+    } else {
+      this.columns = [...this.columns, col];
+    }
+  }
+
+  // if found returns true, else false (if c.name = undefined)
+  isChecked(col) {
+    return (
+      this.columns.find(c => {
+        return c.name === col.name;
+      }) !== undefined
+    );
   }
 
   formatLabel(value: number) {
