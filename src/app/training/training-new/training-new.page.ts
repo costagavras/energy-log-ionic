@@ -40,17 +40,17 @@ export class TrainingNewPage implements OnInit, OnDestroy {
               { name: 'Name', prop: 'name'},
               { name: 'Calories', prop: 'caloriesOut'},
               { name: 'Duration', prop: 'duration'},
-              { name: 'Quantity', prop: 'quantity'},
-              { name: 'Actions', prop: 'actions'}
+              { name: 'Quantity', prop: 'quantity'}
             ];
+  colAction = [{ name: 'Actions', prop: 'actions'}];
   allColumns = [
               { name: 'Date', prop: 'dateStr'},
               { name: 'Name', prop: 'name'},
               { name: 'Calories', prop: 'caloriesOut'},
               { name: 'Duration', prop: 'duration'},
-              { name: 'Quantity', prop: 'quantity'},
-              { name: 'Actions', prop: 'actions'}
+              { name: 'Quantity', prop: 'quantity'}
             ];
+  allAction = [{ name: 'Actions', prop: 'actions'}];
   // totalCalories: number;
   tableClass = 'dark';
   tableStyle = 'dark';
@@ -161,10 +161,31 @@ export class TrainingNewPage implements OnInit, OnDestroy {
     }
   }
 
+  toggleAction(col) {
+    const isChecked = this.isCheckedAction(col);
+
+    if (isChecked) {
+      this.colAction = this.colAction.filter(c => {
+        return c.name !== col.name;
+      });
+    } else {
+      this.colAction = [...this.colAction, col];
+    }
+  }
+
   // if found returns true, else false (if c.name = undefined)
   isChecked(col) {
     return (
       this.columns.find(c => {
+        return c.name === col.name;
+      }) !== undefined
+    );
+  }
+
+  // if found returns true, else false (if c.name = undefined)
+  isCheckedAction(col) {
+    return (
+      this.colAction.find(c => {
         return c.name === col.name;
       }) !== undefined
     );

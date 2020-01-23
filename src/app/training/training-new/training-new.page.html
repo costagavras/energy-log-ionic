@@ -185,9 +185,7 @@
         </ion-grid>
 
       </ion-card-content>
-    
     </ion-card>
-
 
     <!-- 3rd card -->
     <ion-card *ngIf="exerciseType === 'measuredEx'">
@@ -268,8 +266,14 @@
     <ion-row>
       <ion-col *ngFor="let col of allColumns">
         <ion-item>
-          <ion-checkbox [id]="col.name" (click)="toggle(col)" checked="isChecked(col)" slot="end"></ion-checkbox>
+          <ion-checkbox (click)="toggle(col)" checked="isChecked(col)" slot="end"></ion-checkbox>
            &nbsp;<ion-label>{{ col.name }}</ion-label>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-checkbox (click)="toggleAction(allAction[0])" checked="isCheckedAction(allAction[0])" slot="end"></ion-checkbox>
+           &nbsp;<ion-label>{{ allAction[0].name }}</ion-label>
         </ion-item>
       </ion-col>
     </ion-row>
@@ -279,7 +283,6 @@
     </ion-list>
   </ion-item>
   <ngx-datatable 
-    #myTable
     [rows]="tableData" 
     [ngClass]="tableClass" 
     [rowHeight]="'auto'" 
@@ -288,23 +291,13 @@
     [summaryRow]="true"
     [summaryPosition]="'bottom'"
     [summaryHeight]='50'>
-    <!-- <ngx-datatable-column name="Date" prop="dateStr"></ngx-datatable-column>
-    <ngx-datatable-column name="Name" prop="name"></ngx-datatable-column>
-    <ngx-datatable-column name="Calories" prop="caloriesOut"></ngx-datatable-column>
-    <ngx-datatable-column name="Duration" prop="duration"></ngx-datatable-column>
-    <ngx-datatable-column name="Quantity" prop="quantity"></ngx-datatable-column> -->
-    <ngx-datatable-column *ngFor="let col of columns" [name]="col.name" [prop]="col.prop"> 
-      <ng-template *ngIf="col.name == 'Actions'" let-row="row" let-value="value" ngx-datatable-cell-template>
+    <ngx-datatable-column *ngFor="let col of columns" [name]="col.name" [prop]="col.prop"></ngx-datatable-column>
+    <ngx-datatable-column [name]="colAction[0].name" [prop]="colAction[0].prop" *ngIf="colAction.length > 0">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
         <ion-button size="small" fill="outline" (click)="trainingService.deleteDataFromDatabase(row, loggedUserProfile.userId)"><ion-icon name="trash"></ion-icon></ion-button>
       </ng-template>
     </ngx-datatable-column>
-
-
-    <!-- <ngx-datatable-column name="Actions" prop="actions"> -->
-    <!-- </ngx-datatable-column> -->
-    <ngx-datatable-footer></ngx-datatable-footer>
   </ngx-datatable>
-  <ion-item>Hello!</ion-item>
 
 </ion-content>
 
