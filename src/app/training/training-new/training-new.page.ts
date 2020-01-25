@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Exercise } from '../exercise.model';
 import { Subscription } from 'rxjs';
 import { ProfileService } from '../../profile/profile.service';
@@ -51,7 +51,6 @@ export class TrainingNewPage implements OnInit, OnDestroy {
               { name: 'Quantity', prop: 'quantity'}
             ];
   allAction = [{ name: 'Actions', prop: 'actions'}];
-  // totalCalories: number;
   tableClass = 'dark';
   tableStyle = 'dark';
 
@@ -116,7 +115,6 @@ export class TrainingNewPage implements OnInit, OnDestroy {
         return val.date['seconds'] * 1000 >= this.startFilteredDay &&
         val.date['seconds'] * 1000  <= this.endFilteredDay;
       });
-      // this.totalCalories = this.tableData.map(ex => ex.caloriesOut).reduce((acc, value) => acc + value, 0);
       this.tableDataFilter = this.tableData;
     }));
     this.trainingService.fetchCompletedExercises(this.loggedUserProfile.userId);

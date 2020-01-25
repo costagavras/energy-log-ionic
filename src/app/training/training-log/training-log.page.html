@@ -1,9 +1,82 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>training-log</ion-title>
+    <ion-title class="ion-text-center">Past Exercises Log</ion-title>
+    <p>GroupExpansion: {{ groupExpansion }}</p>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf="loggedUserProfile">
 
+  <ion-item class="ion-padding">
+    <ion-input slot="start" 
+      type="text" 
+      placeholder="Filter by name..."
+      (keyup)="doFilter($event.target.value)">
+    </ion-input>
+    <ion-item>
+      <ion-label>Rows grouped</ion-label>
+      <ion-checkbox name="chkBox" color="primary" checked="!groupExpansion" (ionChange)="chkBoxGroup($event.target.checked)" slot="end"></ion-checkbox>
+    </ion-item>
+    <ion-buttons slot="end">
+      <ion-button fill="solid" expand="block" (click)="switchStyle()">{{ tableStyle }}</ion-button>
+    </ion-buttons>
+  </ion-item>
+  <ion-grid>
+    <ion-row>
+      <ion-col *ngFor="let col of allColumns">
+        <ion-item>
+          <ion-checkbox (click)="toggle(col)" checked="isChecked(col)" slot="end"></ion-checkbox>
+           &nbsp;<ion-label>{{ col.name }}</ion-label>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-checkbox (click)="toggleAction(allAction[0])" checked="isCheckedAction(allAction[0])" slot="end"></ion-checkbox>
+           &nbsp;<ion-label>{{ allAction[0].name }}</ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-item>
+    <ion-list>
+    </ion-list>
+  </ion-item>
+  <ngx-datatable
+    #myTable
+    class="material expandable"
+    [rows]="tableData" 
+    [groupExpansionDefault]="groupExpansion"
+    [groupRowsBy]="'dateStr'"
+    [ngClass]="tableClass" 
+    [rowHeight]="'auto'" 
+    [headerHeight]="50" 
+    [columnMode]="'force'" 
+    [summaryRow]="true"
+    [summaryPosition]="'bottom'"
+    [summaryHeight]='50'>
+
+    <!-- Group Header Template -->
+    <ngx-datatable-group-header [rowHeight]="50" #myGroupHeader (toggle)="onDetailToggle($event)">
+      <ng-template let-group="group" let-expanded="expanded" ngx-datatable-group-header-template>
+        <div style="padding-left:5px; display:flex; width: 300px;">
+          <a
+            [class.datatable-icon-right]="!expanded"
+            [class.datatable-icon-down]="expanded"
+            title="Expand/Collapse Group"
+            (click)="toggleExpandGroup(group)">
+            <b style="padding-left: 5px;">Date: &nbsp; {{ group.value[0].dateStr }}</b>
+            <b style="padding-left: 50px;">Calories: &nbsp; {{ group.groupCalories | number }}</b>
+          </a>
+        </div>
+      </ng-template>
+    </ngx-datatable-group-header>
+
+    <ngx-datatable-column *ngFor="let col of columns" [name]="col.name" [prop]="col.prop"></ngx-datatable-column>
+    <ngx-datatable-column [name]="colAction[0].name" [prop]="colAction[0].prop" *ngIf="colAction.length > 0">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <ion-button size="small" fill="outline" (click)="trainingService.deleteDataFromDatabase(row, loggedUserProfile.userId)"><ion-icon name="trash"></ion-icon></ion-button>
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+  
 </ion-content>
