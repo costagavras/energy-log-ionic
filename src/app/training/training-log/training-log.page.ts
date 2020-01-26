@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
 import { Exercise } from '../exercise.model';
 import { Subscription } from 'rxjs';
 import { ProfileService } from '../../profile/profile.service';
@@ -11,9 +11,10 @@ import { AuthService } from 'src/app/auth/auth.service';
   templateUrl: './training-log.page.html',
   styleUrls: ['./training-log.page.scss'],
 })
-export class TrainingLogPage implements OnInit, OnDestroy {
+export class TrainingLogPage implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('myTable', { static: false }) table: any;
+  @ViewChildren('groupSummary') groupSum: QueryList<any>;
 
   funder = [];
   calculated = [];
@@ -54,7 +55,8 @@ export class TrainingLogPage implements OnInit, OnDestroy {
 
   constructor(private profileService: ProfileService,
               public trainingService: TrainingService,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
 
@@ -93,6 +95,20 @@ export class TrainingLogPage implements OnInit, OnDestroy {
     ));
     this.trainingService.fetchAvailableExercisesCal();
 
+  }
+
+  // will add total calories count per group after the table loads
+  ngAfterViewInit() {
+    this.trainingLogSubs.push(this.groupSum.changes.subscribe(result => {
+      if (this.table.groupedRows) {
+        setTimeout(() => { // to avoid expression has changed after it was checked
+          this.table.groupedRows.map(group => {
+            const totalCaloriesGroup = group.value.map(ex => ex.caloriesOut).reduce((acc, value) => acc + value, 0);
+            group.groupCalories = totalCaloriesGroup;
+          }, 1);
+        });
+      }
+    }));
   }
 
   updateFilteredDate() {
@@ -170,20 +186,11 @@ export class TrainingLogPage implements OnInit, OnDestroy {
   }
 
   toggleExpandGroup(group) {
-    // console.log('Toggled Expand Group!', group);
-    const totalCaloriesGroup = group.value.map(ex => ex.caloriesOut).reduce((acc, value) => acc + value, 0);
-
-    group.groupCalories = totalCaloriesGroup;
     this.table.groupHeader.toggleExpandGroup(group);
   }
 
-  onDetailToggle(event) {
-    // console.log('Detail Toggled', event);
-  }
-
-  chkBoxGroup(val) {
-    this.groupExpansion = val;
-    console.log(this.groupExpansion);
+  toggleAllGroups() {
+    this.table.groupedRows.map(group => this.table.groupHeader.toggleExpandGroup(group));
   }
 
   ngOnDestroy() {
