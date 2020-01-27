@@ -1,0 +1,32 @@
+ion-card {
+  width: 80%;
+  margin: 0 auto;
+}
+
+ion-range {
+  padding: 16px 0 8px;
+}
+
+ion-datetime {
+  padding: 10px 0;
+  margin: 0 auto;
+}
+
+ion-select {
+  background: rgba(0,0,0,.04);
+  max-width: none;
+  width: 100%;
+}
+
+ion-input, .ion-native {
+  background: rgba(0,0,0,.04);
+}
+
+ion-label {
+  color: currentColor;
+}
+
+:host ::ng-deep .native-input {
+  opacity: 0.7;
+  text-align: center;
+}

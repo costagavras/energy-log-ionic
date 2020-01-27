@@ -1,6 +1,35 @@
-<ion-header class="third-header">
-  <h2>Food eat header</h2>
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">Add Meals</ion-title>
+  </ion-toolbar>
 </ion-header>
-<ion-content>
-  foot-eat-content
+
+
+<ion-content *ngIf="loggedUserProfile">
+  <form #f="ngForm">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-subtitle class="ion-text-center">Date of meal</ion-card-subtitle>
+        <ion-item class="ion-text-center">
+          <ion-datetime 
+            displayFormat="DDDD, DD MMM, YYYY" 
+            picker-format="DDD MMM YY"
+            placeholder="Select Date"
+            [ngModel]="today"
+            [max]="today"
+            name="dateMeal"
+            required
+            (ionChange)="foodService.filterDate(f.value.dateMeal)"
+            ></ion-datetime>
+        </ion-item>
+        <ion-card-title class="ion-text-center">Completed Exercise</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+
+      </ion-card-content>
+
+    </ion-card>
+  </form>
 </ion-content>
+  

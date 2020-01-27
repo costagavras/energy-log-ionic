@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { FoodEatPageRoutingModule } from './food-eat-routing.module';
 
 import { FoodEatPage } from './food-eat.page';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    FoodEatPageRoutingModule
+    FoodEatPageRoutingModule,
+    NgxDatatableModule
   ],
   declarations: [FoodEatPage]
 })

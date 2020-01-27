@@ -28,8 +28,7 @@ export class TrainingService {
   private trainingServiceSubs: Subscription[] = [];
 
   constructor(private db: AngularFirestore,
-              private uiService: UIService,
-              private profileService: ProfileService) {}
+              private uiService: UIService) {}
 
   fetchAvailableExercisesTime() {
     this.trainingServiceSubs.push(
@@ -131,7 +130,7 @@ export class TrainingService {
     }, userData.userId);
   }
 
-  fetchCompletedExercises(userFirebaseId) {
+  fetchCompletedExercises(userFirebaseId: string) {
 
     this.trainingServiceSubs.push(
       this.db.collection<Exercise>('users/' + userFirebaseId + '/finishedExercises', ref => ref.orderBy('date', 'desc')).valueChanges()
@@ -160,7 +159,7 @@ export class TrainingService {
   }
 
   // called from the template
-  private deleteDataFromDatabase(exercise: Exercise, userFirebaseId) {
+  private deleteDataFromDatabase(exercise: Exercise, userFirebaseId: string) {
     this.db.collection('users').doc(userFirebaseId).collection('finishedExercises').doc(exercise.id).delete();
     this.uiService.showToast(exercise.name + ' was successfully deleted', 3000);
   }

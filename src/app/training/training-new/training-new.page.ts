@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { ProfileService } from '../../profile/profile.service';
 import { TrainingService } from '../training.service';
 import { User, UserProfile } from '../../auth/user.model';
-import { AuthService } from 'src/app/auth/auth.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-training-new',
@@ -66,7 +66,7 @@ export class TrainingNewPage implements OnInit, OnDestroy {
       .subscribe(
         userProfileData => {
           this.loggedUserProfile = userProfileData;
-          this.updateFilteredDate();
+          this.updateFilteredDate(this.loggedUserProfile.userId);
       })
     );
 
@@ -103,12 +103,12 @@ export class TrainingNewPage implements OnInit, OnDestroy {
         this.filteredDay = date; // comes from datepicker change event formatted as 0:0:00
         this.startFilteredDay = new Date(this.filteredDay).setHours(0, 0, 0, 0);
         this.endFilteredDay = new Date(this.filteredDay).setHours(24, 0, 0, -1);
-        this.updateFilteredDate();
+        this.updateFilteredDate(this.loggedUserProfile.userId);
       }));
 
   }
 
-  updateFilteredDate() {
+  updateFilteredDate(userFirebaseId: string) {
     this.newTrainingSubs.push(this.trainingService.finishedExercisesChanged
     .subscribe((exercises: Exercise[]) => {
       this.tableData = exercises.filter(val => {
@@ -117,7 +117,7 @@ export class TrainingNewPage implements OnInit, OnDestroy {
       });
       this.tableDataFilter = this.tableData;
     }));
-    this.trainingService.fetchCompletedExercises(this.loggedUserProfile.userId);
+    this.trainingService.fetchCompletedExercises(userFirebaseId);
   }
 
   segmentChanged(event: any) {

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
 import { Exercise } from '../exercise.model';
 import { Subscription } from 'rxjs';
 import { ProfileService } from '../../profile/profile.service';
@@ -55,8 +55,7 @@ export class TrainingLogPage implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(private profileService: ProfileService,
               public trainingService: TrainingService,
-              private authService: AuthService,
-              private cdRef: ChangeDetectorRef) { }
+              private authService: AuthService) { }
 
   ngOnInit() {
 
@@ -136,11 +135,7 @@ export class TrainingLogPage implements OnInit, AfterViewInit, OnDestroy {
       return val.name.toLowerCase().indexOf(filteredValue) !== -1 || !filteredValue;
     });
 
-    if (filterValue) {
-      this.tableData = filteredData;
-    } else {
-      this.tableData = this.tableDataFilter;
-    }
+    filterValue ? this.tableData = filteredData : this.tableData = this.tableDataFilter;
   }
 
   toggle(col) {
