@@ -6,7 +6,6 @@ import { map } from 'rxjs/operators';
 
 import { FoodItem } from './food-item.model';
 import { UIService } from './../shared/ui.service';
-import { ProfileService } from '../profile/profile.service';
 import { UserStamp, User, UserProfile } from '../auth/user.model';
 
 @Injectable({

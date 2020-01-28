@@ -22,14 +22,91 @@
             (ionChange)="foodService.filterDate(f.value.dateMeal)"
             ></ion-datetime>
         </ion-item>
-        <ion-card-title class="ion-text-center">Completed Exercise</ion-card-title>
+        <ion-card-title class="ion-text-center">Completed Meal</ion-card-title>
+        <ion-item>
+          <ion-label class="db_label" style="text-align: end;" [ngClass]="{'emphasis' : !db_toggle.checked}">Add from USDA database</ion-label>
+          <ion-toggle checked="false" #db_toggle></ion-toggle>
+          <ion-label class="db_label" [ngClass]="{'emphasis' : db_toggle.checked}">Add from app database</ion-label>
+        </ion-item>
       </ion-card-header>
 
       <ion-card-content>
+        <ion-slides *ngIf="db_toggle.checked" pager="true" [options]="slideOpts">
+          <ion-slide *ngFor="let category of foodCategories">
+            <ion-card>
+              <ion-card-header class="food_card_header">
+                <ion-card-title>{{ category.toUpperCase() }}</ion-card-title>
+                <ion-card-subtitle>Input food item and serving size (gr/oz)</ion-card-subtitle>
+              </ion-card-header>
 
+              <ion-card-content>
+                <ion-grid>
+
+                  <ion-row>
+                    <ion-col size-md="10" offset-md="1" size-xl="6" offset-xl="3">
+                      <ion-item>
+                        <ion-select ngModel name="foodName_{{category}}" [required]="foodName.touched" #foodName="ngModel" placeholder="Choose food">
+                          <ion-select-option *ngFor="let food_item of foodCategoriesObject[category]" [value]="food_item.name">
+                            {{ food_item.name }}
+                          </ion-select-option>
+                        </ion-select>
+                      </ion-item>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row *ngIf="foodName.hasError('required') && foodName.touched">
+                    <ion-col offset-md="1" offset-xl="3" style="text-align: start">
+                      <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Field must not be empty.</ion-label>
+                    </ion-col>
+                  </ion-row>
+        
+                  <ion-row>
+                    <ion-col size-xs="6" offset-xs="3" size-md="4" offset-md="4" size-xl="2" offset-xl="5">
+                      <ion-item>
+                        <ion-input ngModel 
+                          type="number"   
+                          name="serving_{{category}}" 
+                          [required]="serving.touched" 
+                          [min]="minValue" 
+                          #serving="ngModel"
+                          placeholder="Serving">
+                        </ion-input>
+                      </ion-item>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row *ngIf="serving.hasError('required') && serving.touched">
+                    <ion-col offset-xs="3" offset-md="4" offset-xl="5" style="text-align: start">
+                      <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Field must not be empty.</ion-label>
+                    </ion-col>
+                  </ion-row>
+                  
+                  <ion-row>
+                    <ion-col size="1" offset-xs="2" offset-lg="3" style="align-self: center;">
+                      <ion-segment (ionChange)="measureChanged($event)" name="unit" [ngModel]="units" #toggleMtImpGroupDB="ngModel" class="metric_imperial_btn_toggle">
+                        <ion-segment-button value="metric">
+                          <ion-label>gr</ion-label>
+                        </ion-segment-button>
+                        <ion-segment-button value="imperial">
+                          <ion-label>oz</ion-label>
+                        </ion-segment-button>
+                      </ion-segment>
+                    </ion-col>
+                    <ion-col offset-xs="3" offset-md="5">
+                      <ion-button type="Submit" 
+                        (click)="foodService.saveFoodItem(f.value.dateMeal, foodName.value, toggleMtImpGroupDB.value === 'metric' ? serving.value : serving.value * 28.3495, loggedUserProfile, category)"
+                        [disabled]="foodName.invalid || foodName.untouched || serving.untouched || serving.invalid">Save!
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                  <!-- Adding space -->
+                  <ion-row style="height: 20px;"></ion-row>
+                </ion-grid>
+              </ion-card-content>
+            </ion-card>
+
+          </ion-slide>
+        </ion-slides>        
       </ion-card-content>
 
     </ion-card>
   </form>
 </ion-content>
-  

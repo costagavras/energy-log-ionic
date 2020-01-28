@@ -16,6 +16,7 @@ export class FoodEatPage implements OnInit, OnDestroy {
   today: string;
   private loggedUser: User;
   loggedUserProfile: UserProfile;
+  minValue = 0;
 
   branded = false;
   requireAllWords = false;
@@ -24,7 +25,6 @@ export class FoodEatPage implements OnInit, OnDestroy {
   totalPages: number;
   defaultPage = 1;
 
-  panelOpenState = false;
   usdaFoodItems = [] as any;
   usdaPickedFoodItem: FoodItem;
   usdaFoodItemDetailPaneOpen = false;
@@ -47,6 +47,10 @@ export class FoodEatPage implements OnInit, OnDestroy {
   foodItemsMeat: FoodItem[];
   foodItemsVegetables: FoodItem[];
   foodItemsOther: FoodItem[];
+  slideOpts = {
+    initialSlide: 0,
+    speed: 400
+  };
   private newFoodIntakeSubs: Subscription[] = [];
 
   proxyURL = 'https://cors-anywhere.herokuapp.com/';
@@ -101,8 +105,12 @@ export class FoodEatPage implements OnInit, OnDestroy {
       .subscribe(
         userProfileData => {
           this.loggedUserProfile = userProfileData;
-          this.updateFilteredDate(this.loggedUserProfile.userId);
-          this.triggerFetchFoodItems(this.loggedUserProfile.userId);
+          if (this.loggedUserProfile !== null) {
+            console.log("I got logged user");
+            this.units = this.loggedUserProfile.units;
+            this.updateFilteredDate(this.loggedUserProfile.userId);
+            this.triggerFetchFoodItems(this.loggedUserProfile.userId);
+          }
       })
     );
 
@@ -115,15 +123,10 @@ export class FoodEatPage implements OnInit, OnDestroy {
       })
     );
 
-    this.newFoodIntakeSubs.push(this.profileService.userProfileData
-      .subscribe(
-        user => (this.units = user.units)
-      ));
-
     this.newFoodIntakeSubs.push(this.foodService.foodItemsBeveragesChanged
       .subscribe(
         foodItems => (this.foodCategoriesObject.beverages = foodItems)
-        ));
+      ));
 
     this.newFoodIntakeSubs.push(this.foodService.foodItemsDairyChanged
       .subscribe(
@@ -174,6 +177,15 @@ export class FoodEatPage implements OnInit, OnDestroy {
       .subscribe(
         foodItems => (this.foodCategoriesObject.other = foodItems)
       ));
+
+       // subscription when filter date changes
+    this.newFoodIntakeSubs.push(this.foodService.dateFilter
+      .subscribe((date: Date) => {
+          this.filteredDay = date; // comes from datepicker change event formatted as 0:0:00
+          this.startFilteredDay = new Date(this.filteredDay).setHours(0, 0, 0, 0);
+          this.endFilteredDay = new Date(this.filteredDay).setHours(24, 0, 0, -1);
+          this.updateFilteredDate(this.loggedUserProfile.userId);
+        }));
   }
 
   triggerFetchFoodItems(userFirebaseId: string) {
@@ -200,6 +212,75 @@ export class FoodEatPage implements OnInit, OnDestroy {
       this.tableDataFilter = this.tableData;
     }));
     this.foodService.fetchCompletedFoodItems(userFirebaseId);
+  }
+
+  measureChanged(event: any) {
+    console.log(event);
+  }
+
+  switchStyle() {
+    if (this.tableClass === 'dark') {
+      this.tableClass = 'bootstrap';
+      this.tableStyle = 'light';
+    } else {
+      this.tableClass = 'dark';
+      this.tableStyle = 'dark';
+    }
+  }
+
+  doFilter(filterValue: string) {
+    const filteredValue = filterValue.trim().toLowerCase();
+    const filteredData = [...this.tableDataFilter].filter(val => {
+      return val.name.toLowerCase().indexOf(filteredValue) !== -1 || !filteredValue;
+    });
+
+    if (filterValue) {
+      this.tableData = filteredData;
+    } else {
+      this.tableData = this.tableDataFilter;
+    }
+  }
+
+  toggle(col) {
+    const isChecked = this.isChecked(col);
+
+    if (isChecked) {
+      this.columns = this.columns.filter(c => {
+        return c.name !== col.name;
+      });
+    } else {
+      this.columns = [...this.columns, col];
+    }
+  }
+
+  toggleAction(col) {
+    const isChecked = this.isCheckedAction(col);
+
+    if (isChecked) {
+      this.colAction = this.colAction.filter(c => {
+        return c.name !== col.name;
+      });
+    } else {
+      this.colAction = [...this.colAction, col];
+    }
+  }
+
+  // if found returns true, else false (if c.name = undefined)
+  isChecked(col) {
+    return (
+      this.columns.find(c => {
+        return c.name === col.name;
+      }) !== undefined
+    );
+  }
+
+  // if found returns true, else false (if c.name = undefined)
+  isCheckedAction(col) {
+    return (
+      this.colAction.find(c => {
+        return c.name === col.name;
+      }) !== undefined
+    );
   }
 
   ngOnDestroy() {

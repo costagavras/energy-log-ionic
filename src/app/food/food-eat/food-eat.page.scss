@@ -3,6 +3,10 @@ ion-card {
   margin: 0 auto;
 }
 
+.food_card_header {
+  padding-top: 4px;
+}
+
 ion-range {
   padding: 16px 0 8px;
 }
@@ -22,11 +26,66 @@ ion-input, .ion-native {
   background: rgba(0,0,0,.04);
 }
 
+:host ::ng-deep  ion-segment-button {
+  background: rgba(0,0,0,.04);
+  min-width: 30px;
+  height: 36px;
+}
+
 ion-label {
   color: currentColor;
+}
+
+.emphasis {
+  font-weight: bold;
+  font-size: 16px;
+  color: black;
+  text-decoration-line: underline;
 }
 
 :host ::ng-deep .native-input {
   opacity: 0.7;
   text-align: center;
 }
+
+@media (max-width: 1200px) {
+
+  
+}
+
+// @media (max-width: 992px) {
+//   ion-slide > ion-card {
+//     margin: 0;
+//   }
+// }
+
+// @media (max-width: 792px) {
+//   .alert-wrapper .sc-ion-alert-md {
+//     min-width: 600px;
+//     // margin: 0 auto;
+//   }
+// }
+
+@media (max-width: 576px) {
+  ion-segment-button {
+    min-width: 10px;
+    width: 30px;
+    min-height: 20px;
+  }
+
+  .db_label {
+    font-size: 10px;
+  }
+
+  .emphasis {
+    font-weight: bold;
+    font-size: 12px;
+  }
+}
+
+// @media (max-width: 400x) {
+//   .alert-wrapper .sc-ion-alert-md {
+//     min-width: 360px;
+//     // margin: 0 auto;
+//   }
+// }
