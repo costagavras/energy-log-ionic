@@ -27,6 +27,7 @@
     "@ionic-native/status-bar": "^5.0.0",
     "@ionic/angular": "^4.7.1",
     "@swimlane/ngx-datatable": "^16.0.3",
+    "axios": "^0.19.2",
     "core-js": "^2.5.4",
     "firebase": "^7.6.1",
     "rxjs": "~6.5.1",

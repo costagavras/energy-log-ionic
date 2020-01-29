@@ -3,6 +3,16 @@ ion-card {
   margin: 0 auto;
 }
 
+.slide_card, .usda_card {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.main_card {
+  width: 70%;
+  margin: 0 auto;
+}
+
 .food_card_header {
   padding-top: 4px;
 }
@@ -48,6 +58,11 @@ ion-label {
   text-align: center;
 }
 
+.usda_citation {
+  font-size: smaller;
+  background-color:  rgba(0,0,0,.04);
+}
+
 @media (max-width: 1200px) {
 
   
@@ -80,6 +95,10 @@ ion-label {
   .emphasis {
     font-weight: bold;
     font-size: 12px;
+  }
+
+  .slide_card, .usda_card, .main_card {
+    width: 100%;
   }
 }
 

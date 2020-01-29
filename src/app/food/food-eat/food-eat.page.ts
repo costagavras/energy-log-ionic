@@ -1,10 +1,17 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { IonSlides, LoadingController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+
 import { ProfileService } from '../../profile/profile.service';
-import { User, UserProfile } from '../../auth/user.model';
 import { AuthService } from '../../auth/auth.service';
 import { FoodService } from '../food.service';
+
+import { User, UserProfile } from '../../auth/user.model';
 import { FoodItem } from '../food-item.model';
+
+import { usdaKey } from '../../../environments/environment.prod';
+
+import axios from 'axios';
 
 @Component({
   selector: 'app-food-eat',
@@ -13,10 +20,16 @@ import { FoodItem } from '../food-item.model';
 })
 export class FoodEatPage implements OnInit, OnDestroy {
 
+  @ViewChild('slides', {static: false}) slides: IonSlides;
+
   today: string;
   private loggedUser: User;
   loggedUserProfile: UserProfile;
   minValue = 0;
+
+  // buttons for slider
+  disablePrevBtn = true;
+  disableNextBtn = false;
 
   branded = false;
   requireAllWords = false;
@@ -95,7 +108,8 @@ export class FoodEatPage implements OnInit, OnDestroy {
 
   constructor(private profileService: ProfileService,
               public foodService: FoodService,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              private loadingController: LoadingController) { }
 
   ngOnInit() {
 
@@ -106,7 +120,6 @@ export class FoodEatPage implements OnInit, OnDestroy {
         userProfileData => {
           this.loggedUserProfile = userProfileData;
           if (this.loggedUserProfile !== null) {
-            console.log("I got logged user");
             this.units = this.loggedUserProfile.units;
             this.updateFilteredDate(this.loggedUserProfile.userId);
             this.triggerFetchFoodItems(this.loggedUserProfile.userId);
@@ -281,6 +294,87 @@ export class FoodEatPage implements OnInit, OnDestroy {
         return c.name === col.name;
       }) !== undefined
     );
+  }
+
+  // axios request
+  onPick(foodDetailID: number) {
+    this.usdaFoodItemDetailPaneOpen = false;
+    this.isLoadingFoodItem = true;
+    this.usdaPickedFoodItem = {} as FoodItem;
+    axios.get(this.proxyURL + this.usdaFoodDetailsURL1 + foodDetailID + this.usdaFoodDetailsURL2 + usdaKey).then(response => {
+    // axios.get(this.usdaFoodDetailsURL1 + foodDetailID + this.usdaFoodDetailsURL2 + usdaKey).then(response => {
+      this.usdaFoodItemDetail = response.data.foodNutrients;
+      this.usdaPickedFoodItem = {
+        name: response.data.description,
+        serving: 100,
+        caloriesIn: this.usdaFoodItemDetail.filter(item => item.nutrient.id === 1008)[0].amount,
+        protein: this.usdaFoodItemDetail.filter(item => item.nutrient.id === 1003)[0].amount,
+        fat: this.usdaFoodItemDetail.filter(item => item.nutrient.id === 1004)[0].amount,
+        carb: this.usdaFoodItemDetail.filter(item => item.nutrient.id === 1005)[0].amount
+      };
+      this.usdaFoodItemDetailPaneOpen = true;
+      this.isLoadingFoodItem = false;
+    });
+  }
+
+  onSearch(searchString: string, branded, allWords, page) {
+    this.isLoadingFoodItems = true;
+    this.loadingController.create({keyboardClose: true, message: 'Searching USDA database...'})
+      .then(loadingEl => {
+        loadingEl.present();
+        this.usdaSearch = searchString;
+        axios.post(this.proxyURL + this.usdaFoodSearchURL + usdaKey,
+        // axios.post(this.usdaFoodSearchURL + usdaKey,
+            {
+              generalSearchInput: searchString,
+              includeDataTypes: {
+                'Survey (FNDDS)': true,
+                'Foundation': true,
+                'Branded': branded
+              },
+              requireAllWords: allWords,
+              pageNumber: typeof page === 'undefined' ? 1 : page
+            }
+          )
+          .then(response => {
+            this.usdaFoodItems = response.data.foods;
+            this.totalHits = response.data.totalHits;
+            this.currentPage = response.data.currentPage;
+            this.totalPages = response.data.totalPages;
+            this.isLoadingFoodItems = false;
+            this.usdaSearchResults = true;
+            loadingEl.dismiss();
+          })
+          .catch(err => {
+            console.log(err, err.response);
+          });
+
+      });
+  }
+
+  // saveCustomFood(usdaPickedFoodItem: FoodItem) {
+  //   const dialogRef = this.dialog.open(DialogAddCategoryComponent, {
+  //       data: {
+  //         foodCategories: this.foodCategories
+  //       }
+  //     });
+  //   this.newFoodIntakeSubs.push(dialogRef.afterClosed().subscribe(pickedCategory => {
+  //       if (pickedCategory) {
+  //         usdaPickedFoodItem.category = pickedCategory;
+  //         this.foodService.saveCustomFood(usdaPickedFoodItem);
+  //       }
+  //     }));
+  //   }
+
+  checkStartEnd() {
+    console.log('here');
+    const prom1 = this.slides.isBeginning();
+    const prom2 = this.slides.isEnd();
+
+    Promise.all([prom1, prom2]).then((data) => {
+      data[0] ? this.disablePrevBtn = true : this.disablePrevBtn = false;
+      data[1] ? this.disableNextBtn = true : this.disableNextBtn = false;
+    });
   }
 
   ngOnDestroy() {
