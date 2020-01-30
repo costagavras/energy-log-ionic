@@ -177,7 +177,7 @@
                 </ion-list>
               </div>
                 <ion-buttons class="usda_foodItemButtons" class="ion-justify-content-around">
-                  <ion-button color="secondary" fill="solid" (click)="saveCustomFood(usdaPickedFoodItem)">Save item to app database</ion-button>
+                  <ion-button color="primary" fill="solid" (click)="saveCustomFood(usdaPickedFoodItem)">Save item to app</ion-button>
                   <ion-button color="primary" fill="solid" (click)="foodService.saveFoodItem(f.value.date, usdaPickedFoodItem.name, toggleMtImpGroupUSDA.value === 'metric' ? servingUSDA.value : servingUSDA.value * 28.3495, 'usda', usdaPickedFoodItem)"
                    [disabled]="servingUSDA.untouched || servingUSDA.invalid">Save food</ion-button>
                 </ion-buttons>
@@ -192,8 +192,8 @@
               <ion-list>
                 <ion-radio-group>
                   <ion-list-header>
-                    <h3>Search results for: <span class="span_search_results">&nbsp;{{ usdaSearch || '.....' }}</span><br/>
-                    Found:&nbsp;<span class="span_search_results">{{ totalHits || '.....' }}</span>  items</h3>
+                    <h3>Search results for: &nbsp;<span class="span_search_results">{{ usdaSearch || '.....' }}</span><br/>
+                    Found:&nbsp;&nbsp;<span class="span_search_results">{{ totalHits || '.....' }}</span>&nbsp;&nbsp;items</h3>
                     <h3 style="display: inline-flex; align-items: baseline;">Page&nbsp;
                         <ion-select class="page_select" ngModel (ionChange)="onSearch(nameSearch.value, branded, requireAllWords, $event.target.value)" [(ngModel)]="defaultPage" name="page" #page>
                           <ion-select-option *ngFor="let page of [].constructor(totalPages); let i = index" [value]="i + 1">

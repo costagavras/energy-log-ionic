@@ -367,7 +367,7 @@ export class FoodEatPage implements OnInit, OnDestroy {
   saveCustomFood(usdaPickedFoodItem: FoodItem) {
 
     this.actionSheetController.create({
-      header: 'Choose category',
+      header: 'CHOOSE CATEGORY',
       buttons: this.createButtons(usdaPickedFoodItem)
     }).then(actionSheetEl => {
       actionSheetEl.present();
@@ -379,6 +379,7 @@ export class FoodEatPage implements OnInit, OnDestroy {
     for (const btn of this.foodCategories) {
       const button = {
         text: btn.toUpperCase(),
+        cssClass: 'actionCtrl_button',
         handler: () => {
           foodItem.category = btn;
           this.foodService.saveCustomFood(this.loggedUserProfile.userId, foodItem);
@@ -388,6 +389,7 @@ export class FoodEatPage implements OnInit, OnDestroy {
     }
     buttons.push({
         text: 'CANCEL',
+        cssClass: 'actionCtrl_cancelButton',
         role: 'cancel'
     });
     return buttons;
