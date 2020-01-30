@@ -32,14 +32,32 @@ ion-select {
   width: 100%;
 }
 
+:host ::ng-deep .page_select {
+  padding: 2px 0px 2px 10px;
+  width: fit-content;
+}
+
+
+:host ::ng-deep .swiper-pagination {
+  position: initial;
+}
+
+.span_search_results {
+  font-weight: bolder;
+  text-decoration: underline;
+}
+
 ion-input, .ion-native {
   background: rgba(0,0,0,.04);
 }
 
 :host ::ng-deep  ion-segment-button {
-  background: rgba(0,0,0,.04);
   min-width: 30px;
   height: 36px;
+}
+
+.segment_emphasis {
+  background: rgba(0,0,0,.04);
 }
 
 ion-label {
@@ -59,8 +77,13 @@ ion-label {
 }
 
 .usda_citation {
+  padding: 10px 0;
   font-size: smaller;
   background-color:  rgba(0,0,0,.04);
+}
+
+.usdaFoodItemPane > ion-card-content {
+  padding-top: 0px;
 }
 
 @media (max-width: 1200px) {
@@ -94,7 +117,7 @@ ion-label {
 
   .emphasis {
     font-weight: bold;
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .slide_card, .usda_card, .main_card {

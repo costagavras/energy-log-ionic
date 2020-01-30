@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { IonSlides, LoadingController } from '@ionic/angular';
+import { IonSlides, LoadingController, IonSearchbar, ActionSheetController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 import { ProfileService } from '../../profile/profile.service';
@@ -21,6 +21,7 @@ import axios from 'axios';
 export class FoodEatPage implements OnInit, OnDestroy {
 
   @ViewChild('slides', {static: false}) slides: IonSlides;
+  @ViewChild('nameSearch', {static: false}) searchBar: IonSearchbar;
 
   today: string;
   private loggedUser: User;
@@ -43,8 +44,8 @@ export class FoodEatPage implements OnInit, OnDestroy {
   usdaFoodItemDetailPaneOpen = false;
   usdaFoodItemDescription: string;
   usdaFoodItemDetail = [] as any;
-  isLoadingFoodItems = false;
-  isLoadingFoodItem = false;
+  // isLoadingFoodItems = false;
+  // isLoadingFoodItem = false;
   usdaSearchResults = false;
   units: string;
   usdaSearch: string;
@@ -109,7 +110,8 @@ export class FoodEatPage implements OnInit, OnDestroy {
   constructor(private profileService: ProfileService,
               public foodService: FoodService,
               private authService: AuthService,
-              private loadingController: LoadingController) { }
+              private loadingController: LoadingController,
+              private actionSheetController: ActionSheetController) { }
 
   ngOnInit() {
 
@@ -299,30 +301,40 @@ export class FoodEatPage implements OnInit, OnDestroy {
   // axios request
   onPick(foodDetailID: number) {
     this.usdaFoodItemDetailPaneOpen = false;
-    this.isLoadingFoodItem = true;
-    this.usdaPickedFoodItem = {} as FoodItem;
-    axios.get(this.proxyURL + this.usdaFoodDetailsURL1 + foodDetailID + this.usdaFoodDetailsURL2 + usdaKey).then(response => {
-    // axios.get(this.usdaFoodDetailsURL1 + foodDetailID + this.usdaFoodDetailsURL2 + usdaKey).then(response => {
-      this.usdaFoodItemDetail = response.data.foodNutrients;
-      this.usdaPickedFoodItem = {
-        name: response.data.description,
-        serving: 100,
-        caloriesIn: this.usdaFoodItemDetail.filter(item => item.nutrient.id === 1008)[0].amount,
-        protein: this.usdaFoodItemDetail.filter(item => item.nutrient.id === 1003)[0].amount,
-        fat: this.usdaFoodItemDetail.filter(item => item.nutrient.id === 1004)[0].amount,
-        carb: this.usdaFoodItemDetail.filter(item => item.nutrient.id === 1005)[0].amount
-      };
-      this.usdaFoodItemDetailPaneOpen = true;
-      this.isLoadingFoodItem = false;
+    // this.isLoadingFoodItem = true;
+    this.loadingController.create({keyboardClose: true, message: 'Searching USDA database...'})
+      .then(loadingEl => {
+        loadingEl.present();
+        this.usdaPickedFoodItem = {} as FoodItem;
+        // test with GET method (https://fdc.nal.usda.gov/api-guide.html)
+        axios.get(this.proxyURL + this.usdaFoodDetailsURL1 + foodDetailID + this.usdaFoodDetailsURL2 + usdaKey)
+          .then(response => {
+          // axios.get(this.usdaFoodDetailsURL1 + foodDetailID + this.usdaFoodDetailsURL2 + usdaKey).then(response => {
+            this.usdaFoodItemDetail = response.data.foodNutrients;
+            this.usdaPickedFoodItem = {
+              name: response.data.description,
+              serving: 100,
+              caloriesIn: this.usdaFoodItemDetail.filter(item => item.nutrient.id === 1008)[0].amount,
+              protein: this.usdaFoodItemDetail.filter(item => item.nutrient.id === 1003)[0].amount,
+              fat: this.usdaFoodItemDetail.filter(item => item.nutrient.id === 1004)[0].amount,
+              carb: this.usdaFoodItemDetail.filter(item => item.nutrient.id === 1005)[0].amount
+            };
+            this.usdaFoodItemDetailPaneOpen = true;
+            loadingEl.dismiss();
+            // this.isLoadingFoodItem = false;
+          }).catch(err => {
+            console.log(err, err.response);
+          });
     });
   }
 
   onSearch(searchString: string, branded, allWords, page) {
-    this.isLoadingFoodItems = true;
+    // this.isLoadingFoodItems = true;
     this.loadingController.create({keyboardClose: true, message: 'Searching USDA database...'})
       .then(loadingEl => {
         loadingEl.present();
         this.usdaSearch = searchString;
+        // test with POST method (https://fdc.nal.usda.gov/api-guide.html)
         axios.post(this.proxyURL + this.usdaFoodSearchURL + usdaKey,
         // axios.post(this.usdaFoodSearchURL + usdaKey,
             {
@@ -341,7 +353,7 @@ export class FoodEatPage implements OnInit, OnDestroy {
             this.totalHits = response.data.totalHits;
             this.currentPage = response.data.currentPage;
             this.totalPages = response.data.totalPages;
-            this.isLoadingFoodItems = false;
+            // this.isLoadingFoodItems = false;
             this.usdaSearchResults = true;
             loadingEl.dismiss();
           })
@@ -352,19 +364,34 @@ export class FoodEatPage implements OnInit, OnDestroy {
       });
   }
 
-  // saveCustomFood(usdaPickedFoodItem: FoodItem) {
-  //   const dialogRef = this.dialog.open(DialogAddCategoryComponent, {
-  //       data: {
-  //         foodCategories: this.foodCategories
-  //       }
-  //     });
-  //   this.newFoodIntakeSubs.push(dialogRef.afterClosed().subscribe(pickedCategory => {
-  //       if (pickedCategory) {
-  //         usdaPickedFoodItem.category = pickedCategory;
-  //         this.foodService.saveCustomFood(usdaPickedFoodItem);
-  //       }
-  //     }));
-  //   }
+  saveCustomFood(usdaPickedFoodItem: FoodItem) {
+
+    this.actionSheetController.create({
+      header: 'Choose category',
+      buttons: this.createButtons(usdaPickedFoodItem)
+    }).then(actionSheetEl => {
+      actionSheetEl.present();
+    });
+  }
+
+  createButtons(foodItem: FoodItem) {
+    const buttons = [];
+    for (const btn of this.foodCategories) {
+      const button = {
+        text: btn.toUpperCase(),
+        handler: () => {
+          foodItem.category = btn;
+          this.foodService.saveCustomFood(this.loggedUserProfile.userId, foodItem);
+        }
+      };
+      buttons.push(button);
+    }
+    buttons.push({
+        text: 'CANCEL',
+        role: 'cancel'
+    });
+    return buttons;
+  }
 
   checkStartEnd() {
     console.log('here');

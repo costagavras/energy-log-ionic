@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { ProfileService } from '../profile.service';
 import { AuthService } from '../../auth/auth.service';
 import { User, UserProfile } from '../../auth/user.model';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-user-profile',
@@ -13,13 +14,14 @@ import { User, UserProfile } from '../../auth/user.model';
 export class UserProfilePage implements OnInit, OnDestroy {
 
   private profileSubs: Subscription[] = [];
-  private loggedUser: User;
+  loggedUser: User;
   loggedUserProfile: UserProfile;
 
 
   constructor(private router: Router,
               private profileService: ProfileService,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              private alertController: AlertController) { }
 
   ngOnInit() {}
 
@@ -35,7 +37,9 @@ export class UserProfilePage implements OnInit, OnDestroy {
     this.profileSubs.push(this.authService.user // getter, not event emitter
       .subscribe(user => {
         this.loggedUser = user;
-        this.profileService.getUserData(this.loggedUser.id); // event emitter for sub;
+        if (this.loggedUser !== null) {
+          this.profileService.getUserData(this.loggedUser.id); // event emitter for sub;
+        }
       })
     );
 
@@ -46,8 +50,28 @@ export class UserProfilePage implements OnInit, OnDestroy {
   }
 
   deleteUser(user: UserProfile) {
-    this.profileService.deleteProfile(user);
+
+    if (this.loggedUserProfile) {
+      this.alertController.create({
+        header: 'Delete this user data?',
+        cssClass: 'alert_delete_user',
+        buttons: [{
+                    text: 'Confirm',
+                    handler: () => {
+                      this.profileService.deleteProfile(user);
+                    }
+                  },
+                  {
+                    text: 'Cancel',
+                    role: 'cancel'
+                  }]
+      })
+      .then(alertDelete => {
+        alertDelete.present();
+      });
+    }
   }
+
 
   ionViewDidLeave() {
     if (this.profileSubs) {

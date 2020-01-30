@@ -17,6 +17,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     FoodEatPageRoutingModule,
     NgxDatatableModule
   ],
-  declarations: [FoodEatPage]
+  exports: [],
+  declarations: [FoodEatPage],
+  entryComponents: [],
 })
 export class FoodEatPageModule {}

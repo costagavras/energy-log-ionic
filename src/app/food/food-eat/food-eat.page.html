@@ -12,8 +12,8 @@
         <ion-card-subtitle class="ion-text-center">Date of meal</ion-card-subtitle>
         <ion-item class="ion-text-center">
           <ion-datetime 
-            displayFormat="DDDD, DD MMM, YYYY" 
-            picker-format="DDD MMM YY"
+            displayForion="DDDD, DD MMM, YYYY" 
+            picker-forion="DDD MMM YY"
             placeholder="Select Date"
             [ngModel]="today"
             [max]="today"
@@ -84,10 +84,10 @@
                     <ion-row>
                       <ion-col size="1" offset-xs="2" offset-lg="3" style="align-self: center;">
                         <ion-segment (ionChange)="measureChanged($event)" name="unit" [ngModel]="units" #toggleMtImpGroupDB="ngModel" class="metric_imperial_btn_toggle">
-                          <ion-segment-button value="metric">
+                          <ion-segment-button value="metric" [ngClass]="{'segment_emphasis' : units === 'metric'}">
                             <ion-label>gr</ion-label>
                           </ion-segment-button>
-                          <ion-segment-button value="imperial">
+                          <ion-segment-button value="imperial" [ngClass]="{'segment_emphasis' : units === 'imperial'}">
                             <ion-label>oz</ion-label>
                           </ion-segment-button>
                         </ion-segment>
@@ -108,8 +108,10 @@
 
             </ion-slide>
           </ion-slides>
-          <ion-button size="small" class="ion-float-left" (click)="slides.slidePrev()" [disabled]="disablePrevBtn"><ion-icon name="arrow-back" slot="start"></ion-icon>Prev</ion-button>
-          <ion-button size="small" class="ion-float-right" (click)="slides.slideNext()" [disabled]="disableNextBtn"><ion-icon name="arrow-forward" slot="end"></ion-icon>Next</ion-button>
+          <div class="ion-padding">
+            <ion-button size="small" class="ion-float-left" (click)="slides.slidePrev()" [disabled]="disablePrevBtn"><ion-icon name="arrow-back" slot="start"></ion-icon>Prev</ion-button>
+            <ion-button size="small" class="ion-float-right" (click)="slides.slideNext()" [disabled]="disableNextBtn"><ion-icon name="arrow-forward" slot="end"></ion-icon>Next</ion-button>
+          </div>
         </div>
 
         <!-- option usda database -->
@@ -117,11 +119,7 @@
           <ion-grid>
             <ion-row>
               <ion-col size-xs="8" size-md="6" offset-sm="1" offset-xl="2">
-                <!-- <ion-item> -->
-                  <!-- <ion-label position="floating">Search for keywords...</ion-label> -->
-                  <ion-searchbar animated showCancelButton="focus" inputmode="text" ngModel class="nameSearch" name="nameSearch" [required]="nameSearch.touched" #nameSearch="ngModel"></ion-searchbar>
-                  <!-- <ion-input inputmode="text" ngModel class="nameSearch" name="nameSearch" [required]="nameSearch.touched" #nameSearch="ngModel"></ion-input> -->
-                <!-- </ion-item> -->
+                <ion-searchbar aniioned showCancelButton="focus" inputmode="text" ngModel class="nameSearch" name="nameSearch" [required]="nameSearch.touched" #nameSearch="ngModel"></ion-searchbar>
               </ion-col>
               <ion-col size-xs="3" size-sm="2" offset-sm="1" class="ion-align-self-center">
                 <ion-button fill="solid" expand="block" [disabled]="!nameSearch.value" (click)="onSearch(nameSearch.value, branded, requireAllWords)">Go!</ion-button>
@@ -133,9 +131,60 @@
               </ion-col>
             </ion-row>
             <ion-row class="ion-justify-content-around ion-padding">
-                <ion-checkbox class="usda_checkbox" name="branded" [(ngModel)]="branded">Include branded items</ion-checkbox>
-                <ion-checkbox class="usda_checkbox" name="requireAllWords" [(ngModel)]="requireAllWords">Require all words</ion-checkbox>
+              <ion-item>
+                <ion-label>Include branded items</ion-label>
+                <ion-checkbox class="usda_checkbox" name="branded" [(ngModel)]="branded" slot="start"></ion-checkbox>
+              </ion-item>
+              <ion-item>
+                <ion-label>Require all words</ion-label>
+                <ion-checkbox class="usda_checkbox" name="requireAllWords" [(ngModel)]="requireAllWords" slot="start"></ion-checkbox>
+              </ion-item>
             </ion-row>
+
+            <ion-card *ngIf="usdaFoodItemDetailPaneOpen" class="usdaFoodItemPane">
+              <ion-segment class="ion-float-left" (ionChange)="measureChanged($event)" name="unit" [ngModel]="units" #toggleMtImpGroupUSDA="ngModel" class="metric_imperial_btn_toggle">
+                  <ion-segment-button value="metric" [ngClass]="{'segment_emphasis' : units === 'metric'}">
+                    <ion-label>gr</ion-label>
+                  </ion-segment-button>
+                  <ion-segment-button value="imperiial" [ngClass]="{'segment_emphasis' : units === 'imperial'}">
+                    <ion-label>oz</ion-label>
+                  </ion-segment-button>
+              </ion-segment>
+              <ion-card-title class="ion-text-center" style="padding-top: 10px;">
+                {{ usdaPickedFoodItem.name }}
+              </ion-card-title>
+              <ion-card-content>
+                <ion-item class="usda_portionSize">
+                  <ion-label position="floating">Portion size</ion-label>
+                  <ion-input ngModel type="number" name="servingUSDA" #servingUSDA="ngModel" class="usda_serving" [min]="minValue" [required]="servingUSDA.touched"></ion-input>
+                </ion-item>
+                <p *ngIf="servingUSDA.hasError('required') && servingUSDA.touched" color="danger" class="ion-padding">
+                  <ion-icon name="information-circle"></ion-icon> &nbsp; Invalid input</p>
+              <div *ngIf="toggleMtImpGroupUSDA.value === 'metric'">
+                <ion-list style="display: flex;" class="ion-justify-content-around">
+                  <ion-chip>Calories: {{ (usdaPickedFoodItem.caloriesIn / 100 * servingUSDA.value) | number: '1.0-0' }}</ion-chip>
+                  <ion-chip>Protein: {{ (usdaPickedFoodItem.protein / 100 * servingUSDA.value) | number: '1.0-0' }}</ion-chip>
+                  <ion-chip>Fat: {{ (usdaPickedFoodItem.fat / 100 * servingUSDA.value) | number: '1.0-0' }}</ion-chip>
+                  <ion-chip>Carb: {{ (usdaPickedFoodItem.carb / 100 * servingUSDA.value) | number: '1.0-0' }}</ion-chip>
+                </ion-list>
+              </div>
+              <div *ngIf="toggleMtImpGroupUSDA.value === 'imperial'">
+                <ion-list style="display: flex;" class="ion-justify-content-around">
+                  <ion-chip>Calories: {{ (usdaPickedFoodItem.caloriesIn / 100 * servingUSDA.value * 28.3495) | number: '1.0-0' }}</ion-chip>
+                  <ion-chip>Protein: {{ (usdaPickedFoodItem.protein / 100 * servingUSDA.value * 28.3495) | number: '1.0-0' }}</ion-chip>
+                  <ion-chip>Fat: {{ (usdaPickedFoodItem.fat / 100 * servingUSDA.value * 28.3495) | number: '1.0-0' }}</ion-chip>
+                  <ion-chip>Carb: {{ (usdaPickedFoodItem.carb / 100 * servingUSDA.value * 28.3495) | number: '1.0-0' }}</ion-chip>
+                </ion-list>
+              </div>
+                <ion-buttons class="usda_foodItemButtons" class="ion-justify-content-around">
+                  <ion-button color="secondary" fill="solid" (click)="saveCustomFood(usdaPickedFoodItem)">Save item to app database</ion-button>
+                  <ion-button color="primary" fill="solid" (click)="foodService.saveFoodItem(f.value.date, usdaPickedFoodItem.name, toggleMtImpGroupUSDA.value === 'metric' ? servingUSDA.value : servingUSDA.value * 28.3495, 'usda', usdaPickedFoodItem)"
+                   [disabled]="servingUSDA.untouched || servingUSDA.invalid">Save food</ion-button>
+                </ion-buttons>
+              </ion-card-content>
+            </ion-card>
+
+
             <ion-row class="ion-justify-content-around">
               <p class="usda_citation">U.S. Department of Agriculture, Agricultural Research Service. FoodData Central, 2019. fdc.nal.usda.gov.</p>
             </ion-row>
@@ -143,19 +192,20 @@
               <ion-list>
                 <ion-radio-group>
                   <ion-list-header>
-                    <h3 class="usda_subheader">Search results for:<span>&nbsp;{{ usdaSearch || '.....' }}</span>. Found:<span>&nbsp;{{ totalHits || '.....' }}&nbsp;</span>items</h3>
-                    <h3 class="usda_subheader">Showing page &nbsp;
-                        <ion-select ngModel (change)="onSearch(nameSearch.value, branded, requireAllWords, $event.target.value)" [(ngModel)]="defaultPage" name="page" #page>
-                          <option *ngFor="let page of [].constructor(totalPages); let i = index" [value]="i + 1">
+                    <h3>Search results for: <span class="span_search_results">&nbsp;{{ usdaSearch || '.....' }}</span><br/>
+                    Found:&nbsp;<span class="span_search_results">{{ totalHits || '.....' }}</span>  items</h3>
+                    <h3 style="display: inline-flex; align-items: baseline;">Page&nbsp;
+                        <ion-select class="page_select" ngModel (ionChange)="onSearch(nameSearch.value, branded, requireAllWords, $event.target.value)" [(ngModel)]="defaultPage" name="page" #page>
+                          <ion-select-option *ngFor="let page of [].constructor(totalPages); let i = index" [value]="i + 1">
                             {{ i + 1 }}
-                          </option>
+                          </ion-select-option>
                         </ion-select>
-                      &nbsp; of &nbsp; {{ totalPages}}.</h3>
+                      &nbsp;of&nbsp;{{ totalPages}}.</h3>
                   </ion-list-header>
 
                   <ion-item *ngFor="let foodItem of usdaFoodItems; let i = index" >
-                    <ion-label>{{ i + 1 + '. ' + foodItem.description }}</ion-label>
-                    <ion-radio slot="start" (click)="onPick(foodItem.fdcId)"></ion-radio>
+                    <ion-label>{{ (currentPage * 50) - 50 + i + 1 + '. ' + foodItem.description }}</ion-label>
+                    <ion-radio slot="start" (click)="onPick(foodItem.fdcId)"></ion-radio> <!-- fdcId is Unique ID of the food from https://fdc.nal.usda.gov/api-guide.html -->
                   </ion-item>
                 </ion-radio-group>
               </ion-list>
