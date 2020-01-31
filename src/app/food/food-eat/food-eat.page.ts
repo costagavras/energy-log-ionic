@@ -44,8 +44,6 @@ export class FoodEatPage implements OnInit, OnDestroy {
   usdaFoodItemDetailPaneOpen = false;
   usdaFoodItemDescription: string;
   usdaFoodItemDetail = [] as any;
-  // isLoadingFoodItems = false;
-  // isLoadingFoodItem = false;
   usdaSearchResults = false;
   units: string;
   usdaSearch: string;
@@ -229,8 +227,9 @@ export class FoodEatPage implements OnInit, OnDestroy {
     this.foodService.fetchCompletedFoodItems(userFirebaseId);
   }
 
-  measureChanged(event: any) {
-    console.log(event);
+  ionViewWillLeave() {
+    this.tableData = [];
+    this.tableDataFilter = [];
   }
 
   switchStyle() {
@@ -301,7 +300,6 @@ export class FoodEatPage implements OnInit, OnDestroy {
   // axios request
   onPick(foodDetailID: number) {
     this.usdaFoodItemDetailPaneOpen = false;
-    // this.isLoadingFoodItem = true;
     this.loadingController.create({keyboardClose: true, message: 'Searching USDA database...'})
       .then(loadingEl => {
         loadingEl.present();
@@ -321,7 +319,6 @@ export class FoodEatPage implements OnInit, OnDestroy {
             };
             this.usdaFoodItemDetailPaneOpen = true;
             loadingEl.dismiss();
-            // this.isLoadingFoodItem = false;
           }).catch(err => {
             console.log(err, err.response);
           });
@@ -329,7 +326,6 @@ export class FoodEatPage implements OnInit, OnDestroy {
   }
 
   onSearch(searchString: string, branded, allWords, page) {
-    // this.isLoadingFoodItems = true;
     this.loadingController.create({keyboardClose: true, message: 'Searching USDA database...'})
       .then(loadingEl => {
         loadingEl.present();
@@ -353,7 +349,6 @@ export class FoodEatPage implements OnInit, OnDestroy {
             this.totalHits = response.data.totalHits;
             this.currentPage = response.data.currentPage;
             this.totalPages = response.data.totalPages;
-            // this.isLoadingFoodItems = false;
             this.usdaSearchResults = true;
             loadingEl.dismiss();
           })
@@ -396,7 +391,6 @@ export class FoodEatPage implements OnInit, OnDestroy {
   }
 
   checkStartEnd() {
-    console.log('here');
     const prom1 = this.slides.isBeginning();
     const prom2 = this.slides.isEnd();
 

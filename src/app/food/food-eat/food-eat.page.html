@@ -83,7 +83,7 @@
                     
                     <ion-row>
                       <ion-col size="1" offset-xs="2" offset-lg="3" style="align-self: center;">
-                        <ion-segment (ionChange)="measureChanged($event)" name="unit" [ngModel]="units" #toggleMtImpGroupDB="ngModel" class="metric_imperial_btn_toggle">
+                        <ion-segment name="unit" [ngModel]="units" #toggleMtImpGroupDB="ngModel" class="metric_imperial_btn_toggle">
                           <ion-segment-button value="metric" [ngClass]="{'segment_emphasis' : units === 'metric'}">
                             <ion-label>gr</ion-label>
                           </ion-segment-button>
@@ -142,7 +142,7 @@
             </ion-row>
 
             <ion-card *ngIf="usdaFoodItemDetailPaneOpen" class="usdaFoodItemPane">
-              <ion-segment class="ion-float-left" (ionChange)="measureChanged($event)" name="unit" [ngModel]="units" #toggleMtImpGroupUSDA="ngModel" class="metric_imperial_btn_toggle">
+              <ion-segment class="ion-float-left" name="unit" [ngModel]="units" #toggleMtImpGroupUSDA="ngModel" class="metric_imperial_btn_toggle">
                   <ion-segment-button value="metric" [ngClass]="{'segment_emphasis' : units === 'metric'}">
                     <ion-label>gr</ion-label>
                   </ion-segment-button>
@@ -178,7 +178,7 @@
               </div>
                 <ion-buttons class="usda_foodItemButtons" class="ion-justify-content-around">
                   <ion-button color="primary" fill="solid" (click)="saveCustomFood(usdaPickedFoodItem)">Save item to app</ion-button>
-                  <ion-button color="primary" fill="solid" (click)="foodService.saveFoodItem(f.value.date, usdaPickedFoodItem.name, toggleMtImpGroupUSDA.value === 'metric' ? servingUSDA.value : servingUSDA.value * 28.3495, 'usda', usdaPickedFoodItem)"
+                  <ion-button color="primary" fill="solid" (click)="foodService.saveFoodItem(f.value.dateMeal, usdaPickedFoodItem.name, toggleMtImpGroupUSDA.value === 'metric' ? servingUSDA.value : servingUSDA.value * 28.3495, loggedUserProfile, 'usda', usdaPickedFoodItem)"
                    [disabled]="servingUSDA.untouched || servingUSDA.invalid">Save food</ion-button>
                 </ion-buttons>
               </ion-card-content>
@@ -189,7 +189,7 @@
               <p class="usda_citation">U.S. Department of Agriculture, Agricultural Research Service. FoodData Central, 2019. fdc.nal.usda.gov.</p>
             </ion-row>
             <div class="usda_search_results" *ngIf="usdaSearchResults">
-              <ion-list>
+              <ion-list class="usda_results_list">
                 <ion-radio-group>
                   <ion-list-header>
                     <h3>Search results for: &nbsp;<span class="span_search_results">{{ usdaSearch || '.....' }}</span><br/>
@@ -216,4 +216,52 @@
 
     </ion-card>
   </form>
+
+  <!-- ngx datatable -->
+  <ion-item class="ion-padding">
+    <ion-input slot="start" 
+      type="text" 
+      placeholder="Filter by name..."
+      (keyup)="doFilter($event.target.value)">
+    </ion-input>
+    <ion-buttons slot="end">
+      <ion-button fill="solid" expand="block" (click)="switchStyle()">{{ tableStyle }}</ion-button>
+    </ion-buttons>
+  </ion-item>
+  <ion-grid>
+    <ion-row>
+      <ion-col *ngFor="let col of allColumns">
+        <ion-item>
+          <ion-checkbox (click)="toggle(col)" checked="isChecked(col)" slot="end"></ion-checkbox>
+           &nbsp;<ion-label>{{ col.name }}</ion-label>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-checkbox (click)="toggleAction(allAction[0])" checked="isCheckedAction(allAction[0])" slot="end"></ion-checkbox>
+           &nbsp;<ion-label>{{ allAction[0].name }}</ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-item>
+    <ion-list>
+    </ion-list>
+  </ion-item>
+  <ngx-datatable 
+    [rows]="tableData" 
+    [ngClass]="tableClass" 
+    [rowHeight]="'auto'" 
+    [headerHeight]="50" 
+    [columnMode]="'force'" 
+    [summaryRow]="true"
+    [summaryPosition]="'bottom'"
+    [summaryHeight]='50'>
+    <ngx-datatable-column *ngFor="let col of columns" [name]="col.name" [prop]="col.prop"></ngx-datatable-column>
+    <ngx-datatable-column [name]="colAction[0].name" [prop]="colAction[0].prop" *ngIf="colAction.length > 0">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <ion-button size="small" fill="outline" (click)="foodService.deleteDataFromDatabase(row, loggedUserProfile.userId)"><ion-icon name="trash"></ion-icon></ion-button>
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
 </ion-content>

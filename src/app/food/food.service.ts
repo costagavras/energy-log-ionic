@@ -60,7 +60,7 @@ export class FoodService {
           this.availableFoodItemsStorage['beverages'] = foodItems;
           this.foodItemsBeveragesChanged.next([...this.availableFoodItemsStorage['beverages']]);
         }, error => {
-          this.uiService.showToast('Fetching food items failed, please try again later', 3000);
+          this.uiService.showToast('Fetching food items failed, please try again later', 2000);
     }));
   }
 
@@ -80,7 +80,7 @@ export class FoodService {
         this.availableFoodItemsStorage['dairy'] = foodItems;
         this.foodItemsDairyChanged.next([...this.availableFoodItemsStorage['dairy']]);
       }, error => {
-        this.uiService.showToast('Fetching food items failed, please try again later', 3000);
+        this.uiService.showToast('Fetching food items failed, please try again later', 2000);
       }));
   }
 
@@ -100,7 +100,7 @@ export class FoodService {
         this.availableFoodItemsStorage['desserts'] = foodItems;
         this.foodItemsDessertsChanged.next([...this.availableFoodItemsStorage['desserts']]);
       }, error => {
-        this.uiService.showToast('Fetching food items failed, please try again later', 3000);
+        this.uiService.showToast('Fetching food items failed, please try again later', 2000);
       }));
   }
 
@@ -120,7 +120,7 @@ export class FoodService {
         this.availableFoodItemsStorage['dishes'] = foodItems;
         this.foodItemsDishesChanged.next([...this.availableFoodItemsStorage['dishes']]);
       }, error => {
-        this.uiService.showToast('Fetching food items failed, please try again later', 3000);
+        this.uiService.showToast('Fetching food items failed, please try again later', 2000);
       }));
   }
 
@@ -140,7 +140,7 @@ export class FoodService {
         this.availableFoodItemsStorage['fats'] = foodItems;
         this.foodItemsFatsChanged.next([...this.availableFoodItemsStorage['fats']]);
       }, error => {
-        this.uiService.showToast('Fetching food items failed, please try again later', 3000);
+        this.uiService.showToast('Fetching food items failed, please try again later', 2000);
       }));
   }
 
@@ -160,7 +160,7 @@ export class FoodService {
         this.availableFoodItemsStorage['fish'] = foodItems;
         this.foodItemsFishChanged.next([...this.availableFoodItemsStorage['fish']]);
       }, error => {
-        this.uiService.showToast('Fetching food items failed, please try again later', 3000);
+        this.uiService.showToast('Fetching food items failed, please try again later', 2000);
       }));
   }
 
@@ -180,7 +180,7 @@ export class FoodService {
         this.availableFoodItemsStorage['fruits'] = foodItems;
         this.foodItemsFruitsChanged.next([...this.availableFoodItemsStorage['fruits']]);
       }, error => {
-        this.uiService.showToast('Fetching food items failed, please try again later', 3000);
+        this.uiService.showToast('Fetching food items failed, please try again later', 2000);
       }));
   }
 
@@ -200,7 +200,7 @@ export class FoodService {
         this.availableFoodItemsStorage['grains'] = foodItems;
         this.foodItemsGrainsChanged.next([...this.availableFoodItemsStorage['grains']]);
       }, error => {
-        this.uiService.showToast('Fetching food items failed, please try again later', 3000);
+        this.uiService.showToast('Fetching food items failed, please try again later', 2000);
       }));
   }
 
@@ -220,7 +220,7 @@ export class FoodService {
         this.availableFoodItemsStorage['meat'] = foodItems;
         this.foodItemsMeatChanged.next([...this.availableFoodItemsStorage['meat']]);
       }, error => {
-        this.uiService.showToast('Fetching food items failed, please try again later', 3000);
+        this.uiService.showToast('Fetching food items failed, please try again later', 2000);
       }));
   }
 
@@ -241,7 +241,7 @@ export class FoodService {
         this.availableFoodItemsStorage['vegetables'] = foodItems;
         this.foodItemsVegetablesChanged.next([...this.availableFoodItemsStorage['vegetables']]);
       }, error => {
-        this.uiService.showToast('Fetching food items failed, please try again later', 3000);
+        this.uiService.showToast('Fetching food items failed, please try again later', 2000);
       }));
   }
 
@@ -261,7 +261,7 @@ export class FoodService {
         this.availableFoodItemsStorage['other'] = foodItems;
         this.foodItemsOtherChanged.next([...this.availableFoodItemsStorage['other']]);
       }, error => {
-        this.uiService.showToast('Fetching food items failed, please try again later', 3000);
+        this.uiService.showToast('Fetching food items failed, please try again later', 2000);
       }));
   }
 
@@ -279,11 +279,11 @@ export class FoodService {
       .subscribe((foodItems: FoodItem[]) => {
         this.customFoodItemsChanged.next(foodItems);
       }, error => {
-        this.uiService.showToast('Fetching food items failed, please try again later', 3000);
+        this.uiService.showToast('Fetching food items failed, please try again later', 2000);
       }));
   }
 
-  saveFoodItem(foodDate: Date, name: string, size: number, userData: UserProfile, param: string, usdaFoodItem: FoodItem) {
+  saveFoodItem(foodDate: string, name: string, size: number, userData: UserProfile, param: string, usdaFoodItem: FoodItem) {
     if (param !== 'usda') {
       this.chosenFoodItem = this.availableFoodItemsStorage[param].find(ex => ex.name === name);
     } else {
@@ -297,12 +297,16 @@ export class FoodService {
       carb: Math.round(size / this.chosenFoodItem.serving * this.chosenFoodItem.carb),
       fat: Math.round(size / this.chosenFoodItem.serving * this.chosenFoodItem.fat),
       // dateStr: new Date(foodDate.setHours(12, 0, 0, 0)).toISOString().substring(0, 10).split('-').reverse().join('.'),
-      dateStr: new Date(foodDate.setHours(12, 0, 0, 0)).toISOString().substring(0, 10),
-      date: new Date(foodDate.setHours(12, 0, 0, 0))
+      // dateStr: new Date(foodDate.setHours(12, 0, 0, 0)).toISOString().substring(0, 10),
+      // date: new Date(foodDate.setHours(12, 0, 0, 0))
+      dateStr: foodDate.substring(0, 10),
+      date: new Date(new Date(foodDate).setHours(12, 0, 0, 0))
     },
     {
-      date: new Date(foodDate.setHours(12, 0, 0, 0)),
-      dateStr: new Date(foodDate.setHours(12, 0, 0, 0)).toISOString().substring(0, 10),
+      // date: new Date(foodDate.setHours(12, 0, 0, 0)),
+      // dateStr: new Date(foodDate.setHours(12, 0, 0, 0)).toISOString().substring(0, 10),
+      dateStr: foodDate.substring(0, 10),
+      date: new Date(new Date(foodDate).setHours(12, 0, 0, 0)),
       age: userData.age,
       weight: userData.weight,
       bmi: userData.bmi,
@@ -316,7 +320,7 @@ export class FoodService {
     if (oldName && oldName === 'delete') {
       return this.db.collection('users').doc(userFirebaseId).collection('userFoodItems').doc(foodItem.name).delete()
       .then(() => {
-        this.uiService.showToast(foodItem.name + ' was successfully deleted', 3000);
+        this.uiService.showToast(foodItem.name + ' was successfully deleted', 2000);
         });
     }
 
@@ -326,7 +330,7 @@ export class FoodService {
         .then(() => {
           this.db.collection('users').doc(userFirebaseId).collection('userFoodItems').doc(foodItem.name).set(foodItem)
             .then(() => {
-              this.uiService.showToast(foodItem.name + ' was updated in the database', 3000);
+              this.uiService.showToast(foodItem.name + ' was updated in the database', 2000);
               this.oldAddedFoodName = foodItem.name;
             });
         });
@@ -336,7 +340,7 @@ export class FoodService {
     if (!oldName) {
       return this.db.collection('users').doc(userFirebaseId).collection('userFoodItems').doc(foodItem.name).set(foodItem)
       .then(() => {
-        this.uiService.showToast(foodItem.name + ' was added to the database', 3000);
+        this.uiService.showToast(foodItem.name + ' was added to the database', 2000);
       });
     }
 
@@ -349,24 +353,10 @@ fetchCompletedFoodItems(userFirebaseId: string) {
       .subscribe((foodItem: FoodItem[]) => {
         this.finishedFoodItemsChanged.next(foodItem);
       }, error => {
-        this.uiService.showToast('Fetching food items failed, please try again later', 3000);
+        this.uiService.showToast('Fetching food items failed, please try again later', 2000);
       })
     );
   }
-
-  // fetchCustomFoodItems() {
-  //   this.uiService.loadingStateChanged.next(true);
-  //   this.foodServiceSubs.push(
-  //     this.db.collectionGroup<FoodItem>('userFoodItems').valueChanges()
-  //       .subscribe((foodItem: FoodItem[]) => {
-  //         this.uiService.loadingStateChanged.next(false);
-  //         this.customFoodItemsChanged.next(foodItem);
-  //   }, error => {
-  //     this.uiService.loadingStateChanged.next(false);
-  //     this.uiService.showToast('Fetching food items failed, please try again later', 3000);
-  //   })
-  //   );
-  // }
 
 filterDate(date) {
     this.dateFilter.next(date);
@@ -378,7 +368,7 @@ filterDate(date) {
       this.db.collection('users').doc(userFirebaseId).collection('finishedFoodItems').doc(docRef.id).update({
         id: docRef.id
       });
-      // this.uiService.showToast(foodItem.name + 'was successfully added', 3000);
+      this.uiService.showToast(foodItem.name + ' was successfully added', 1000);
     });
     this.db.collection('users').doc(userFirebaseId).collection('userStamp').doc(userStamp.dateStr).set(userStamp);
   }
@@ -386,7 +376,7 @@ filterDate(date) {
   // called from the template
   private deleteDataFromDatabase(foodItem: FoodItem, userFirebaseId: string) {
     this.db.collection('users').doc(userFirebaseId).collection('finishedFoodItems').doc(foodItem.id).delete();
-    this.uiService.showToast(foodItem.name + ' was successfully deleted', 3000);
+    this.uiService.showToast(foodItem.name + ' was successfully deleted', 1000);
   }
 
   cancelSubscriptions() {

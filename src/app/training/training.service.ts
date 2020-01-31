@@ -50,7 +50,7 @@ export class TrainingService {
         this.availableExercisesTime = exercises;
         this.exercisesTimeChanged.next([...this.availableExercisesTime]);
       }, error => {
-        this.uiService.showToast('Fetching exercises failed, please try again later', 3000);
+        this.uiService.showToast('Fetching exercises failed, please try again later', 2000);
       }));
   }
 
@@ -69,7 +69,7 @@ export class TrainingService {
         this.availableExercisesQty = exercises;
         this.exercisesQtyChanged.next([...this.availableExercisesQty]);
       }, error => {
-        this.uiService.showToast('Fetching exercises failed, please try again later', 3000);
+        this.uiService.showToast('Fetching exercises failed, please try again later', 2000);
       }));
   }
 
@@ -88,7 +88,7 @@ export class TrainingService {
         this.availableExercisesCal = exercises;
         this.exercisesCalChanged.next([...this.availableExercisesCal]);
       }, error => {
-        this.uiService.showToast('Fetching exercises failed, please try again later', 3000);
+        this.uiService.showToast('Fetching exercises failed, please try again later', 2000);
       }));
   }
 
@@ -120,8 +120,8 @@ export class TrainingService {
       dateStr: exerciseDate.substring(0, 10),
       date: new Date(new Date(exerciseDate).setHours(12, 0, 0, 0))
     }, {
-      date: new Date(new Date(exerciseDate).setHours(12, 0, 0, 0)),
       dateStr: exerciseDate.substring(0, 10),
+      date: new Date(new Date(exerciseDate).setHours(12, 0, 0, 0)),
       age: userData.age,
       weight: userData.weight,
       bmi: userData.bmi,
@@ -139,7 +139,7 @@ export class TrainingService {
       this.finishedExercisesChanged.next(exercises);
     }, error => {
       // this.uiService.loadingStateChanged.next(false);
-      this.uiService.showToast('Fetching exercises failed, please try again later', 3000);
+      this.uiService.showToast('Fetching exercises failed, please try again later', 2000);
     }));
   }
 
@@ -161,7 +161,7 @@ export class TrainingService {
   // called from the template
   private deleteDataFromDatabase(exercise: Exercise, userFirebaseId: string) {
     this.db.collection('users').doc(userFirebaseId).collection('finishedExercises').doc(exercise.id).delete();
-    this.uiService.showToast(exercise.name + ' was successfully deleted', 3000);
+    this.uiService.showToast(exercise.name + ' was successfully deleted', 1000);
   }
 
   cancelSubscriptions() {
