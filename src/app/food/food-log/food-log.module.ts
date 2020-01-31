@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { FoodLogPageRoutingModule } from './food-log-routing.module';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 import { FoodLogPage } from './food-log.page';
 
@@ -13,7 +14,8 @@ import { FoodLogPage } from './food-log.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    FoodLogPageRoutingModule
+    FoodLogPageRoutingModule,
+    NgxDatatableModule
   ],
   declarations: [FoodLogPage]
 })

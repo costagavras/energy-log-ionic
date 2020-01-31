@@ -258,9 +258,7 @@
       placeholder="Filter by name..."
       (keyup)="doFilter($event.target.value)">
     </ion-input>
-    <ion-buttons slot="end">
-      <ion-button fill="solid" expand="block" (click)="switchStyle()">{{ tableStyle }}</ion-button>
-    </ion-buttons>
+      <ion-button slot="end" fill="solid" expand="block" (click)="switchStyle()">{{ tableStyle }}</ion-button>
   </ion-item>
   <ion-grid>
     <ion-row>

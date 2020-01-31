@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { ProfileService } from '../../profile/profile.service';
 import { TrainingService } from '../training.service';
 import { User, UserProfile } from '../../auth/user.model';
-import { AuthService } from 'src/app/auth/auth.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-training-log',
@@ -16,15 +16,6 @@ export class TrainingLogPage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('myTable', { static: false }) table: any;
   @ViewChildren('groupSummary') groupSum: QueryList<any>;
 
-  funder = [];
-  calculated = [];
-  pending = [];
-  groups = [];
-  editing = {};
-
-  exercisesTime: Exercise[];
-  exercisesQty: Exercise[];
-  exercisesCal: Exercise[];
   private trainingLogSubs: Subscription[] = [];
   private loggedUser: User;
   loggedUserProfile: UserProfile;
@@ -63,7 +54,7 @@ export class TrainingLogPage implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(
         userProfileData => {
           this.loggedUserProfile = userProfileData;
-          this.updateFilteredDate();
+          this.fetchAllExercises(this.loggedUserProfile.userId);
       })
     );
 
@@ -75,24 +66,6 @@ export class TrainingLogPage implements OnInit, AfterViewInit, OnDestroy {
         }
       })
     );
-
-    this.trainingLogSubs.push(this.trainingService.exercisesTimeChanged
-      .subscribe(
-        exercises => (this.exercisesTime = exercises)
-      ));
-    this.trainingService.fetchAvailableExercisesTime();
-
-    this.trainingLogSubs.push(this.trainingService.exercisesQtyChanged
-    .subscribe(
-      exercises => (this.exercisesQty = exercises)
-    ));
-    this.trainingService.fetchAvailableExercisesQty();
-
-    this.trainingLogSubs.push(this.trainingService.exercisesCalChanged
-    .subscribe(
-      exercises => (this.exercisesCal = exercises)
-    ));
-    this.trainingService.fetchAvailableExercisesCal();
 
   }
 
@@ -110,13 +83,13 @@ export class TrainingLogPage implements OnInit, AfterViewInit, OnDestroy {
     }));
   }
 
-  updateFilteredDate() {
+  fetchAllExercises(userFirebaseId: string) {
     this.trainingLogSubs.push(this.trainingService.finishedExercisesChanged
     .subscribe((exercises: Exercise[]) => {
       this.tableData = exercises;
       this.tableDataFilter = exercises;
     }));
-    this.trainingService.fetchCompletedExercises(this.loggedUserProfile.userId);
+    this.trainingService.fetchCompletedExercises(userFirebaseId);
   }
 
   switchStyle() {

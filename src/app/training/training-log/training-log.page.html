@@ -6,7 +6,7 @@
 
 <ion-content *ngIf="loggedUserProfile">
 
-  <ion-item class="ion-padding">
+  <ion-item class="filter_row">
     <ion-input slot="start" 
       type="text" 
       placeholder="Filter by name..."
@@ -16,9 +16,7 @@
       <ion-label>Rows grouped</ion-label>
       <ion-checkbox name="chkBox" color="primary" checked="true" (ionChange)="toggleAllGroups()" slot="end"></ion-checkbox>
     </ion-item>
-    <ion-buttons slot="end">
-      <ion-button fill="solid" expand="block" (click)="switchStyle()">{{ tableStyle }}</ion-button>
-    </ion-buttons>
+      <ion-button slot="end" fill="solid" expand="block" (click)="switchStyle()">{{ tableStyle }}</ion-button>
   </ion-item>
   <ion-grid>
     <ion-row>

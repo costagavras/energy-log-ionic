@@ -130,7 +130,7 @@
                 <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Field must not be empty.</ion-label>
               </ion-col>
             </ion-row>
-            <ion-row class="ion-justify-content-around ion-padding">
+            <ion-row class="ion-justify-content-around ion-padding-bottom">
               <ion-item>
                 <ion-label>Include branded items</ion-label>
                 <ion-checkbox class="usda_checkbox" name="branded" [(ngModel)]="branded" slot="start"></ion-checkbox>
@@ -176,11 +176,11 @@
                   <ion-chip>Carb: {{ (usdaPickedFoodItem.carb / 100 * servingUSDA.value * 28.3495) | number: '1.0-0' }}</ion-chip>
                 </ion-list>
               </div>
-                <ion-buttons class="usda_foodItemButtons" class="ion-justify-content-around">
+                <div class="usda_foodItemButtons">
                   <ion-button color="primary" fill="solid" (click)="saveCustomFood(usdaPickedFoodItem)">Save item to app</ion-button>
                   <ion-button color="primary" fill="solid" (click)="foodService.saveFoodItem(f.value.dateMeal, usdaPickedFoodItem.name, toggleMtImpGroupUSDA.value === 'metric' ? servingUSDA.value : servingUSDA.value * 28.3495, loggedUserProfile, 'usda', usdaPickedFoodItem)"
                    [disabled]="servingUSDA.untouched || servingUSDA.invalid">Save food</ion-button>
-                </ion-buttons>
+                </div>
               </ion-card-content>
             </ion-card>
 
