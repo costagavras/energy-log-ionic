@@ -1,0 +1,80 @@
+.new-food-item {
+  padding: 10px;
+}
+
+.food-name {
+  width: 96%;
+  display: block;
+  margin: 0 auto;
+}
+
+.row2, .row3, .row4 {
+  width: 96%;
+  margin: 0 auto;
+}
+
+.food-category, .calories {
+  width: 45%;
+  text-align: center;
+}
+
+.measurement, .mat-calories {
+  width: 45%;
+  margin-left: 10%;
+  text-align: center;
+}
+
+
+.food-composition {
+  width: 30%;
+  text-align: center;
+}
+
+.fc2, .fc3 {
+  margin-left: 5%;
+}
+
+.mat-calories {
+  display: inline-block;
+  padding: 0px;
+  vertical-align: top;
+}
+
+.mat-calories > .mat-card-content {
+  margin-bottom: 2px;
+}
+
+.emphasis {
+  font: bold;
+  font-size: 16px;
+  color: black;
+  text-decoration-line: underline;
+}
+
+@media (min-width: 576px) {
+  .card_main {
+    width: 90%;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 768px) {
+  .card_main {
+    width: 80%;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 992px) {
+  .card_main {
+    width: 60%;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 1200px) {
+  .card_main {
+    width: 50%;
+    margin: 0 auto;
+  }
+}

@@ -1,9 +1,108 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>food-manage</ion-title>
+    <ion-title class="ion-text-center">App food database management</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <form #f="ngForm">
+    <ion-card class="card_main">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label position="floating">Pick food name...</ion-label>
+              <ionic-selectable name="filterFoodItem" #filterSearchBar="ngModel"
+                [(ngModel)]="filteredItem"
+                [items]="foodItems"
+                itemValueField="name"
+                itemTextField="name"
+                [canClear]="true"
+                [canSearch]="true"
+                closeButtonSlot="end"
+                [searchFailText]="'No food items were found.'"
+                [hasInfiniteScroll]="true"
+                [required]="filterSearchBar.touched"
+                (onChange)="onSelectionChanged(filteredItem)">
 
+                <ng-template ionicSelectableCloseButtonTemplate>
+                  <ion-icon name="close-circle"></ion-icon>
+                </ng-template>
+      
+            </ionic-selectable>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="filterSearchBar.hasError('required')">Field must not be empty</ion-row>
+      </ion-grid>
+    </ion-card> 
+  </form>
 </ion-content>
+
+       
+
+
+        <!-- <div class="row2">
+          <mat-form-field class="food-category" appearance="fill">
+            <mat-label>Food category</mat-label>
+            <mat-select ngModel name="foodCategory" required #foodCategoryInput="ngModel">
+              <mat-option *ngFor="let catItem of foodCategories" [value]="catItem">
+                {{ catItem.toUpperCase() }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="foodCategoryInput.hasError('required')">Field must not be empty.</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="measurement" appearance="fill">
+            <mat-label>Serving, gr</mat-label>
+            <input matInput ngModel type="number" name="serving" required min="minValue" #servingInput="ngModel">
+            <mat-error *ngIf="servingInput.hasError('required')">Field must not be empty!</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="row3">
+          <mat-form-field class="food-composition fc1" appearance="fill">
+            <mat-label>Fat, gr</mat-label>
+            <input matInput ngModel type="number" name="fat" [min]="minValue" required  #fatInput="ngModel">
+            <mat-error *ngIf="fatInput.hasError('required')">Field must not be empty.</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="food-composition fc2" appearance="fill">
+            <mat-label>Carbohydrate, gr</mat-label>
+            <input matInput ngModel type="number" name="carbohydrate" [min]="minValue" required #carbInput="ngModel">
+            <mat-error *ngIf="carbInput.hasError('required')">Field must not be empty.</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="food-composition fc3" appearance="fill">
+            <mat-label>Protein, gr</mat-label>
+            <input matInput ngModel type="number" name="protein" [min]="minValue" required #proteinInput="ngModel">
+            <mat-error *ngIf="proteinInput.hasError('required')">Field must not be empty.</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="row4">
+          <mat-form-field class="calories" appearance="fill">
+            <mat-label>Calories</mat-label>
+            <input matInput ngModel type="number" name="calories" required [min]="minValue" #caloriesInput="ngModel">
+            <mat-error *ngIf="caloriesInput.hasError('required')">Field must not be empty.</mat-error>
+          </mat-form-field>
+
+          <mat-card class="mat-calories" appearance="fill">
+            <mat-card-subtitle>Check calories</mat-card-subtitle>
+            <mat-card-content>
+              <h4>{{ (f.value.fat * 9 + (f.value.carbohydrate + f.value.protein) * 4) || '0' }}</h4>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <mat-action-row style="justify-content: space-around; display: flex;">
+          <button type="Submit" (click)="onSave(f, filterControl.value, 'delete')" mat-raised-button color="warn"
+          [disabled]="filterControl.invalid || filterControl.value === null || f.invalid">Delete</button>
+          <button type="Submit" (click)="resetForm()" mat-raised-button color="accent"
+          [disabled]="filterControl.invalid || filterControl.value === null || f.invalid">Reset</button>
+          <button type="Submit" (click)="onSave(f, filterControl.value, 'update')" mat-raised-button color="accent"
+          [disabled]="filterControl.invalid || filterControl.value === null || f.invalid">Update</button>
+          <button type="Submit" (click)="onSave(f, filterControl.value, 'add')" mat-raised-button color="primary"
+          [disabled]="filterControl.invalid || filterControl.value === null || f.invalid">Add</button>
+        </mat-action-row> -->
+

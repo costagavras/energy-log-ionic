@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { FoodManagePageRoutingModule } from './food-manage-routing.module';
-
+import { IonicSelectableModule } from 'ionic-selectable';
 import { FoodManagePage } from './food-manage.page';
 
 @NgModule({
@@ -13,7 +13,8 @@ import { FoodManagePage } from './food-manage.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    FoodManagePageRoutingModule
+    FoodManagePageRoutingModule,
+    IonicSelectableModule
   ],
   declarations: [FoodManagePage]
 })

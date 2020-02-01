@@ -16,7 +16,7 @@ export class FoodLogPage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('myTable', { static: false }) table: any;
   @ViewChildren('groupSummary') groupSum: QueryList<any>;
 
-  private trainingLogSubs: Subscription[] = [];
+  private foodLogSubs: Subscription[] = [];
   private loggedUser: User;
   loggedUserProfile: UserProfile;
 
@@ -54,7 +54,7 @@ allColumns = [
 
   ngOnInit() {
 
-    this.trainingLogSubs.push(this.profileService.userProfileData
+    this.foodLogSubs.push(this.profileService.userProfileData
       .subscribe(
         userProfileData => {
           this.loggedUserProfile = userProfileData;
@@ -62,7 +62,7 @@ allColumns = [
       })
     );
 
-    this.trainingLogSubs.push(this.authService.user // getter, not event emitter
+    this.foodLogSubs.push(this.authService.user // getter, not event emitter
       .subscribe(user => {
         this.loggedUser = user;
         if (this.loggedUser !== null) {
@@ -75,7 +75,7 @@ allColumns = [
 
   // will add total calories count per group after the table loads
   ngAfterViewInit() {
-    this.trainingLogSubs.push(this.groupSum.changes.subscribe(result => {
+    this.foodLogSubs.push(this.groupSum.changes.subscribe(result => {
       if (this.table.groupedRows) {
         setTimeout(() => { // to avoid expression has changed after it was checked
           this.table.groupedRows.map(group => {
@@ -88,7 +88,7 @@ allColumns = [
   }
 
   fetchAllFoodItems(userFirebaseId: string) {
-    this.trainingLogSubs.push(this.foodService.finishedFoodItemsChanged
+    this.foodLogSubs.push(this.foodService.finishedFoodItemsChanged
     .subscribe((foodItem: FoodItem[]) => {
       this.tableData = foodItem;
       this.tableDataFilter = foodItem;
@@ -166,8 +166,8 @@ allColumns = [
   }
 
   ngOnDestroy() {
-    if (this.trainingLogSubs) {
-      this.trainingLogSubs.forEach(sub => sub.unsubscribe());
+    if (this.foodLogSubs) {
+      this.foodLogSubs.forEach(sub => sub.unsubscribe());
     }
   }
 }
