@@ -51,30 +51,46 @@
   text-decoration-line: underline;
 }
 
-@media (min-width: 576px) {
-  .card_main {
-    width: 90%;
-    margin: 0 auto;
-  }
+ion-select, ion-input {
+  background: rgba(0,0,0,.04);
+  max-width: none;
+  width: 100%;
+  text-align: center;
 }
 
-@media (min-width: 768px) {
+ion-col {
+  text-align: center;
+}
+
+.buttons_manage_foodItem {
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (min-width: 576px) {
   .card_main {
     width: 80%;
     margin: 0 auto;
   }
 }
 
+@media (min-width: 768px) {
+  .card_main {
+    width: 70%;
+    margin: 0 auto;
+  }
+}
+
 @media (min-width: 992px) {
   .card_main {
-    width: 60%;
+    width: 50%;
     margin: 0 auto;
   }
 }
 
 @media (min-width: 1200px) {
   .card_main {
-    width: 50%;
+    width: 40%;
     margin: 0 auto;
   }
 }

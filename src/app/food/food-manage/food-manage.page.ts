@@ -19,6 +19,10 @@ import { IonicSelectableComponent } from 'ionic-selectable';
 })
 export class FoodManagePage implements OnInit, OnDestroy {
 
+  @Output() optionSelected: EventEmitter<any>;
+  @ViewChild('f', {static: false}) addFoodForm: NgForm;
+  @ViewChild('filterSearchBar', {static: false}) filterSearch: IonicSelectableComponent;
+
   minValue = 0;
   name: string;
   today = new Date();
@@ -36,9 +40,6 @@ export class FoodManagePage implements OnInit, OnDestroy {
               private profileService: ProfileService,
               private authService: AuthService) { }
 
-  @Output() optionSelected: EventEmitter<any>;
-  @ViewChild('f', {static: false}) addFoodForm: NgForm;
-  @ViewChild('filterSearchBar', {static: false}) filterSearch: IonicSelectableComponent;
 
 
   ngOnInit() {
@@ -63,33 +64,35 @@ export class FoodManagePage implements OnInit, OnDestroy {
     this.addFoodSubs.push(this.foodService.customFoodItemsChanged
       .subscribe(foodItems => {
         this.foodItems = foodItems;
-        this.filteredFoodItems = this.filterControl.valueChanges
-        .pipe(
-          startWith(''),
-          map(value => value !== null ? typeof value === 'string' ? value : value.name : ''),
-          map(name => name ? this._filter(name) : this.foodItems.slice())
-        );
+        // this.filteredFoodItems = this.filterControl.valueChanges
+        // .pipe(
+        //   startWith(''),
+        //   map(value => value !== null ? typeof value === 'string' ? value : value.name : ''),
+        //   map(name => name ? this._filter(name) : this.foodItems.slice())
+        // );
       }));
 
   }
 
-  // onSave(form: NgForm, filterValue: any, action: string) {
-  //   if (action === 'delete') {
-  //     this.foodService.saveCustomFood(filterValue, 'delete');
-  //     form.resetForm();
-  //     this.filterControl.reset();
-  //   } else {
-  //     this.foodService.saveCustomFood({
-  //       name: typeof filterValue === 'string' ? filterValue : filterValue.name,
-  //       serving: form.value.serving,
-  //       caloriesIn: form.value.calories,
-  //       fat: form.value.fat,
-  //       carb: form.value.carbohydrate,
-  //       protein: form.value.protein,
-  //       category: form.value.foodCategory.toLowerCase(),
-  //     }, action === 'update' ? this.foodService.oldAddedFoodName || this.name : null);
-  //   }
-  // }
+  onSave(user: UserProfile, form: NgForm, filterValue: any, action: string) {
+    if (action === 'delete') {
+      this.foodService.saveCustomFood(user.userId, filterValue, 'delete');
+      this.resetForm();
+    } else {
+      this.foodService.saveCustomFood(
+        user.userId,
+        {
+          name: typeof filterValue === 'string' ? filterValue : filterValue.name,
+          serving: form.value.serving,
+          caloriesIn: form.value.calories,
+          fat: form.value.fat,
+          carb: form.value.carbohydrate,
+          protein: form.value.protein,
+          category: form.value.foodCategory.toLowerCase(),
+        },
+        action === 'update' ? this.foodService.oldAddedFoodName || this.name : null);
+    }
+  }
 
   displayFn(foodItem?: FoodItem): string | undefined {
     if (!foodItem) {
@@ -106,17 +109,17 @@ export class FoodManagePage implements OnInit, OnDestroy {
   }
 
   onSelectionChanged(selectedFoodItem: FoodItem) {
-    console.log(selectedFoodItem);
-    // this.name = event.value.name,
-    // // using ViewChild
-    // this.addFoodForm.setValue({
-    //   foodCategory: event.option.value.category,
-    //   serving: event.option.value.serving,
-    //   fat: event.option.value.fat,
-    //   carbohydrate: event.option.value.carb,
-    //   protein: event.option.value.protein,
-    //   calories: event.option.value.caloriesIn
-    // });
+    this.name = selectedFoodItem.name,
+    // using ViewChild
+    this.addFoodForm.setValue({
+      filterFoodItem: selectedFoodItem,
+      foodCategory: selectedFoodItem.category,
+      serving: selectedFoodItem.serving,
+      fat: selectedFoodItem.fat,
+      carb: selectedFoodItem.carb,
+      protein: selectedFoodItem.protein,
+      calories: selectedFoodItem.caloriesIn
+    });
   }
 
   resetForm() {

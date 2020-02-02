@@ -4,24 +4,21 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf="loggedUserProfile">
   <form #f="ngForm">
     <ion-card class="card_main">
+
       <ion-grid>
+
+        <!-- Row: 1 - Dropdown food item -->
         <ion-row>
           <ion-col>
             <ion-item>
               <ion-label position="floating">Pick food name...</ion-label>
-              <ionic-selectable name="filterFoodItem" #filterSearchBar="ngModel"
-                [(ngModel)]="filteredItem"
-                [items]="foodItems"
-                itemValueField="name"
-                itemTextField="name"
-                [canClear]="true"
-                [canSearch]="true"
-                closeButtonSlot="end"
-                [searchFailText]="'No food items were found.'"
-                [hasInfiniteScroll]="true"
+              <ionic-selectable name="filterFoodItem" #filterSearchBar="ngModel" [(ngModel)]="filteredItem"
+                [items]="foodItems" itemValueField="name" itemTextField="name"
+                [canClear]="true" [canSearch]="true" [searchFailText]="'No food items were found.'"
+                closeButtonSlot="end" [hasInfiniteScroll]="true"
                 [required]="filterSearchBar.touched"
                 (onChange)="onSelectionChanged(filteredItem)">
 
@@ -33,76 +30,101 @@
             </ion-item>
           </ion-col>
         </ion-row>
-        <ion-row *ngIf="filterSearchBar.hasError('required')">Field must not be empty</ion-row>
+        <ion-row *ngIf="filterSearchBar.hasError('required')">
+          <ion-col>
+            <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Field must not be empty.</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <!-- Row: 2 - Dropdown categories -->
+        <ion-row>
+          <ion-col offset-md="1">
+            <ion-item>
+              <ion-label position="floating">Choose food category</ion-label>
+              <ion-select ngModel name="foodCategory" [required]="foodCategoryInput.touched" #foodCategoryInput="ngModel">
+                <ion-select-option *ngFor="let catItem of foodCategories" [value]="catItem"
+                  >{{ catItem.toUpperCase() }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+          <!-- Input serving size -->
+          <ion-col>
+            <ion-item>
+              <ion-label position="floating">Serving, gr</ion-label>
+              <ion-input ngModel type="number" name="serving" [required]="servingInput.touched" [min]="minValue" #servingInput="ngModel"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <!-- Error message -->
+        <ion-row *ngIf="foodCategoryInput.hasError('required') && foodCategoryInput.touched || servingInput.hasError('required') && servingInput.touched">
+          <ion-col offset-md="4">
+            <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Field must not be empty.</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <!-- Row: 3 - Input serving fat, carbs, protein -->
+        <ion-row>
+          <ion-col offset-md="1">
+            <ion-item>
+              <ion-label position="floating">Fat, gr</ion-label>
+              <ion-input ngModel type="number" name="fat" [required]="fatInput.touched" [min]="minValue" #fatInput="ngModel"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-item>
+              <ion-label position="floating">Carbohydrate, gr</ion-label>
+              <ion-input ngModel type="number" name="carb" [required]="carbInput.touched" [min]="minValue" #carbInput="ngModel"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-item>
+              <ion-label position="floating">Protein, gr</ion-label>
+              <ion-input ngModel type="number" name="protein" [required]="proteinInput.touched" [min]="minValue" #proteinInput="ngModel"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <!-- Error message -->
+        <ion-row *ngIf="fatInput.hasError('required') && fatInput.touched || carbInput.hasError('required') && carbInput.touched || proteinInput.hasError('required') && proteinInput.touched">
+          <ion-col offset-md="4">
+            <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Field must not be empty.</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <!-- Row 4: - Input serving calories, check calories -->
+        <ion-row>
+          <ion-col offset-md="1">
+            <ion-item>
+              <ion-label position="floating">kCalories</ion-label>
+              <ion-input ngModel type="number" name="calories" [required]="caloriesInput.touched" [min]="minValue" #caloriesInput="ngModel"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-card-subtitle>Check calories</ion-card-subtitle>
+            <ion-chip outline color="primary">
+              <ion-icon name="arrow-back"></ion-icon>
+              <ion-label>{{ (fatInput.value * 9 + (carbInput.value + proteinInput.value) * 4) | number: '1.0-0' }}</ion-label>
+              <ion-icon name="arrow-forward"></ion-icon>
+            </ion-chip>
+          </ion-col>
+        </ion-row>
+        <!-- Error message -->
+        <ion-row *ngIf="caloriesInput.hasError('required') && caloriesInput.touched">
+          <ion-col offset-md="4">
+            <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Field must not be empty.</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <div class="buttons_manage_foodItem">
+          <ion-button type="Submit" (click)="onSave(loggedUserProfile, f, filterSearchBar.value, 'delete')" [disabled]="filterSearchBar.invalid || filterSearchBar.value === null || f.invalid">Delete</ion-button>
+          <ion-button type="Submit" (click)="resetForm()" [disabled]="filterSearchBar.invalid || filterSearchBar.value === null || f.invalid">Reset</ion-button>
+          <ion-button type="Submit" (click)="onSave(loggedUserProfile, f, filterSearchBar.value, 'update')" [disabled]="filterSearchBar.invalid || filterSearchBar.value === null || f.invalid">Update</ion-button>
+          <ion-button type="Submit" (click)="onSave(loggedUserProfile, f, filterSearchBar.value, 'add')" [disabled]="filterSearchBar.invalid || filterSearchBar.value === null || f.invalid">Add</ion-button>
+        </div>
+
       </ion-grid>
     </ion-card> 
   </form>
 </ion-content>
 
        
-
-
-        <!-- <div class="row2">
-          <mat-form-field class="food-category" appearance="fill">
-            <mat-label>Food category</mat-label>
-            <mat-select ngModel name="foodCategory" required #foodCategoryInput="ngModel">
-              <mat-option *ngFor="let catItem of foodCategories" [value]="catItem">
-                {{ catItem.toUpperCase() }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="foodCategoryInput.hasError('required')">Field must not be empty.</mat-error>
-          </mat-form-field>
-
-          <mat-form-field class="measurement" appearance="fill">
-            <mat-label>Serving, gr</mat-label>
-            <input matInput ngModel type="number" name="serving" required min="minValue" #servingInput="ngModel">
-            <mat-error *ngIf="servingInput.hasError('required')">Field must not be empty!</mat-error>
-          </mat-form-field>
-        </div>
-
-        <div class="row3">
-          <mat-form-field class="food-composition fc1" appearance="fill">
-            <mat-label>Fat, gr</mat-label>
-            <input matInput ngModel type="number" name="fat" [min]="minValue" required  #fatInput="ngModel">
-            <mat-error *ngIf="fatInput.hasError('required')">Field must not be empty.</mat-error>
-          </mat-form-field>
-
-          <mat-form-field class="food-composition fc2" appearance="fill">
-            <mat-label>Carbohydrate, gr</mat-label>
-            <input matInput ngModel type="number" name="carbohydrate" [min]="minValue" required #carbInput="ngModel">
-            <mat-error *ngIf="carbInput.hasError('required')">Field must not be empty.</mat-error>
-          </mat-form-field>
-
-          <mat-form-field class="food-composition fc3" appearance="fill">
-            <mat-label>Protein, gr</mat-label>
-            <input matInput ngModel type="number" name="protein" [min]="minValue" required #proteinInput="ngModel">
-            <mat-error *ngIf="proteinInput.hasError('required')">Field must not be empty.</mat-error>
-          </mat-form-field>
-        </div>
-
-        <div class="row4">
-          <mat-form-field class="calories" appearance="fill">
-            <mat-label>Calories</mat-label>
-            <input matInput ngModel type="number" name="calories" required [min]="minValue" #caloriesInput="ngModel">
-            <mat-error *ngIf="caloriesInput.hasError('required')">Field must not be empty.</mat-error>
-          </mat-form-field>
-
-          <mat-card class="mat-calories" appearance="fill">
-            <mat-card-subtitle>Check calories</mat-card-subtitle>
-            <mat-card-content>
-              <h4>{{ (f.value.fat * 9 + (f.value.carbohydrate + f.value.protein) * 4) || '0' }}</h4>
-            </mat-card-content>
-          </mat-card>
-        </div>
-
-        <mat-action-row style="justify-content: space-around; display: flex;">
-          <button type="Submit" (click)="onSave(f, filterControl.value, 'delete')" mat-raised-button color="warn"
-          [disabled]="filterControl.invalid || filterControl.value === null || f.invalid">Delete</button>
-          <button type="Submit" (click)="resetForm()" mat-raised-button color="accent"
-          [disabled]="filterControl.invalid || filterControl.value === null || f.invalid">Reset</button>
-          <button type="Submit" (click)="onSave(f, filterControl.value, 'update')" mat-raised-button color="accent"
-          [disabled]="filterControl.invalid || filterControl.value === null || f.invalid">Update</button>
-          <button type="Submit" (click)="onSave(f, filterControl.value, 'add')" mat-raised-button color="primary"
-          [disabled]="filterControl.invalid || filterControl.value === null || f.invalid">Add</button>
-        </mat-action-row> -->
-
