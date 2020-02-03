@@ -24,6 +24,12 @@
   text-align: center;
 }
 
+.emphasis {
+  font-weight: bold;
+  font-size: 16px;
+  color: black;
+  text-decoration-line: underline;
+}
 
 .food-composition {
   width: 30%;
@@ -44,17 +50,14 @@
   margin-bottom: 2px;
 }
 
-.emphasis {
-  font: bold;
-  font-size: 16px;
-  color: black;
-  text-decoration-line: underline;
-}
-
 ion-select, ion-input {
   background: rgba(0,0,0,.04);
   max-width: none;
   width: 100%;
+  text-align: center;
+}
+
+:host ::ng-deep .ionic-selectable-value {
   text-align: center;
 }
 
@@ -64,7 +67,7 @@ ion-col {
 
 .buttons_manage_foodItem {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 
 @media (min-width: 576px) {

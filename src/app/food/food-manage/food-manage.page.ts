@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter, ViewChild } from '@angular/core';
-import { NgForm, FormControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 
 import { FoodService } from '../food.service';
 import { ProfileService } from '../../profile/profile.service';
@@ -24,7 +24,7 @@ export class FoodManagePage implements OnInit, OnDestroy {
   @ViewChild('filterSearchBar', {static: false}) filterSearch: IonicSelectableComponent;
 
   minValue = 0;
-  name: string;
+  name = ' ';
   today = new Date();
   foodCategories = ['beverages', 'dairy', 'desserts', 'dishes', 'fats', 'fish', 'fruits', 'grains',
                     'meat', 'vegetables', 'other'];
@@ -32,9 +32,8 @@ export class FoodManagePage implements OnInit, OnDestroy {
   private loggedUser: User;
   loggedUserProfile: UserProfile;
   foodItems: FoodItem[];
-  filteredItem: FoodItem;
+  searchFoundItem: FoodItem;
   filteredFoodItems: Observable<FoodItem[]>;
-  filterControl = new FormControl();
 
   constructor(public foodService: FoodService,
               private profileService: ProfileService,
@@ -74,19 +73,19 @@ export class FoodManagePage implements OnInit, OnDestroy {
 
   }
 
-  onSave(user: UserProfile, form: NgForm, filterValue: any, action: string) {
-    if (action === 'delete') {
-      this.foodService.saveCustomFood(user.userId, filterValue, 'delete');
+  onSave(user: UserProfile, form: NgForm, action: string) {
+    if (action === 'delete' && !this.searchFoundItem) {
+      this.foodService.saveCustomFood(user.userId, this.searchFoundItem, 'delete');
       this.resetForm();
     } else {
       this.foodService.saveCustomFood(
         user.userId,
         {
-          name: typeof filterValue === 'string' ? filterValue : filterValue.name,
+          name: form.value.name,
           serving: form.value.serving,
           caloriesIn: form.value.calories,
           fat: form.value.fat,
-          carb: form.value.carbohydrate,
+          carb: form.value.carb,
           protein: form.value.protein,
           category: form.value.foodCategory.toLowerCase(),
         },
@@ -109,7 +108,12 @@ export class FoodManagePage implements OnInit, OnDestroy {
   }
 
   onSelectionChanged(selectedFoodItem: FoodItem) {
-    this.name = selectedFoodItem.name,
+    if (!selectedFoodItem) {
+      this.resetForm();
+      return;
+    }
+    this.searchFoundItem = selectedFoodItem;
+    this.name = selectedFoodItem.name; // set name for food input in E/Add mode
     // using ViewChild
     this.addFoodForm.setValue({
       filterFoodItem: selectedFoodItem,
@@ -125,7 +129,32 @@ export class FoodManagePage implements OnInit, OnDestroy {
   resetForm() {
     // using ViewChild
     this.addFoodForm.reset();
-    this.filterSearch.clear();
+  }
+
+  ionViewWillLeave() {
+    this.resetForm();
+  }
+
+  // solution to avoid undefined input error on nameInput.hasError('required'),
+  // probably related to search_toggle issue of being undefined on load
+  deleteSpace() {
+    this.name = '';
+  }
+
+  validInputForm(form: NgForm) {
+    if (
+          form.value.name === '' ||
+          form.value.category === '' ||
+          form.value.serving === '' ||
+          form.value.fat === '' ||
+          form.value.carb === '' ||
+          form.value.protein === '' ||
+          form.value.calories === ''
+        ) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   ngOnDestroy() {

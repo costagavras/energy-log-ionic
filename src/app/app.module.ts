@@ -11,7 +11,7 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { IonicSelectableModule } from 'ionic-selectable';
+// import { IonicSelectableModule } from 'ionic-selectable';
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,7 +19,7 @@ import { IonicSelectableModule } from 'ionic-selectable';
   imports: [
     BrowserModule,
     HttpClientModule, IonicModule.forRoot(),
-    IonicSelectableModule,
+    // IonicSelectableModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase), // imports firebase/app needed for everything
     AngularFirestoreModule, // imports firebase/firestore, only needed for database features
