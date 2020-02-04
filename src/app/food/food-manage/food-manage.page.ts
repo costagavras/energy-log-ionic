@@ -24,7 +24,11 @@ export class FoodManagePage implements OnInit, OnDestroy {
   @ViewChild('filterSearchBar', {static: false}) filterSearch: IonicSelectableComponent;
 
   minValue = 0;
-  name = ' ';
+  name: string;
+  disabledDeleteButton = true;
+  disabledUpdateButton = true;
+  disableAddButton = true;
+  nameExists = false;
   today = new Date();
   foodCategories = ['beverages', 'dairy', 'desserts', 'dishes', 'fats', 'fish', 'fruits', 'grains',
                     'meat', 'vegetables', 'other'];
@@ -33,6 +37,7 @@ export class FoodManagePage implements OnInit, OnDestroy {
   loggedUserProfile: UserProfile;
   foodItems: FoodItem[];
   searchFoundItem: FoodItem;
+  oldFoodItemName: string;
   filteredFoodItems: Observable<FoodItem[]>;
 
   constructor(public foodService: FoodService,
@@ -63,48 +68,51 @@ export class FoodManagePage implements OnInit, OnDestroy {
     this.addFoodSubs.push(this.foodService.customFoodItemsChanged
       .subscribe(foodItems => {
         this.foodItems = foodItems;
-        // this.filteredFoodItems = this.filterControl.valueChanges
-        // .pipe(
-        //   startWith(''),
-        //   map(value => value !== null ? typeof value === 'string' ? value : value.name : ''),
-        //   map(name => name ? this._filter(name) : this.foodItems.slice())
-        // );
       }));
 
   }
 
-  onSave(user: UserProfile, form: NgForm, action: string) {
-    if (action === 'delete' && !this.searchFoundItem) {
-      this.foodService.saveCustomFood(user.userId, this.searchFoundItem, 'delete');
-      this.resetForm();
-    } else {
-      this.foodService.saveCustomFood(
-        user.userId,
-        {
-          name: form.value.name,
-          serving: form.value.serving,
-          caloriesIn: form.value.calories,
-          fat: form.value.fat,
-          carb: form.value.carb,
-          protein: form.value.protein,
-          category: form.value.foodCategory.toLowerCase(),
-        },
-        action === 'update' ? this.foodService.oldAddedFoodName || this.name : null);
-    }
+  onDelete(user: UserProfile) {
+    this.foodService.deleteCustomFood(user.userId, this.searchFoundItem);
+    this.resetForm();
   }
 
-  displayFn(foodItem?: FoodItem): string | undefined {
-    if (!foodItem) {
-      return '';
+  onAdd(user: UserProfile, form: NgForm) {
+    if (this.oldFoodItemName === form.value.name) {
+      console.log('same name');
+      return;
     }
-    return foodItem ? foodItem.name : undefined;
+    this.foodService.saveCustomFood(
+      user.userId,
+      {
+        name: form.value.name,
+        serving: form.value.serving,
+        caloriesIn: form.value.calories,
+        fat: form.value.fat,
+        carb: form.value.carb,
+        protein: form.value.protein,
+        category: form.value.foodCategory.toLowerCase()
+      }
+    );
   }
 
-  private _filter(name: string): FoodItem[] {
-    if (name != null) {
-    const filterValue = name.toLowerCase();
-    return this.foodItems.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
-    }
+
+  onUpdate(user: UserProfile, form: NgForm) {
+    this.foodService.saveCustomFood(
+      user.userId,
+      {
+        name: form.value.name,
+        serving: form.value.serving,
+        caloriesIn: form.value.calories,
+        fat: form.value.fat,
+        carb: form.value.carb,
+        protein: form.value.protein,
+        category: form.value.foodCategory.toLowerCase()
+      },
+      // if no name change will update existing, if name change will delete old and add new food Item
+      this.oldFoodItemName === form.value.name ? null : this.oldFoodItemName
+    );
+    this.oldFoodItemName = form.value.name;
   }
 
   onSelectionChanged(selectedFoodItem: FoodItem) {
@@ -113,7 +121,10 @@ export class FoodManagePage implements OnInit, OnDestroy {
       return;
     }
     this.searchFoundItem = selectedFoodItem;
-    this.name = selectedFoodItem.name; // set name for food input in E/Add mode
+    this.oldFoodItemName = selectedFoodItem.name;
+    this.name = selectedFoodItem.name; // set name for food input in Edit/Add mode
+    this.disabledDeleteButton = false;
+    this.disabledUpdateButton = false;
     // using ViewChild
     this.addFoodForm.setValue({
       filterFoodItem: selectedFoodItem,
@@ -129,31 +140,27 @@ export class FoodManagePage implements OnInit, OnDestroy {
   resetForm() {
     // using ViewChild
     this.addFoodForm.reset();
+    this.searchFoundItem = null;
+    this.oldFoodItemName = null;
+    this.disabledDeleteButton = true;
+    this.disabledUpdateButton = true;
+    this.disableAddButton = true;
   }
 
   ionViewWillLeave() {
     this.resetForm();
   }
 
-  // solution to avoid undefined input error on nameInput.hasError('required'),
-  // probably related to search_toggle issue of being undefined on load
-  deleteSpace() {
-    this.name = '';
-  }
-
-  validInputForm(form: NgForm) {
-    if (
-          form.value.name === '' ||
-          form.value.category === '' ||
-          form.value.serving === '' ||
-          form.value.fat === '' ||
-          form.value.carb === '' ||
-          form.value.protein === '' ||
-          form.value.calories === ''
-        ) {
-      return false;
+  nameChange(event: any) {
+    const newName = event.target.value.trim();
+    if (newName !== '' && newName !== this.oldFoodItemName) {
+      this.disableAddButton = false;
+      this.nameExists = this.foodItems.some(item => item.name === newName);
+    } else if (newName === '') {
+        this.disabledUpdateButton = true;
+        this.disableAddButton = true;
     } else {
-      return true;
+        this.disableAddButton = true;
     }
   }
 

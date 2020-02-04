@@ -13,9 +13,9 @@
         <ion-row>
           <ion-col>
             <ion-item>
-              <ion-label class="mode_label" style="text-align: end;" [ngClass]="{'emphasis' : !search_toggle.checked}">Edit / Add mode</ion-label>
+              <ion-label style="text-align: end;" [ngClass]="{'emphasis' : !search_toggle.checked}">Edit / Add mode</ion-label>
               <ion-toggle checked="false" #search_toggle></ion-toggle>
-              <ion-label class="mode_label" [ngClass]="{'emphasis' : search_toggle.checked}">Search mode</ion-label>
+              <ion-label [ngClass]="{'emphasis' : search_toggle.checked}">Search mode</ion-label>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -25,7 +25,7 @@
           <ion-col offset-md="1">
             <ion-item>
               <ion-label position="floating">Add / change name</ion-label>
-              <ion-input (ionFocus)="deleteSpace()" ngModel type="text" name="name" [required]="nameInput.touched" [min]="minValue" #nameInput="ngModel" [(ngModel)]="name"></ion-input>
+              <ion-input ngModel type="text" (ionChange)="nameChange($event)" name="name" minLength="1" [required]="nameInput.touched" #nameInput="ngModel" [(ngModel)]="name"></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -35,7 +35,13 @@
             <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Field must not be empty.</ion-label>
           </ion-col>
         </ion-row>
+        <ion-row *ngIf="!search_toggle.checked && nameExists">
+          <ion-col>
+            <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;This name/food item exists in your database. Proceeding will modify it.</ion-label>
+          </ion-col>
+        </ion-row>
 
+        <!-- Firestorage search -->
         <ion-row *ngIf="search_toggle.checked">
           <ion-col offset-md="1">
             <ion-item>
@@ -62,7 +68,7 @@
           <ion-col offset-md="1">
             <ion-item [disabled]="search_toggle.checked">
               <ion-label position="floating">Food category</ion-label>
-              <ion-select ngModel name="foodCategory" [required]="foodCategoryInput.touched" #foodCategoryInput="ngModel">
+              <ion-select ngModel name="foodCategory" [required]="foodCategoryInput.touched" minLength="1" #foodCategoryInput="ngModel">
                 <ion-select-option *ngFor="let catItem of foodCategories" [value]="catItem"
                   >{{ catItem.toUpperCase() }}
                 </ion-select-option>
@@ -73,7 +79,7 @@
           <ion-col>
             <ion-item [disabled]="search_toggle.checked">
               <ion-label position="floating">Serving, gr</ion-label>
-              <ion-input ngModel type="number" name="serving" [required]="servingInput.touched" [min]="minValue" #servingInput="ngModel"></ion-input>
+              <ion-input ngModel type="number" name="serving" [required]="servingInput.touched" minLength="1" [min]="minValue" #servingInput="ngModel"></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -89,19 +95,19 @@
           <ion-col offset-md="1">
             <ion-item [disabled]="search_toggle.checked">
               <ion-label position="floating">Fat, gr</ion-label>
-              <ion-input ngModel type="number" name="fat" [required]="fatInput.touched" [min]="minValue" #fatInput="ngModel"></ion-input>
+              <ion-input ngModel type="number" name="fat" [required]="fatInput.touched" minLength="1" [min]="minValue" #fatInput="ngModel"></ion-input>
             </ion-item>
           </ion-col>
           <ion-col>
             <ion-item [disabled]="search_toggle.checked">
               <ion-label position="floating">Carbohydrate, gr</ion-label>
-              <ion-input ngModel type="number" name="carb" [required]="carbInput.touched" [min]="minValue" #carbInput="ngModel"></ion-input>
+              <ion-input ngModel type="number" name="carb" [required]="carbInput.touched" minLength="1" [min]="minValue" #carbInput="ngModel"></ion-input>
             </ion-item>
           </ion-col>
           <ion-col>
             <ion-item [disabled]="search_toggle.checked">
               <ion-label position="floating">Protein, gr</ion-label>
-              <ion-input ngModel type="number" name="protein" [required]="proteinInput.touched" [min]="minValue" #proteinInput="ngModel"></ion-input>
+              <ion-input ngModel type="number" name="protein" [required]="proteinInput.touched" minLength="1" [min]="minValue" #proteinInput="ngModel"></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -117,7 +123,7 @@
           <ion-col offset-md="1">
             <ion-item [disabled]="search_toggle.checked">
               <ion-label position="floating">kCalories</ion-label>
-              <ion-input ngModel type="number" name="calories" [required]="caloriesInput.touched" [min]="minValue" #caloriesInput="ngModel"></ion-input>
+              <ion-input ngModel type="number" name="calories" [required]="caloriesInput.touched" minLength="1" [min]="minValue" #caloriesInput="ngModel"></ion-input>
             </ion-item>
           </ion-col>
           <ion-col>
@@ -137,10 +143,10 @@
         </ion-row>
 
         <div class="buttons_manage_foodItem ion-padding">
-          <ion-button type="Submit" (click)="onSave(loggedUserProfile, f, 'delete')" [disabled]="search_toggle.checked || !validInputForm(f)">Delete</ion-button>
-          <ion-button type="Submit" (click)="resetForm()" [disabled]="search_toggle.checked">Reset</ion-button>
-          <ion-button type="Submit" (click)="onSave(loggedUserProfile, f, 'update')" [disabled]="search_toggle.checked || !validInputForm(f)">Update</ion-button>
-          <ion-button type="Submit" (click)="onSave(loggedUserProfile, f, 'add')" [disabled]="search_toggle.checked || !validInputForm(f)">Add</ion-button>
+          <ion-button *ngIf="!search_toggle.checked" (click)="onDelete(loggedUserProfile)" [disabled]="f.invalid || disabledDeleteButton">Delete</ion-button>
+          <ion-button *ngIf="!search_toggle.checked" (click)="resetForm()">Reset</ion-button>
+          <ion-button *ngIf="!search_toggle.checked" (click)="onUpdate(loggedUserProfile, f, 'update')" [disabled]="f.invalid || disabledUpdateButton">Update</ion-button>
+          <ion-button *ngIf="!search_toggle.checked" (click)="onAdd(loggedUserProfile, f, 'add')" [disabled]="f.invalid || disableAddButton || f.value.name === oldFoodItemName">Add</ion-button>
         </div>
 
       </ion-grid>

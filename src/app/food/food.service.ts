@@ -315,28 +315,29 @@ export class FoodService {
     }, userData.userId);
   }
 
-  saveCustomFood(userFirebaseId: string, foodItem: FoodItem, oldName?: string) {
-    // case Delete
-    if (oldName && oldName === 'delete') {
-      return this.db.collection('users').doc(userFirebaseId).collection('userFoodItems').doc(foodItem.name).delete()
-      .then(() => {
-        this.uiService.showToast(foodItem.name + ' was successfully deleted', 2000);
-        });
-    }
 
-    // case Update
-    if (oldName && oldName !== 'delete') {
+  deleteCustomFood(userFirebaseId: string, foodItem: FoodItem) {
+    const itemName = foodItem.name;
+    return this.db.collection('users').doc(userFirebaseId).collection('userFoodItems').doc(foodItem.name).delete()
+    .then(() => {
+      this.uiService.showToast(itemName + ' was successfully deleted', 2000);
+      });
+  }
+
+  saveCustomFood(userFirebaseId: string, foodItem: FoodItem, oldName?: string) {
+
+    // case Update - case name change - will delete and add new food Item;
+    if (oldName) {
       return this.db.collection('users').doc(userFirebaseId).collection('userFoodItems').doc(oldName).delete()
         .then(() => {
           this.db.collection('users').doc(userFirebaseId).collection('userFoodItems').doc(foodItem.name).set(foodItem)
             .then(() => {
               this.uiService.showToast(foodItem.name + ' was updated in the database', 2000);
-              this.oldAddedFoodName = foodItem.name;
             });
         });
     }
 
-    // case Add
+    // case Add or Update with no name change - will simply rewrite the old food Item
     if (!oldName) {
       return this.db.collection('users').doc(userFirebaseId).collection('userFoodItems').doc(foodItem.name).set(foodItem)
       .then(() => {
