@@ -1,10 +1,13 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
-import { Exercise } from '../exercise.model';
+
 import { Subscription } from 'rxjs';
+
 import { ProfileService } from '../../profile/profile.service';
 import { TrainingService } from '../training.service';
-import { User, UserProfile } from '../../auth/user.model';
 import { AuthService } from '../../auth/auth.service';
+
+import { User, UserProfile } from '../../auth/user.model';
+import { Exercise } from '../exercise.model';
 
 @Component({
   selector: 'app-training-log',

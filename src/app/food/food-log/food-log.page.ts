@@ -1,8 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewChildren, ViewChild, QueryList, AfterViewInit } from '@angular/core';
+
 import { ProfileService } from '../../profile/profile.service';
 import { AuthService } from '../../auth/auth.service';
 import { FoodService } from '../food.service';
+
 import { Subscription } from 'rxjs';
+
 import { User, UserProfile } from '../../auth/user.model';
 import { FoodItem } from '../food-item.model';
 

@@ -53,39 +53,16 @@ private profileServiceSubs: Subscription[] = [];
         });
   }
 
-  // getUserStampData(userId) {
-  //   this.profileServiceSubs.push(
-  //     this.db.collection('users/' + userId + '/userStamp').valueChanges()
-  //     .subscribe((userStamps: UserStamp[]) => {
-  //       this.userStampsCollection.next(userStamps);
-  //     }, error => {
-  //       this.uiService.showToast('Fetching user info failed, please try again later', 3000);
-  //     }
-  //   ));
-  // }
-
-  // getFirebaseUser() {
-  //   return firebase.auth().currentUser;
-  // }
-
-  // getUserData2() {
-  //   firebase.auth().onAuthStateChanged(user => {
-  //     if (user) {
-  //       const userRef = this.db.collection('users').doc(user.uid);
-  //       userRef.get().toPromise()
-  //         .then(doc => {
-  //           if (doc.exists) {
-  //             this.userProfile = doc.data();
-  //             this.userProfileData.next(this.userProfile);
-  //           }
-  //         })
-  //         .catch(err => {
-  //           console.log('Error getting document', err);
-  //         });
-  //       }
-  //     });
-  //   return this.userProfile;
-  // }
+  getUserStampData(userId) {
+    this.profileServiceSubs.push(
+      this.db.collection('users/' + userId + '/userStamp').valueChanges()
+      .subscribe((userStamps: UserStamp[]) => {
+        this.userStampsCollection.next(userStamps);
+      }, error => {
+        this.uiService.showToast('Fetching user info failed, please try again later', 3000);
+      }
+    ));
+  }
 
   getActivitiesList() {
     this.profileServiceSubs.push(

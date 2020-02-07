@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { LogPageRoutingModule } from './log-routing.module';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 import { LogPage } from './log.page';
 
@@ -13,7 +14,8 @@ import { LogPage } from './log.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    LogPageRoutingModule
+    LogPageRoutingModule,
+    NgxDatatableModule
   ],
   declarations: [LogPage]
 })
