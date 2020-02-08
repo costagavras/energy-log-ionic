@@ -25,37 +25,35 @@ export class LogPage implements OnInit, AfterViewInit, OnDestroy {
 
   // table styling
   groupExpansion = false;
-  tableData: any;
-  // tableDataFilter: Exercise[];
-  // tableData: FoodItem[];
-  // tableDataFilter: FoodItem[];
+  tableData = [];
   objExercises: Exercise[] = [];
   objFoodItems: FoodItem[] = [];
   userStampData: UserStamp[] = [];
-
-  private initialData: any[] = [];
 
   totalCaloriesIn: number;
   totalCaloriesExercise: number;
   totalDayEnergyExpenditure: number;
   totalCaloriesBalance: number;
 
+  logPeriods = ['date', 'week', 'month', 'year'];
+
   columns = [
               { name: 'Date', prop: 'dateStr'},
-              { name: 'Energy+', prop: 'energyIn'},
-              { name: 'Total Energy-', prop: 'energyOut'},
-              { name: 'Exercise', prop: 'exercise'},
+              { name: 'Energy+', prop: 'caloriesIn'},
+              { name: 'Total Energy-', prop: 'totalEnergy'},
+              { name: 'Exercise', prop: 'caloriesExercise'},
               { name: 'Balance', prop: 'balance'}
             ];
   allColumns = [
               { name: 'Date', prop: 'dateStr'},
-              { name: 'Name', prop: 'name'},
-              { name: 'Calories', prop: 'caloriesOut'},
-              { name: 'Duration', prop: 'duration'},
-              { name: 'Quantity', prop: 'quantity'}
+              { name: 'Energy+', prop: 'caloriesIn'},
+              { name: 'Total Energy-', prop: 'totalEnergy'},
+              { name: 'Exercise', prop: 'caloriesExercise'},
+              { name: 'Balance', prop: 'balance'}
             ];
   tableClass = 'dark';
   tableStyle = 'dark';
+  tableToggle = true;
 
   constructor(private profileService: ProfileService,
               public trainingService: TrainingService,
@@ -71,6 +69,7 @@ export class LogPage implements OnInit, AfterViewInit, OnDestroy {
           this.trainingService.fetchCompletedExercises(this.loggedUserProfile.userId);
           this.foodService.fetchCompletedFoodItems(this.loggedUserProfile.userId);
           this.profileService.getUserStampData(this.loggedUserProfile.userId);
+          this.transformData();
       })
     );
 
@@ -133,8 +132,7 @@ export class LogPage implements OnInit, AfterViewInit, OnDestroy {
     await Promise.all([this.getUserStampInfo(), this.fetchFinishedExercises(), this.fetchAllEatenFood()]);
 
     const arCombinedData = Array().concat(this.objExercises, this.objFoodItems, this.userStampData);
-
-    console.log(arCombinedData);
+    // console.log(arCombinedData);
 
     // accept array and key (property)
     const groupByProperty = (objectArray, property) => {
@@ -171,8 +169,9 @@ export class LogPage implements OnInit, AfterViewInit, OnDestroy {
 
       return {
         date: dateAdj4Tz,
+        dateStr: dateAdj4Tz.toISOString().substring(0, 10),
         week: weekNum,
-        month: monthNum,
+        month: monthNum + 1,
         year: yearNum,
         caloriesIn: Math.round(calsIn),
         caloriesExercise: Math.round(calsExercise),
@@ -181,13 +180,13 @@ export class LogPage implements OnInit, AfterViewInit, OnDestroy {
       };
     }));
 
-    // console.log(summaryByDay);
-    this.tableData.data = summaryByDay;
-    this.initialData = summaryByDay;
-    this.totalCaloriesIn = this.tableData.data.map(item => item.caloriesIn).reduce((acc, value) => acc + value, 0);
-    this.totalCaloriesExercise = this.tableData.data.map(item => item.caloriesExercise).reduce((acc, value) => acc + value, 0);
-    this.totalDayEnergyExpenditure = this.tableData.data.map(item => item.totalEnergy).reduce((acc, value) => acc + value, 0);
-    this.totalCaloriesBalance = this.tableData.data.map(item => item.balance).reduce((acc, value) => acc + value, 0);
+    this.tableData = summaryByDay.sort((d1, d2) => d2.date.getTime() - d1.date.getTime());
+    // console.log(this.tableData);
+    // this.totalCaloriesIn = this.tableData.map(item => item.caloriesIn).reduce((acc, value) => acc + value, 0);
+    // console.log(this.totalCaloriesIn);
+    // this.totalCaloriesExercise = this.tableData.map(item => item.caloriesExercise).reduce((acc, value) => acc + value, 0);
+    // this.totalDayEnergyExpenditure = this.tableData.map(item => item.totalEnergy).reduce((acc, value) => acc + value, 0);
+    // this.totalCaloriesBalance = this.tableData.map(item => item.balance).reduce((acc, value) => acc + value, 0);
   }
 
 
@@ -201,15 +200,6 @@ export class LogPage implements OnInit, AfterViewInit, OnDestroy {
       this.tableStyle = 'dark';
     }
   }
-
-  // doFilter(filterValue: string) {
-  //   const filteredValue = filterValue.trim().toLowerCase();
-  //   const filteredData = [...this.tableDataFilter].filter(val => {
-  //     return val.name.toLowerCase().indexOf(filteredValue) !== -1 || !filteredValue;
-  //   });
-
-  //   filterValue ? this.tableData = filteredData : this.tableData = this.tableDataFilter;
-  // }
 
   toggle(col) {
     const isChecked = this.isChecked(col);
@@ -234,6 +224,13 @@ export class LogPage implements OnInit, AfterViewInit, OnDestroy {
 
   toggleExpandGroup(group) {
     this.table.groupHeader.toggleExpandGroup(group);
+  }
+
+  updateTable() {
+    this.tableToggle = false;
+    this.table.groupedRows.map(group => this.table.groupHeader.toggleExpandGroup(group));
+    this.table.groupedRows.map(group => this.table.groupHeader.toggleExpandGroup(group));
+    this.tableToggle = true;
   }
 
   toggleAllGroups() {

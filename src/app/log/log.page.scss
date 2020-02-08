@@ -1,5 +1,9 @@
-ion-input, .ion-native {
+ion-input, ion-select, .ion-native {
   background: rgba(0,0,0,.04);
+}
+
+ion-select {
+  width: 20%;
 }
 
 @media (max-width: 768px) {

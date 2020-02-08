@@ -7,13 +7,13 @@
 <ion-content *ngIf="loggedUserProfile">
 
   <ion-item class="filter_row">
-    <ion-input slot="start" 
-      type="text" 
-      placeholder="Filter by name..."
-      (keyup)="doFilter($event.target.value)">
-    </ion-input>
-    <ion-item>
-      <ion-label>Rows grouped</ion-label>
+    <ion-select slot="start" (ionChange)="updateTable()" [ngModel]="'date'" name="groupLog" #groupLogPeriod="ngModel" placeholder="Choose group period">
+      <ion-select-option *ngFor="let period of logPeriods" [value]="period"
+        >{{ period }}
+      </ion-select-option>
+    </ion-select>
+    <ion-item style="margin: 0 auto;">
+      <ion-label>Rows collapsed</ion-label>
       <ion-checkbox name="chkBox" color="primary" checked="true" (ionChange)="toggleAllGroups()" slot="end"></ion-checkbox>
     </ion-item>
       <ion-button slot="end" fill="solid" expand="block" (click)="switchStyle()">{{ tableStyle }}</ion-button>
@@ -26,24 +26,18 @@
            &nbsp;<ion-label>{{ col.name }}</ion-label>
         </ion-item>
       </ion-col>
-      <ion-col>
-        <ion-item>
-          <ion-checkbox (click)="toggleAction(allAction[0])" checked="isCheckedAction(allAction[0])" slot="end"></ion-checkbox>
-           &nbsp;<ion-label>{{ allAction[0].name }}</ion-label>
-        </ion-item>
-      </ion-col>
     </ion-row>
   </ion-grid>
   <ion-item>
     <ion-list>
     </ion-list>
   </ion-item>
-  <ngx-datatable
+  <ngx-datatable *ngIf="tableToggle"
     #myTable
     class="material expandable"
     [rows]="tableData" 
     [groupExpansionDefault]="false"
-    [groupRowsBy]="'dateStr'"
+    [groupRowsBy]="groupLogPeriod.value"
     [ngClass]="tableClass" 
     [rowHeight]="'auto'" 
     [headerHeight]="50" 
@@ -61,8 +55,11 @@
             [class.datatable-icon-down]="expanded"
             title="Expand/Collapse Group"
             (click)="toggleExpandGroup(group)">
-            <b style="padding-left: 5px;">Date: &nbsp; {{ group.value[0].dateStr }}</b>
-            <b style="padding-left: 50px;">Calories: &nbsp; {{ group.groupCalories | number }}</b>
+            <b *ngIf="groupLogPeriod.value === 'date'" style="padding-left: 5px;">Date: &nbsp; {{ group.value[0].date | date: 'EEE, d MMM, y' }}</b>
+            <b *ngIf="groupLogPeriod.value === 'week'" style="padding-left: 5px;">Week: &nbsp; {{ group.value[0].week}}</b>
+            <b *ngIf="groupLogPeriod.value === 'month'" style="padding-left: 5px;">Month: &nbsp; {{ group.value[0].month}}</b>
+            <b *ngIf="groupLogPeriod.value === 'year'" style="padding-left: 5px;">Year: &nbsp; {{ group.value[0].year}}</b>
+            <!-- <b style="padding-left: 50px;">Calories: &nbsp; {{ group.value[0].caloriesIn | number }}</b> -->
           </a>
         </div>
       </ng-template>
