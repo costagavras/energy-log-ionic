@@ -14,7 +14,7 @@ import { Exercise } from '../training/exercise.model';
   templateUrl: './log.page.html',
   styleUrls: ['./log.page.scss'],
 })
-export class LogPage implements OnInit, AfterViewInit, OnDestroy {
+export class LogPage implements OnInit, OnDestroy {
 
   @ViewChild('myTable', { static: false }) table: any;
   @ViewChildren('groupSummary') groupSum: QueryList<any>;
@@ -85,18 +85,18 @@ export class LogPage implements OnInit, AfterViewInit, OnDestroy {
 
 
   // will add total calories count per group after the table loads
-  ngAfterViewInit() {
-    this.logSubs.push(this.groupSum.changes.subscribe(result => {
-      if (this.table.groupedRows) {
-        setTimeout(() => { // to avoid expression has changed after it was checked
-          this.table.groupedRows.map(group => {
-            const totalCaloriesGroup = group.value.map(ex => ex.caloriesOut).reduce((acc, value) => acc + value, 0);
-            group.groupCalories = totalCaloriesGroup;
-          }, 1);
-        });
-      }
-    }));
-  }
+  // ngAfterViewInit() {
+  //   this.logSubs.push(this.groupSum.changes.subscribe(result => {
+  //     if (this.table.groupedRows) {
+  //       setTimeout(() => { // to avoid expression has changed after it was checked
+  //         this.table.groupedRows.map(group => {
+  //           const totalCaloriesGroup = group.value.map(ex => ex.caloriesOut).reduce((acc, value) => acc + value, 0);
+  //           group.groupCalories = totalCaloriesGroup;
+  //         }, 1);
+  //       });
+  //     }
+  //   }));
+  // }
 
   fetchFinishedExercises() {
     return new Promise (resolve => {
@@ -182,11 +182,19 @@ export class LogPage implements OnInit, AfterViewInit, OnDestroy {
 
     this.tableData = summaryByDay.sort((d1, d2) => d2.date.getTime() - d1.date.getTime());
     // console.log(this.tableData);
-    // this.totalCaloriesIn = this.tableData.map(item => item.caloriesIn).reduce((acc, value) => acc + value, 0);
+    // const groupedByWeek = groupByProperty(this.tableData, 'week');
+    // console.log(groupedByWeek);
+    // // this.totalCaloriesIn = groupedByWeek.map(item => item.caloriesIn).reduce((acc, value) => acc + value, 0);
+    // for (const [key] of Object.keys(groupedByWeek)) {
+    //   const test = groupedByWeek[key].map(item => item.caloriesIn).reduce((acc, value) => acc + value, 0);
+    //   groupedByWeek[key][0]['calInTotal'] = test;
+    //  }
+    // console.log(groupedByWeek);
     // console.log(this.totalCaloriesIn);
     // this.totalCaloriesExercise = this.tableData.map(item => item.caloriesExercise).reduce((acc, value) => acc + value, 0);
     // this.totalDayEnergyExpenditure = this.tableData.map(item => item.totalEnergy).reduce((acc, value) => acc + value, 0);
     // this.totalCaloriesBalance = this.tableData.map(item => item.balance).reduce((acc, value) => acc + value, 0);
+
   }
 
 
@@ -223,14 +231,20 @@ export class LogPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   toggleExpandGroup(group) {
+    console.log(group);
     this.table.groupHeader.toggleExpandGroup(group);
   }
 
   updateTable() {
-    this.tableToggle = false;
-    this.table.groupedRows.map(group => this.table.groupHeader.toggleExpandGroup(group));
-    this.table.groupedRows.map(group => this.table.groupHeader.toggleExpandGroup(group));
-    this.tableToggle = true;
+    setTimeout(() => {
+    this.table.groupedRows.map(group => {
+      group.groupCaloriesIn = group.value.map(ex => ex.caloriesIn).reduce((acc, value) => acc + value, 0);
+      group.groupCaloriesOutTotal = group.value.map(item => item.totalEnergy).reduce((acc, value) => acc + value, 0);
+      group.groupCaloriesOutExercise = group.value.map(item => item.caloriesExercise).reduce((acc, value) => acc + value, 0);
+      group.groupCaloriesBalance = group.value.map(item => item.balance).reduce((acc, value) => acc + value, 0);
+      console.log(group);
+    });
+    }, 200);
   }
 
   toggleAllGroups() {
