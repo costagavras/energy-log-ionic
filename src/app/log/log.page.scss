@@ -6,6 +6,10 @@ ion-select {
   width: 20%;
 }
 
+:host ::ng-deep .ngx-datatable.dark .datatable-body-cell-label {
+  color: white;
+}
+
 @media (max-width: 768px) {
   .filter_row {
     padding: 0px;

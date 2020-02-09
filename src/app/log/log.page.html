@@ -32,43 +32,43 @@
     <ion-list>
     </ion-list>
   </ion-item>
-  <ngx-datatable *ngIf="tableToggle"
-    #myTable
-    class="material expandable"
-    [rows]="tableData" 
-    [groupExpansionDefault]="false"
-    [groupRowsBy]="groupLogPeriod.value"
-    [ngClass]="tableClass" 
-    [rowHeight]="'auto'" 
-    [headerHeight]="50" 
-    [columnMode]="'force'" 
-    [summaryRow]="true"
-    [summaryPosition]="'bottom'"
-    [summaryHeight]='50'>
+  <ngx-datatable
+  #myTable
+  class="material expandable"
+  [rows]="tableData" 
+  [groupExpansionDefault]="false"
+  [groupRowsBy]="groupLogPeriod.value"
+  [ngClass]="tableClass"
+  [rowHeight]="'auto'" 
+  [headerHeight]="50" 
+  [columnMode]="'force'" 
+  [summaryRow]="true"
+  [summaryPosition]="'bottom'"
+  [summaryHeight]='60'>
+  
+  <!-- Group Header Template -->
+  <ngx-datatable-group-header [rowHeight]="50" #myGroupHeader>
+    <ng-template let-group="group" let-expanded="expanded" ngx-datatable-group-header-template>
+      <div style="padding-left:5px; display:flex; width: 300px;">
+        <a #groupSummary
+        [class.datatable-icon-right]="!expanded"
+        [class.datatable-icon-down]="expanded"
+        title="Expand/Collapse Group"
+        (click)="toggleExpandGroup(group)">
+        <b *ngIf="groupLogPeriod.value === 'date'" style="padding-left: 5px;">Date: &nbsp; {{ group.value[0].date | date: 'EEE, d MMM, y' }}</b>
+        <b *ngIf="groupLogPeriod.value === 'week'" style="padding-left: 5px;">Week: &nbsp; {{ group.value[0].week}}</b>
+        <b *ngIf="groupLogPeriod.value === 'month'" style="padding-left: 5px;">Month: &nbsp; {{ group.value[0].month}}</b>
+        <b *ngIf="groupLogPeriod.value === 'year'" style="padding-left: 5px;">Year: &nbsp; {{ group.value[0].year}}</b>
+        <!-- <b style="padding-left: 50px;">Calories: &nbsp; {{ group.value[0].caloriesIn | number }}</b> -->
+      </a>
+    </div>
+  </ng-template>
+</ngx-datatable-group-header>
 
-    <!-- Group Header Template -->
-    <ngx-datatable-group-header [rowHeight]="50" #myGroupHeader>
-      <ng-template let-group="group" let-expanded="expanded" ngx-datatable-group-header-template>
-        <div style="padding-left:5px; display:flex; width: 300px;">
-          <a #groupSummary
-            [class.datatable-icon-right]="!expanded"
-            [class.datatable-icon-down]="expanded"
-            title="Expand/Collapse Group"
-            (click)="toggleExpandGroup(group)">
-            <b *ngIf="groupLogPeriod.value === 'date'" style="padding-left: 5px;">Date: &nbsp; {{ group.value[0].date | date: 'EEE, d MMM, y' }}</b>
-            <b *ngIf="groupLogPeriod.value === 'week'" style="padding-left: 5px;">Week: &nbsp; {{ group.value[0].week}}</b>
-            <b *ngIf="groupLogPeriod.value === 'month'" style="padding-left: 5px;">Month: &nbsp; {{ group.value[0].month}}</b>
-            <b *ngIf="groupLogPeriod.value === 'year'" style="padding-left: 5px;">Year: &nbsp; {{ group.value[0].year}}</b>
-            <!-- <b style="padding-left: 50px;">Calories: &nbsp; {{ group.value[0].caloriesIn | number }}</b> -->
-          </a>
-        </div>
-      </ng-template>
-    </ngx-datatable-group-header>
-
-    <ngx-datatable-column *ngFor="let col of columns" [name]="col.name" [prop]="col.prop">
-      <ngx-datatable-row-detail></ngx-datatable-row-detail>
-    </ngx-datatable-column>
-  </ngx-datatable>
+  <ngx-datatable-column *ngFor="let col of columns" [name]="col.name" [prop]="col.prop">
+    <ngx-datatable-row-detail></ngx-datatable-row-detail>
+  </ngx-datatable-column>
+</ngx-datatable>
   
 </ion-content>
 

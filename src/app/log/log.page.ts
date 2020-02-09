@@ -51,8 +51,8 @@ export class LogPage implements OnInit, AfterViewInit, OnDestroy {
               { name: 'Exercise', prop: 'caloriesExercise'},
               { name: 'Balance', prop: 'balance'}
             ];
-  tableClass = 'dark';
-  tableStyle = 'dark';
+  tableClass = 'light';
+  tableStyle = 'light';
   tableToggle = true;
 
   constructor(private profileService: ProfileService,
