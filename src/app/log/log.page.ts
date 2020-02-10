@@ -180,21 +180,8 @@ export class LogPage implements OnInit, OnDestroy {
       };
     }));
 
+    // sorts groups in time order
     this.tableData = summaryByDay.sort((d1, d2) => d2.date.getTime() - d1.date.getTime());
-    // console.log(this.tableData);
-    // const groupedByWeek = groupByProperty(this.tableData, 'week');
-    // console.log(groupedByWeek);
-    // // this.totalCaloriesIn = groupedByWeek.map(item => item.caloriesIn).reduce((acc, value) => acc + value, 0);
-    // for (const [key] of Object.keys(groupedByWeek)) {
-    //   const test = groupedByWeek[key].map(item => item.caloriesIn).reduce((acc, value) => acc + value, 0);
-    //   groupedByWeek[key][0]['calInTotal'] = test;
-    //  }
-    // console.log(groupedByWeek);
-    // console.log(this.totalCaloriesIn);
-    // this.totalCaloriesExercise = this.tableData.map(item => item.caloriesExercise).reduce((acc, value) => acc + value, 0);
-    // this.totalDayEnergyExpenditure = this.tableData.map(item => item.totalEnergy).reduce((acc, value) => acc + value, 0);
-    // this.totalCaloriesBalance = this.tableData.map(item => item.balance).reduce((acc, value) => acc + value, 0);
-
   }
 
 
@@ -231,23 +218,25 @@ export class LogPage implements OnInit, OnDestroy {
   }
 
   toggleExpandGroup(group) {
-    console.log(group);
     this.table.groupHeader.toggleExpandGroup(group);
   }
 
   updateTable() {
     setTimeout(() => {
-    this.table.groupedRows.map(group => {
-      group.groupCaloriesIn = group.value.map(ex => ex.caloriesIn).reduce((acc, value) => acc + value, 0);
-      group.groupCaloriesOutTotal = group.value.map(item => item.totalEnergy).reduce((acc, value) => acc + value, 0);
-      group.groupCaloriesOutExercise = group.value.map(item => item.caloriesExercise).reduce((acc, value) => acc + value, 0);
-      group.groupCaloriesBalance = group.value.map(item => item.balance).reduce((acc, value) => acc + value, 0);
-      console.log(group);
-    });
-    }, 200);
+      this.table.groupedRows.map(group => {
+        group.groupCaloriesIn = group.value.map(ex => ex.caloriesIn).reduce((acc, value) => acc + value, 0);
+        group.groupCaloriesOutTotal = group.value.map(item => item.totalEnergy).reduce((acc, value) => acc + value, 0);
+        group.groupCaloriesOutExercise = group.value.map(item => item.caloriesExercise).reduce((acc, value) => acc + value, 0);
+        group.groupCaloriesBalance = group.value.map(item => item.balance).reduce((acc, value) => acc + value, 0);
+      });
+      this.toggleAllGroups();
+      this.toggleAllGroups();
+  }, 200);
+    // this.toggleAllGroups();
   }
 
   toggleAllGroups() {
+    console.log("I'm toggled");
     this.table.groupedRows.map(group => this.table.groupHeader.toggleExpandGroup(group));
   }
 

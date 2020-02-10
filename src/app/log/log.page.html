@@ -30,23 +30,23 @@
     </ion-list>
   </ion-item>
   <ngx-datatable
-  #myTable
-  class="material expandable"
-  [rows]="tableData" 
-  [groupExpansionDefault]="false"
-  [groupRowsBy]="groupLogPeriod.value"
-  [ngClass]="tableClass"
-  [rowHeight]="'auto'" 
-  [headerHeight]="50" 
-  [columnMode]="'force'" 
-  [summaryRow]="true"
-  [summaryPosition]="'bottom'"
-  [summaryHeight]='60'>  
+    #myTable
+    class="material expandable"
+    [rows]="tableData" 
+    [groupExpansionDefault]="false"
+    [groupRowsBy]="groupLogPeriod.value"
+    [ngClass]="tableClass"
+    [rowHeight]="'auto'" 
+    [headerHeight]="50" 
+    [columnMode]="'force'" 
+    [summaryRow]="true"
+    [summaryPosition]="'bottom'"
+    [summaryHeight]='60'>  
   
   <!-- Group Header Template -->
   <ngx-datatable-group-header [rowHeight]="50" #myGroupHeader>
     <ng-template let-group="group" let-expanded="expanded" ngx-datatable-group-header-template>
-      <div style="padding-left:5px; display:flex; width: max-content;">
+      <div class="groupSummaryLabel">
         <a #groupSummary
         [class.datatable-icon-right]="!expanded"
         [class.datatable-icon-down]="expanded"
@@ -57,25 +57,25 @@
         <b *ngIf="groupLogPeriod.value === 'month'" style="padding-left: 5px;">Month: &nbsp; {{ group.value[0].month}}</b>
         <b *ngIf="groupLogPeriod.value === 'year'" style="padding-left: 5px;">Year: &nbsp; {{ group.value[0].year}}</b>
 
-        <b  *ngIf="groupLogPeriod.value === 'date'" style="padding-left: 5px;">Energy+: &nbsp; {{ group.value[0].caloriesIn | number }}</b>
-        <b  *ngIf="groupLogPeriod.value === 'date'" style="padding-left: 5px;">Total Energy-: &nbsp; {{ group.value[0].totalEnergy | number }}</b>
-        <b  *ngIf="groupLogPeriod.value === 'date'" style="padding-left: 5px;">Exercise: &nbsp; {{ group.value[0].caloriesExercise | number }}</b>
-        <b  *ngIf="groupLogPeriod.value === 'date'" style="padding-left: 5px;">Balance: &nbsp; {{ group.value[0].balance | number }}</b>
+        <b  *ngIf="groupLogPeriod.value === 'date'" style="padding-left: 5px;">En+: &nbsp; {{ group.value[0].caloriesIn | number }}</b>
+        <b  *ngIf="groupLogPeriod.value === 'date'" style="padding-left: 5px;">Tot En-: &nbsp; {{ group.value[0].totalEnergy | number }}</b>
+        <b  *ngIf="groupLogPeriod.value === 'date'" style="padding-left: 5px;">Ex: &nbsp; {{ group.value[0].caloriesExercise | number }}</b>
+        <b  *ngIf="groupLogPeriod.value === 'date'" style="padding-left: 5px;">&#916; &nbsp; {{ group.value[0].balance | number }}</b>
 
-        <b  *ngIf="groupLogPeriod.value === 'week'" style="padding-left: 5px;">Energy+: &nbsp; {{ group.groupCaloriesIn | number }}</b>
-        <b  *ngIf="groupLogPeriod.value === 'week'" style="padding-left: 5px;">Total Energy-: &nbsp; {{ group.groupCaloriesOutTotal | number }}</b>
-        <b  *ngIf="groupLogPeriod.value === 'week'" style="padding-left: 5px;">Exercise: &nbsp; {{ group.groupCaloriesOutExercise | number }}</b>
-        <b  *ngIf="groupLogPeriod.value === 'week'" style="padding-left: 5px;">Balance: &nbsp; {{ group.groupCaloriesBalance | number }}</b>
+        <b  *ngIf="groupLogPeriod.value === 'week'" style="padding-left: 5px;">En+: &nbsp; {{ group.groupCaloriesIn | number }}</b>
+        <b  *ngIf="groupLogPeriod.value === 'week'" style="padding-left: 5px;">Tot En-: &nbsp; {{ group.groupCaloriesOutTotal | number }}</b>
+        <b  *ngIf="groupLogPeriod.value === 'week'" style="padding-left: 5px;">Ex: &nbsp; {{ group.groupCaloriesOutExercise | number }}</b>
+        <b  *ngIf="groupLogPeriod.value === 'week'" style="padding-left: 5px;">&#916; &nbsp; {{ group.groupCaloriesBalance | number }}</b>
 
-        <b  *ngIf="groupLogPeriod.value === 'month'" style="padding-left: 5px;">Energy+: &nbsp; {{ group.groupCaloriesIn | number }}</b>
-        <b  *ngIf="groupLogPeriod.value === 'month'" style="padding-left: 5px;">Total Energy-: &nbsp; {{ group.groupCaloriesOutTotal | number }}</b>
-        <b  *ngIf="groupLogPeriod.value === 'month'" style="padding-left: 5px;">Exercise: &nbsp; {{ group.groupCaloriesOutExercise | number }}</b>
-        <b  *ngIf="groupLogPeriod.value === 'month'" style="padding-left: 5px;">Balance: &nbsp; {{ group.groupCaloriesBalance | number }}</b>
+        <b  *ngIf="groupLogPeriod.value === 'month'" style="padding-left: 5px;">En+: &nbsp; {{ group.groupCaloriesIn | number }}</b>
+        <b  *ngIf="groupLogPeriod.value === 'month'" style="padding-left: 5px;">Tot En-: &nbsp; {{ group.groupCaloriesOutTotal | number }}</b>
+        <b  *ngIf="groupLogPeriod.value === 'month'" style="padding-left: 5px;">Ex: &nbsp; {{ group.groupCaloriesOutExercise | number }}</b>
+        <b  *ngIf="groupLogPeriod.value === 'month'" style="padding-left: 5px;">&#916; &nbsp; {{ group.groupCaloriesBalance | number }}</b>
 
-        <b  *ngIf="groupLogPeriod.value === 'year'" style="padding-left: 5px;">Energy+: &nbsp; {{ group.groupCaloriesIn | number }}</b>
-        <b  *ngIf="groupLogPeriod.value === 'year'" style="padding-left: 5px;">Total Energy-: &nbsp; {{ group.groupCaloriesOutTotal | number }}</b>
-        <b  *ngIf="groupLogPeriod.value === 'year'" style="padding-left: 5px;">Exercise: &nbsp; {{ group.groupCaloriesOutExercise | number }}</b>
-        <b  *ngIf="groupLogPeriod.value === 'year'" style="padding-left: 5px;">Balance: &nbsp; {{ group.groupCaloriesBalance | number }}</b>
+        <b  *ngIf="groupLogPeriod.value === 'year'" style="padding-left: 5px;">En+: &nbsp; {{ group.groupCaloriesIn | number }}</b>
+        <b  *ngIf="groupLogPeriod.value === 'year'" style="padding-left: 5px;">Tot En-: &nbsp; {{ group.groupCaloriesOutTotal | number }}</b>
+        <b  *ngIf="groupLogPeriod.value === 'year'" style="padding-left: 5px;">Ex: &nbsp; {{ group.groupCaloriesOutExercise | number }}</b>
+        <b  *ngIf="groupLogPeriod.value === 'year'" style="padding-left: 5px;">&#916; &nbsp; {{ group.groupCaloriesBalance | number }}</b>
       </a>
     </div>
   </ng-template>
