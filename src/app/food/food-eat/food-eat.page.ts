@@ -10,6 +10,7 @@ import { User, UserProfile } from '../../auth/user.model';
 import { FoodItem } from '../food-item.model';
 
 import { usdaKey } from '../../../environments/environment.prod';
+import { environment } from '../../../environments/environment';
 
 import axios from 'axios';
 
@@ -300,13 +301,15 @@ export class FoodEatPage implements OnInit, OnDestroy {
   // axios request
   onPick(foodDetailID: number) {
     this.usdaFoodItemDetailPaneOpen = false;
+    if (environment.production) {
+      this.proxyURL = '';
+    }
     this.loadingController.create({keyboardClose: true, message: 'Searching USDA database...'})
       .then(loadingEl => {
         loadingEl.present();
         this.usdaPickedFoodItem = {} as FoodItem;
         // test with GET method (https://fdc.nal.usda.gov/api-guide.html)
         axios.get(this.proxyURL + this.usdaFoodDetailsURL1 + foodDetailID + this.usdaFoodDetailsURL2 + usdaKey)
-        // axios.get(this.usdaFoodsDetailsURL1 + foodDetailID + this.usdaFoodDetailsURL2 + usdaKey)
           .then(response => {
             this.usdaFoodItemDetail = response.data.foodNutrients;
             this.usdaPickedFoodItem = {
@@ -326,13 +329,15 @@ export class FoodEatPage implements OnInit, OnDestroy {
   }
 
   onSearch(searchString: string, branded, allWords, page) {
+    if (environment.production) {
+      this.proxyURL = '';
+    }
     this.loadingController.create({keyboardClose: true, message: 'Searching USDA database...'})
       .then(loadingEl => {
         loadingEl.present();
         this.usdaSearch = searchString;
         // test with POST method (https://fdc.nal.usda.gov/api-guide.html)
-        // axios.post(this.proxyURL + this.usdaFoodSearchURL + usdaKey,
-        axios.post(this.usdaFoodSearchURL + usdaKey,
+        axios.post(this.proxyURL + this.usdaFoodSearchURL + usdaKey,
             {
               generalSearchInput: searchString,
               includeDataTypes: {
