@@ -83,21 +83,6 @@ export class LogPage implements OnInit, OnDestroy {
     );
   }
 
-
-  // will add total calories count per group after the table loads
-  // ngAfterViewInit() {
-  //   this.logSubs.push(this.groupSum.changes.subscribe(result => {
-  //     if (this.table.groupedRows) {
-  //       setTimeout(() => { // to avoid expression has changed after it was checked
-  //         this.table.groupedRows.map(group => {
-  //           const totalCaloriesGroup = group.value.map(ex => ex.caloriesOut).reduce((acc, value) => acc + value, 0);
-  //           group.groupCalories = totalCaloriesGroup;
-  //         }, 1);
-  //       });
-  //     }
-  //   }));
-  // }
-
   fetchFinishedExercises() {
     return new Promise (resolve => {
       this.logSubs.push(this.trainingService.finishedExercisesChanged
@@ -132,7 +117,6 @@ export class LogPage implements OnInit, OnDestroy {
     await Promise.all([this.getUserStampInfo(), this.fetchFinishedExercises(), this.fetchAllEatenFood()]);
 
     const arCombinedData = Array().concat(this.objExercises, this.objFoodItems, this.userStampData);
-    // console.log(arCombinedData);
 
     // accept array and key (property)
     const groupByProperty = (objectArray, property) => {
@@ -151,12 +135,10 @@ export class LogPage implements OnInit, OnDestroy {
     };
 
     const groupedByDate = groupByProperty(arCombinedData, 'dateStr');
-    // console.log(groupedByDate);
 
     const summaryByDay = Object.keys(groupedByDate).map((key => {
       const calsIn = groupedByDate[key].filter(keys => keys.caloriesIn > 0).reduce((total, obj) => obj.caloriesIn + total, 0);
       const calsExercise = groupedByDate[key].filter(keys => keys.caloriesOut > 0).reduce((total, obj) => obj.caloriesOut + total, 0);
-      // const totalEnergyDay = userRMR + calsExercise;
       const totalEnergyDay = groupedByDate[key].find(keys => keys.bmr).bmr *
         groupedByDate[key].find(keys => keys.activityLevel).activityLevel + calsExercise;
       const endBalance = calsIn - totalEnergyDay;
@@ -183,8 +165,6 @@ export class LogPage implements OnInit, OnDestroy {
     // sorts groups in time order
     this.tableData = summaryByDay.sort((d1, d2) => d2.date.getTime() - d1.date.getTime());
   }
-
-
 
   switchStyle() {
     if (this.tableClass === 'dark') {
@@ -221,6 +201,11 @@ export class LogPage implements OnInit, OnDestroy {
     this.table.groupHeader.toggleExpandGroup(group);
   }
 
+  toggleAllGroups() {
+    this.table.groupedRows.map(group => this.table.groupHeader.toggleExpandGroup(group));
+  }
+
+  // updates subtotals
   updateTable() {
     setTimeout(() => {
       this.table.groupedRows.map(group => {
@@ -231,13 +216,7 @@ export class LogPage implements OnInit, OnDestroy {
       });
       this.toggleAllGroups();
       this.toggleAllGroups();
-  }, 200);
-    // this.toggleAllGroups();
-  }
-
-  toggleAllGroups() {
-    console.log("I'm toggled");
-    this.table.groupedRows.map(group => this.table.groupHeader.toggleExpandGroup(group));
+    }, 200);
   }
 
   ngOnDestroy() {

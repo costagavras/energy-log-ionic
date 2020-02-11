@@ -45,7 +45,6 @@ export class FoodService {
   fetchAvailableFoodItemsBeverages(userFirebaseId: string) {
     const userFoodItemsCollection = 'users/' + userFirebaseId + '/userFoodItems';
     this.foodServiceSubs.push(
-      // this.db.collectionGroup<FoodItem>('userFoodItems', ref => ref.where('category', '==', 'Beverages'))
       this.db.collection<FoodItem>(userFoodItemsCollection, ref => ref.where('category', '==', 'beverages'))
       .snapshotChanges()
         .pipe(map(docArray => {

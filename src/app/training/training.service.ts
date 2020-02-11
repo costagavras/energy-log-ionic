@@ -5,7 +5,6 @@ import { Subject, Subscription } from 'rxjs';
 
 import { Exercise } from './exercise.model';
 import { UserProfile, UserStamp } from '../auth/user.model';
-import { ProfileService } from '../profile/profile.service';
 import { UIService } from '../shared/ui.service';
 import { map } from 'rxjs/operators';
 
@@ -135,10 +134,8 @@ export class TrainingService {
     this.trainingServiceSubs.push(
       this.db.collection<Exercise>('users/' + userFirebaseId + '/finishedExercises', ref => ref.orderBy('date', 'desc')).valueChanges()
     .subscribe((exercises: Exercise[]) => {
-      // this.uiService.loadingStateChanged.next(false);
       this.finishedExercisesChanged.next(exercises);
     }, error => {
-      // this.uiService.loadingStateChanged.next(false);
       this.uiService.showToast('Fetching exercises failed, please try again later', 2000);
     }));
   }

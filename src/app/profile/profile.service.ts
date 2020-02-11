@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { User, UserStamp, UserProfile } from '.././auth/user.model';
+import { UserStamp, UserProfile } from '.././auth/user.model';
 import * as firebase from 'firebase/app';
 
 
@@ -20,7 +20,6 @@ unitsUserSelected = new Subject<string>();
 dataSaved = new Subject<boolean>();
 userStampsCollection = new Subject<UserStamp[]>();
 userProfile: UserProfile;
-fbUser;
 units: string;
 
 private profileServiceSubs: Subscription[] = [];
@@ -104,7 +103,6 @@ private profileServiceSubs: Subscription[] = [];
 
     this.db.collection('users').doc(user.userId).delete()
           .then(() => {
-            console.log('user deleted');
             this.router.navigate(['/']);
             this.uiService.showToast(user.name + ' is now gone!', 3000);
           }).catch(error => {

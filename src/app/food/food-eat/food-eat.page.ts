@@ -306,8 +306,8 @@ export class FoodEatPage implements OnInit, OnDestroy {
         this.usdaPickedFoodItem = {} as FoodItem;
         // test with GET method (https://fdc.nal.usda.gov/api-guide.html)
         axios.get(this.proxyURL + this.usdaFoodDetailsURL1 + foodDetailID + this.usdaFoodDetailsURL2 + usdaKey)
+        // axios.get(this.usdaFoodsDetailsURL1 + foodDetailID + this.usdaFoodDetailsURL2 + usdaKey)
           .then(response => {
-          // axios.get(this.usdaFoodDetailsURL1 + foodDetailID + this.usdaFoodDetailsURL2 + usdaKey).then(response => {
             this.usdaFoodItemDetail = response.data.foodNutrients;
             this.usdaPickedFoodItem = {
               name: response.data.description,
@@ -331,8 +331,8 @@ export class FoodEatPage implements OnInit, OnDestroy {
         loadingEl.present();
         this.usdaSearch = searchString;
         // test with POST method (https://fdc.nal.usda.gov/api-guide.html)
-        axios.post(this.proxyURL + this.usdaFoodSearchURL + usdaKey,
-        // axios.post(this.usdaFoodSearchURL + usdaKey,
+        // axios.post(this.proxyURL + this.usdaFoodSearchURL + usdaKey,
+        axios.post(this.usdaFoodSearchURL + usdaKey,
             {
               generalSearchInput: searchString,
               includeDataTypes: {
