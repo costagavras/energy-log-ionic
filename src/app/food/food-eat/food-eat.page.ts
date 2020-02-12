@@ -301,6 +301,7 @@ export class FoodEatPage implements OnInit, OnDestroy {
   // axios request
   onPick(foodDetailID: number) {
     this.usdaFoodItemDetailPaneOpen = false;
+    // don't need a proxy once it's in production (CORS issue)
     if (environment.production) {
       this.proxyURL = '';
     }
@@ -329,6 +330,7 @@ export class FoodEatPage implements OnInit, OnDestroy {
   }
 
   onSearch(searchString: string, branded, allWords, page) {
+    // don't need a proxy once it's in production (CORS issue)
     if (environment.production) {
       this.proxyURL = '';
     }

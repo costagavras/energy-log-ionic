@@ -156,7 +156,7 @@ export class TrainingService {
   }
 
   // called from the template
-  private deleteDataFromDatabase(exercise: Exercise, userFirebaseId: string) {
+  deleteDataFromDatabase(exercise: Exercise, userFirebaseId: string) {
     this.db.collection('users').doc(userFirebaseId).collection('finishedExercises').doc(exercise.id).delete();
     this.uiService.showToast(exercise.name + ' was successfully deleted', 1000);
   }

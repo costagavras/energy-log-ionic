@@ -145,8 +145,8 @@
         <div class="buttons_manage_foodItem ion-padding">
           <ion-button *ngIf="!search_toggle.checked" (click)="onDelete(loggedUserProfile)" [disabled]="f.invalid || disabledDeleteButton">Delete</ion-button>
           <ion-button *ngIf="!search_toggle.checked" (click)="resetForm()">Reset</ion-button>
-          <ion-button *ngIf="!search_toggle.checked" (click)="onUpdate(loggedUserProfile, f, 'update')" [disabled]="f.invalid || disabledUpdateButton">Update</ion-button>
-          <ion-button *ngIf="!search_toggle.checked" (click)="onAdd(loggedUserProfile, f, 'add')" [disabled]="f.invalid || disableAddButton || f.value.name === oldFoodItemName">Add</ion-button>
+          <ion-button *ngIf="!search_toggle.checked" (click)="onUpdate(loggedUserProfile, f)" [disabled]="f.invalid || disabledUpdateButton">Update</ion-button>
+          <ion-button *ngIf="!search_toggle.checked" (click)="onAdd(loggedUserProfile, f)" [disabled]="f.invalid || disableAddButton || f.value.name === oldFoodItemName">Add</ion-button>
         </div>
 
       </ion-grid>

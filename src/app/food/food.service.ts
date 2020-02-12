@@ -374,7 +374,7 @@ filterDate(date) {
   }
 
   // called from the template
-  private deleteDataFromDatabase(foodItem: FoodItem, userFirebaseId: string) {
+  deleteDataFromDatabase(foodItem: FoodItem, userFirebaseId: string) {
     this.db.collection('users').doc(userFirebaseId).collection('finishedFoodItems').doc(foodItem.id).delete();
     this.uiService.showToast(foodItem.name + ' was successfully deleted', 1000);
   }

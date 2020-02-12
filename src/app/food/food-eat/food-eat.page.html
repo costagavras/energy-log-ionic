@@ -94,7 +94,7 @@
                       </ion-col>
                       <ion-col offset-xs="3" offset-md="5">
                         <ion-button type="Submit" 
-                          (click)="foodService.saveFoodItem(f.value.dateMeal, foodName.value, toggleMtImpGroupDB.value === 'metric' ? serving.value : serving.value * 28.3495, loggedUserProfile, category)"
+                          (click)="foodService.saveFoodItem(f.value.dateMeal, foodName.value, toggleMtImpGroupDB.value === 'metric' ? serving.value : serving.value * 28.3495, loggedUserProfile, category, null)"
                           [disabled]="foodName.invalid || foodName.untouched || serving.untouched || serving.invalid">Save!
                         </ion-button>
                       </ion-col>
@@ -122,7 +122,7 @@
                 <ion-searchbar aniioned showCancelButton="focus" inputmode="text" ngModel class="nameSearch" name="nameSearch" [required]="nameSearch.touched" #nameSearch="ngModel"></ion-searchbar>
               </ion-col>
               <ion-col size-xs="3" size-sm="2" offset-sm="1" class="ion-align-self-center">
-                <ion-button fill="solid" expand="block" [disabled]="!nameSearch.value" (click)="onSearch(nameSearch.value, branded, requireAllWords)">Go!</ion-button>
+                <ion-button fill="solid" expand="block" [disabled]="!nameSearch.value" (click)="onSearch(nameSearch.value, branded, requireAllWords, 1)">Go!</ion-button>
               </ion-col>
             </ion-row>
             <ion-row *ngIf="nameSearch.hasError('required') && nameSearch.touched">

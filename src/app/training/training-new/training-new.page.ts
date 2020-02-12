@@ -189,11 +189,11 @@ export class TrainingNewPage implements OnInit, OnDestroy {
     );
   }
 
-  formatLabel(value: number) {
-    if (isNaN(value)) {
-      value = 0;
+  formatLabel(val) {
+    if (isNaN(val)) {
+      val = 0;
     }
-    this.returnWeight = value + 'kg / ' + Math.round(value / 0.454) + 'lb';
+    this.returnWeight = val + 'kg / ' + Math.round(val / 0.454) + 'lb';
   }
 
   ngOnDestroy() {
