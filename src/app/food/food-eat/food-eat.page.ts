@@ -103,7 +103,8 @@ export class FoodEatPage implements OnInit, OnDestroy {
               { name: 'Fat', prop: 'fat'}
             ];
   allAction = [{ name: 'Actions', prop: 'actions'}];
-  tableClass = 'light';
+
+  tableClass = 'bootstrap';
   tableStyle = 'light';
 
   constructor(private profileService: ProfileService,
@@ -122,6 +123,7 @@ export class FoodEatPage implements OnInit, OnDestroy {
           this.loggedUserProfile = userProfileData;
           if (this.loggedUserProfile !== null) {
             this.units = this.loggedUserProfile.units;
+            // this filters food eaten today
             this.updateFilteredDate(this.loggedUserProfile.userId);
             this.triggerFetchFoodItems(this.loggedUserProfile.userId);
           }
@@ -195,11 +197,14 @@ export class FoodEatPage implements OnInit, OnDestroy {
        // subscription when filter date changes
     this.newFoodIntakeSubs.push(this.foodService.dateFilter
       .subscribe((date: Date) => {
+        if (date) { // without the check undefined date from dateFilter Subject was getting through at template initialization
           this.filteredDay = date; // comes from datepicker change event formatted as 0:0:00
           this.startFilteredDay = new Date(this.filteredDay).setHours(0, 0, 0, 0);
           this.endFilteredDay = new Date(this.filteredDay).setHours(24, 0, 0, -1);
           this.updateFilteredDate(this.loggedUserProfile.userId);
-        }));
+        }
+        })
+    );
   }
 
   triggerFetchFoodItems(userFirebaseId: string) {
@@ -226,11 +231,6 @@ export class FoodEatPage implements OnInit, OnDestroy {
       this.tableDataFilter = this.tableData;
     }));
     this.foodService.fetchCompletedFoodItems(userFirebaseId);
-  }
-
-  ionViewWillLeave() {
-    this.tableData = [];
-    this.tableDataFilter = [];
   }
 
   switchStyle() {

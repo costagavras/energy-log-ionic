@@ -27,7 +27,9 @@ export class UserSettingsPage implements OnInit, OnDestroy {
     this.appSettingSubs.push(this.authService.user // getter
       .subscribe(user => {
         this.loggedUser = user;
-        this.profileService.getUserData(this.loggedUser.id);
+        if (this.loggedUser !== null) {
+          this.profileService.getUserData(this.loggedUser.id); // event emitter for sub;
+        }
       })
     );
 

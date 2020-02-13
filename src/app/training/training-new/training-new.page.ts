@@ -52,8 +52,10 @@ export class TrainingNewPage implements OnInit, OnDestroy {
             ];
   allAction = [{ name: 'Actions', prop: 'actions'}];
 
-  tableClass = 'light';
+  tableClass = 'bootstrap';
   tableStyle = 'light';
+
+  tableShow = false;
 
 
   constructor(private profileService: ProfileService,
@@ -67,6 +69,7 @@ export class TrainingNewPage implements OnInit, OnDestroy {
       .subscribe(
         userProfileData => {
           this.loggedUserProfile = userProfileData;
+          // this filters exercises done today
           this.updateFilteredDate(this.loggedUserProfile.userId);
       })
     );
@@ -87,25 +90,28 @@ export class TrainingNewPage implements OnInit, OnDestroy {
     this.trainingService.fetchAvailableExercisesTime();
 
     this.newTrainingSubs.push(this.trainingService.exercisesQtyChanged
-    .subscribe(
-      exercises => (this.exercisesQty = exercises)
-    ));
+      .subscribe(
+        exercises => (this.exercisesQty = exercises)
+      ));
     this.trainingService.fetchAvailableExercisesQty();
 
     this.newTrainingSubs.push(this.trainingService.exercisesCalChanged
-    .subscribe(
-      exercises => (this.exercisesCal = exercises)
-    ));
+      .subscribe(
+        exercises => (this.exercisesCal = exercises)
+      ));
     this.trainingService.fetchAvailableExercisesCal();
 
     // subscription when filter date changes
     this.newTrainingSubs.push(this.trainingService.dateFilter
-    .subscribe((date: Date) => {
-        this.filteredDay = date; // comes from datepicker change event formatted as 0:0:00
-        this.startFilteredDay = new Date(this.filteredDay).setHours(0, 0, 0, 0);
-        this.endFilteredDay = new Date(this.filteredDay).setHours(24, 0, 0, -1);
-        this.updateFilteredDate(this.loggedUserProfile.userId);
-      }));
+      .subscribe((date: Date) => {
+        if (date) { // without the check undefined date from dateFilter Subject was getting through at template initialization
+          this.filteredDay = date; // comes from datepicker change event formatted as 0:0:00
+          this.startFilteredDay = new Date(this.filteredDay).setHours(0, 0, 0, 0);
+          this.endFilteredDay = new Date(this.filteredDay).setHours(24, 0, 0, -1);
+          this.updateFilteredDate(this.loggedUserProfile.userId);
+        }
+        })
+    );
 
   }
 

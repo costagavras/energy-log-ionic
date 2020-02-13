@@ -44,7 +44,7 @@ export class TrainingLogPage implements OnInit, AfterViewInit, OnDestroy {
             ];
   allAction = [{ name: 'Actions', prop: 'actions'}];
 
-  tableClass = 'light';
+  tableClass = 'bootstrap';
   tableStyle = 'light';
 
 

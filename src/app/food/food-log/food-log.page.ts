@@ -47,8 +47,8 @@ allColumns = [
               { name: 'Fat', prop: 'fat'}
             ];
   allAction = [{ name: 'Actions', prop: 'actions'}];
-  
-  tableClass = 'light';
+
+  tableClass = 'bootstrap';
   tableStyle = 'light';
 
 

@@ -251,52 +251,56 @@
     </ion-card>
     
   </form>
-  
-  <ion-item class="ion-padding">
-    <ion-input slot="start" 
-      type="text" 
-      placeholder="Filter by name..."
-      (keyup)="doFilter($event.target.value)">
-    </ion-input>
-      <ion-button slot="end" fill="solid" expand="block" (click)="switchStyle()">{{ tableStyle }}</ion-button>
-  </ion-item>
-  <ion-grid>
-    <ion-row>
-      <ion-col *ngFor="let col of allColumns">
-        <ion-item>
-          <ion-checkbox (click)="toggle(col)" checked="isChecked(col)" slot="end"></ion-checkbox>
-           &nbsp;<ion-label>{{ col.name }}</ion-label>
-        </ion-item>
-      </ion-col>
-      <ion-col>
-        <ion-item>
-          <ion-checkbox (click)="toggleAction(allAction[0])" checked="isCheckedAction(allAction[0])" slot="end"></ion-checkbox>
-           &nbsp;<ion-label>{{ allAction[0].name }}</ion-label>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-  <ion-item>
-    <ion-list>
-    </ion-list>
-  </ion-item>
-  <ngx-datatable 
-    [rows]="tableData" 
-    [ngClass]="tableClass" 
-    [rowHeight]="'auto'" 
-    [headerHeight]="50" 
-    [columnMode]="'force'" 
-    [summaryRow]="true"
-    [summaryPosition]="'bottom'"
-    [summaryHeight]='50'>
-    <ngx-datatable-column *ngFor="let col of columns" [name]="col.name" [prop]="col.prop"></ngx-datatable-column>
-    <ngx-datatable-column [name]="colAction[0].name" [prop]="colAction[0].prop" *ngIf="colAction.length > 0">
-      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-        <ion-button size="small" fill="outline" (click)="trainingService.deleteDataFromDatabase(row, loggedUserProfile.userId)"><ion-icon name="trash"></ion-icon></ion-button>
-      </ng-template>
-    </ngx-datatable-column>
-  </ngx-datatable>
 
+  <!-- ngx datatable -->
+  <!-- <p>{{ tableData }}</p> -->
+  <!-- <div *ngIf="tableData"> -->
+    <ion-item class="ion-padding">
+      <ion-input slot="start" 
+        type="text" 
+        placeholder="Filter by name..."
+        (keyup)="doFilter($event.target.value)">
+      </ion-input>
+        <ion-button slot="end" fill="solid" expand="block" (click)="switchStyle()">{{ tableStyle }}</ion-button>
+    </ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col *ngFor="let col of allColumns">
+          <ion-item>
+            <ion-checkbox (click)="toggle(col)" checked="isChecked(col)" slot="end"></ion-checkbox>
+             &nbsp;<ion-label>{{ col.name }}</ion-label>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-checkbox (click)="toggleAction(allAction[0])" checked="isCheckedAction(allAction[0])" slot="end"></ion-checkbox>
+             &nbsp;<ion-label>{{ allAction[0].name }}</ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-item>
+      <ion-list>
+      </ion-list>
+    </ion-item>
+    <ngx-datatable
+      [rows]="tableData" 
+      [ngClass]="tableClass" 
+      [rowHeight]="'auto'" 
+      [headerHeight]="50" 
+      [columnMode]="'force'" 
+      [summaryRow]="true"
+      [summaryPosition]="'bottom'"
+      [summaryHeight]='50'>
+      <ngx-datatable-column *ngFor="let col of columns" [name]="col.name" [prop]="col.prop"></ngx-datatable-column>
+      <ngx-datatable-column [name]="colAction[0].name" [prop]="colAction[0].prop" *ngIf="colAction.length > 0">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <ion-button size="small" fill="outline" (click)="trainingService.deleteDataFromDatabase(row, loggedUserProfile.userId)"><ion-icon name="trash"></ion-icon></ion-button>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  <!-- </div> -->
+  
 </ion-content>
 
 

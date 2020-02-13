@@ -55,7 +55,9 @@ export class UserDataPage implements OnInit, OnDestroy {
     this.anthropometrySubs.push(this.authService.user // getter, not event emitter
       .subscribe(user => {
         this.loggedUser = user;
-        this.profileService.getUserData(this.loggedUser.id); // event emitter for sub at line 57;
+        if (this.loggedUser !== null) {
+          this.profileService.getUserData(this.loggedUser.id); // event emitter for sub;
+        }
       })
     );
 
