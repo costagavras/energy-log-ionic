@@ -103,8 +103,8 @@ export class FoodEatPage implements OnInit, OnDestroy {
               { name: 'Fat', prop: 'fat'}
             ];
   allAction = [{ name: 'Actions', prop: 'actions'}];
-  tableClass = 'dark';
-  tableStyle = 'dark';
+  tableClass = 'light';
+  tableStyle = 'light';
 
   constructor(private profileService: ProfileService,
               public foodService: FoodService,

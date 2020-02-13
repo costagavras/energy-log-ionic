@@ -51,8 +51,9 @@ export class TrainingNewPage implements OnInit, OnDestroy {
               { name: 'Quantity', prop: 'quantity'}
             ];
   allAction = [{ name: 'Actions', prop: 'actions'}];
-  tableClass = 'dark';
-  tableStyle = 'dark';
+
+  tableClass = 'light';
+  tableStyle = 'light';
 
 
   constructor(private profileService: ProfileService,

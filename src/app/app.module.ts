@@ -5,13 +5,12 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { environment } from '../environments/environment';
+import { environment, secondaryDb } from '../environments/environment';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-// import { IonicSelectableModule } from 'ionic-selectable';
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,9 +18,9 @@ import { AppRoutingModule } from './app-routing.module';
   imports: [
     BrowserModule,
     HttpClientModule, IonicModule.forRoot(),
-    // IonicSelectableModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase), // imports firebase/app needed for everything
+    AngularFireModule.initializeApp(secondaryDb, 'secondary'), // my-energy-log db
     AngularFirestoreModule, // imports firebase/firestore, only needed for database features
   ],
   providers: [

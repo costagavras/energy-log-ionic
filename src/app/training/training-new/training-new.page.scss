@@ -31,6 +31,10 @@ ion-label {
   text-align: center;
 }
 
+:host ::ng-deep .ngx-datatable.dark .datatable-body-cell-label {
+  color: white;
+}
+
 @media (max-width: 1200px) {
   .alert-wrapper .sc-ion-alert-md {
     min-width: 800px;

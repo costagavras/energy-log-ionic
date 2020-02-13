@@ -53,7 +53,6 @@ export class LogPage implements OnInit, OnDestroy {
             ];
   tableClass = 'light';
   tableStyle = 'light';
-  tableToggle = true;
 
   constructor(private profileService: ProfileService,
               public trainingService: TrainingService,

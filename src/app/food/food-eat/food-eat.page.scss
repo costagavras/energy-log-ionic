@@ -117,6 +117,10 @@ ion-label {
   }
 }
 
+:host ::ng-deep .ngx-datatable.dark .datatable-body-cell-label {
+  color: white;
+}
+
 @media (max-width: 576px) {
   ion-segment-button {
     min-width: 10px;
