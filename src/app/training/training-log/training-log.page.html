@@ -12,11 +12,8 @@
       placeholder="Filter by name..."
       (keyup)="doFilter($event.target.value)">
     </ion-input>
-    <ion-item style="margin: 0 auto;"> 
-      <ion-label>Rows grouped</ion-label>
-      <ion-checkbox name="chkBox" color="primary" checked="true" (ionChange)="toggleAllGroups()" slot="end"></ion-checkbox>
-    </ion-item>
-      <ion-button slot="end" fill="solid" expand="block" (click)="switchStyle()">{{ tableStyle }}</ion-button>
+    <ion-button fill="solid" (click)="toggleAllGroups()" style="margin: 0 auto; z-index: 100;">Rows toggle</ion-button>
+    <ion-button slot="end" fill="solid" expand="block" (click)="switchStyle()" style="z-index: 100;">{{ tableStyle }}</ion-button>
   </ion-item>
   <ion-grid>
     <ion-row>
