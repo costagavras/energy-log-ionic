@@ -96,7 +96,7 @@ export class UserActivityLevelPage implements OnInit, OnDestroy {
 
   sumHours() {
     // 0 stands for initial value
-    this.total = Object.values(this.userActivityFormGroup.value).reduce((a: number, b: number) => +a + +b, 0);
+    this.total = Object.values(this.userActivityFormGroup.value).reduce((a: number, b: number) => Math.round((+a + +b) * 100) / 100, 0);
   }
 
   ionViewDidLeave() {
