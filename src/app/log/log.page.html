@@ -7,7 +7,8 @@
 <ion-content *ngIf="loggedUserProfile">
 
   <ion-item class="filter_row">
-    <ion-select slot="start" (ionChange)="updateTable()" [ngModel]="'date'" name="groupLog" #groupLogPeriod="ngModel" placeholder="Choose group period">
+    <ion-label class="label_subtotals">Subtotals by </ion-label>
+    <ion-select (ionChange)="updateTable()" [ngModel]="'date'" name="groupLog" #groupLogPeriod="ngModel">
       <ion-select-option *ngFor="let period of logPeriods" [value]="period">
         {{ period }}
       </ion-select-option>

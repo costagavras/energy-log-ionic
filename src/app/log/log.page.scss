@@ -6,6 +6,13 @@ ion-select {
   width: 20%;
 }
 
+.label_subtotals {
+  display: flex;
+  justify-self: start;
+  max-width: fit-content;
+  padding-right: 10px;
+}
+
 .groupSummaryLabel {
   padding-left: 5px;
   display: flex;
@@ -28,6 +35,10 @@ ion-select {
   }
   :host ::ng-deep .datatable-body-cell-label {
     font-size: 12px;
+  }
+  ion-select {
+    width: 25%;
+    padding-left: 5px;
   }
 }
 
