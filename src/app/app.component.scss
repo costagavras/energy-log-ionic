@@ -11,8 +11,17 @@ ion-chip {
   }
 }
 
+.hamburger_menu {
+  display: none;
+}
+
+
 @media (max-width: 640px) {
   .horiz-menu-buttons {
     display: none;
+  }
+
+  .hamburger_menu {
+    display:flex;
   }
 }

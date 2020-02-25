@@ -1,10 +1,26 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title class="ion-text-center">Units</ion-title>
+    <ion-title class="ion-text-center">Introduction & User Units</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <section class="intro_profile">
+    <ul class="ion-padding-end">
+      <li>
+        <h6>The app gathers your anthropometric data (age, gender, height, weight) to calculate your <span>Basal Metabolic Rate (BMR)</span> using Mifflin - St. Jeor equation</h6>
+      </li>
+      <li>
+        <h6>The next step is to determine your average <span>activity level</span> over 24 hours</h6>
+      </li>
+      <li>
+        <h6>Your BMR times your activity level plus daily exercises return an estimate of your <span>total daily energy expenditure (TDEE)</span></h6>
+      </li>
+      <li>
+        <h6>Let's start by choosing <span>the measurement units</span> down below:</h6>
+      </li>
+    </ul>
+  </section>
   <form [formGroup]="unitsFormGroup" class="form_units">
     <ion-grid>
       <ion-row>

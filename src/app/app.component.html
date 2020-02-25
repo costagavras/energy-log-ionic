@@ -46,8 +46,8 @@
   <ion-header class="first-header">
     <ion-toolbar color="primary" class="first-header-toolbar">
       <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-        <ion-button fill="solid" routerLink="/home">My Energy Log</ion-button>        
+        <ion-menu-button class="hamburger_menu"></ion-menu-button>
+        <ion-button fill="solid" routerLink="/home"><ion-icon name="home" style="padding-bottom: 3px;"></ion-icon>&nbsp; Ion Energy Log</ion-button>        
       </ion-buttons>
       <div>
         <ion-chip color="primary" routerLink="/profile/user-profile">
@@ -55,7 +55,7 @@
           <ion-label>{{ loggedUserProfile?.name || 'No Profile User' }}</ion-label>
         </ion-chip>
       </div>
-      <ion-buttons slot="end" ion-hide-md class="horiz-menu-buttons">
+      <ion-buttons slot="end" class="horiz-menu-buttons">
         <ion-button routerLink="/profile">Profile</ion-button>
         <ion-button routerLink="/food">Food</ion-button>
         <ion-button routerLink="/training">Training</ion-button>
