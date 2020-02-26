@@ -98,6 +98,9 @@ private profileServiceSubs: Subscription[] = [];
     const collectionFoodRef = this.db.collection('users').doc(user.userId).collection('finishedFoodItems').ref;
     this.deleteCollection(this.db, collectionFoodRef, 100);
 
+    const collectionUserFoodRef = this.db.collection('users').doc(user.userId).collection('userFoodItems').ref;
+    this.deleteCollection(this.db, collectionUserFoodRef, 100);
+
     const collectionStampRef = this.db.collection('users').doc(user.userId).collection('userStamp').ref;
     this.deleteCollection(this.db, collectionStampRef, 100);
 
