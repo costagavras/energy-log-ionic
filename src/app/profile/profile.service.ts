@@ -107,7 +107,7 @@ private profileServiceSubs: Subscription[] = [];
     this.db.collection('users').doc(user.userId).delete()
           .then(() => {
             this.router.navigate(['/']);
-            this.uiService.showToast(user.name + ' is now gone!', 3000);
+            this.uiService.showToast(user.name + '\'s profile is now gone!', 3000);
           }).catch(error => {
             console.log(error);
           });
