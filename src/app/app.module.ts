@@ -12,6 +12,11 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
+import * as firebase from 'firebase/app';
+
+firebase.initializeApp(environment.firebase);
+firebase.initializeApp(secondaryDb, 'secondary');
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],

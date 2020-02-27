@@ -3,7 +3,6 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { UserStamp, UserProfile } from '.././auth/user.model';
 import * as firebase from 'firebase/app';
 
-
 import { Subject, Subscription } from 'rxjs';
 import { UIService } from '../shared/ui.service';
 import { Router } from '@angular/router';
@@ -123,7 +122,7 @@ private profileServiceSubs: Subscription[] = [];
 
   deleteQueryBatch(db, query, batchSize, resolve, reject) {
     query.get()
-        .then((snapshot) => {
+        .then(snapshot => {
             // When there are no documents left, we are done
             if (snapshot.size === 0) {
                 return 0;
@@ -131,14 +130,16 @@ private profileServiceSubs: Subscription[] = [];
 
             // Delete documents in a batch
             const batch = firebase.firestore().batch();
-            snapshot.docs.forEach((doc) => {
+            console.log(batch);
+            snapshot.docs.forEach(doc => {
+                console.log(doc);
                 batch.delete(doc.ref);
             });
 
             return batch.commit().then(() => {
                 return snapshot.size;
             });
-        }).then((numDeleted) => {
+        }).then(numDeleted => {
         if (numDeleted === 0) {
             resolve();
             return;

@@ -83,7 +83,7 @@
                     
                     <ion-row>
                       <ion-col size="1" offset-xs="2" offset-lg="3" style="align-self: center;">
-                        <ion-segment name="unit" [ngModel]="units" #toggleMtImpGroupDB="ngModel" class="metric_imperial_btn_toggle">
+                        <ion-segment name="unit" [(ngModel)]="units" #toggleMtImpGroupDB="ngModel" class="metric_imperial_btn_toggle">
                           <ion-segment-button value="metric" [ngClass]="{'segment_emphasis' : units === 'metric'}">
                             <ion-label>gr</ion-label>
                           </ion-segment-button>
@@ -142,11 +142,11 @@
             </ion-row>
 
             <ion-card *ngIf="usdaFoodItemDetailPaneOpen" class="usdaFoodItemPane">
-              <ion-segment class="ion-float-left" name="unit" [ngModel]="units" #toggleMtImpGroupUSDA="ngModel" class="metric_imperial_btn_toggle">
+              <ion-segment class="ion-float-left" name="unit" [(ngModel)]="units" #toggleMtImpGroupUSDA="ngModel" class="metric_imperial_btn_toggle">
                   <ion-segment-button value="metric" [ngClass]="{'segment_emphasis' : units === 'metric'}">
                     <ion-label>gr</ion-label>
                   </ion-segment-button>
-                  <ion-segment-button value="imperiial" [ngClass]="{'segment_emphasis' : units === 'imperial'}">
+                  <ion-segment-button value="imperial" [ngClass]="{'segment_emphasis' : units === 'imperial'}">
                     <ion-label>oz</ion-label>
                   </ion-segment-button>
               </ion-segment>
