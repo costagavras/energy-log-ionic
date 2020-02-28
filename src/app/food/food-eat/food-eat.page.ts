@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
-import { IonSlides, LoadingController, IonSearchbar, ActionSheetController, IonItem } from '@ionic/angular';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { IonSlides, LoadingController, IonSearchbar, ActionSheetController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 import { ProfileService } from '../../profile/profile.service';
@@ -19,11 +19,10 @@ import axios from 'axios';
   templateUrl: './food-eat.page.html',
   styleUrls: ['./food-eat.page.scss'],
 })
-export class FoodEatPage implements OnInit, AfterViewInit, OnDestroy {
+export class FoodEatPage implements OnInit, OnDestroy {
 
   @ViewChild('slides', {static: false}) slides: IonSlides;
   @ViewChild('nameSearch', {static: false}) searchBar: IonSearchbar;
-  @ViewChild('datetime_picker', {static: false}) datetimePicker: ElementRef<IonItem>;
 
   today: string;
   private loggedUser: User;
