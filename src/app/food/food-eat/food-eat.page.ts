@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { IonSlides, LoadingController, IonSearchbar, ActionSheetController } from '@ionic/angular';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
+import { IonSlides, LoadingController, IonSearchbar, ActionSheetController, IonItem } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 import { ProfileService } from '../../profile/profile.service';
@@ -19,10 +19,11 @@ import axios from 'axios';
   templateUrl: './food-eat.page.html',
   styleUrls: ['./food-eat.page.scss'],
 })
-export class FoodEatPage implements OnInit, OnDestroy {
+export class FoodEatPage implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('slides', {static: false}) slides: IonSlides;
   @ViewChild('nameSearch', {static: false}) searchBar: IonSearchbar;
+  @ViewChild('datetime_picker', {static: false}) datetimePicker: ElementRef<IonItem>;
 
   today: string;
   private loggedUser: User;
@@ -126,6 +127,11 @@ export class FoodEatPage implements OnInit, OnDestroy {
             // this filters food eaten today
             this.updateFilteredDate(this.loggedUserProfile.userId);
             this.triggerFetchFoodItems(this.loggedUserProfile.userId);
+            // this.colorDate()
+            //   .then(element => {
+            //     console.log(element);
+            //       element.setAttribute('style', 'background: rgba(0,0,0,.04);');
+            //   });
           }
       })
     );
@@ -205,6 +211,27 @@ export class FoodEatPage implements OnInit, OnDestroy {
         }
         })
     );
+
+  }
+
+  // async checkElement(selector) {
+
+  //   while ( document.querySelector(selector) === null) {
+  //       await new Promise(resolve =>  requestAnimationFrame(resolve));
+  //   }
+  //   return document.querySelector(selector);
+  // }
+
+  async colorDate() {
+    while (!document.querySelector('.datetime_picker')) {
+      await new Promise(resolve => requestAnimationFrame(resolve));
+    }
+    while (!document.querySelector('.datetime_picker').shadowRoot.querySelector('.item-native')) {
+      await new Promise(resolve => requestAnimationFrame(resolve));
+      }
+    return document.querySelector('.datetime_picker').shadowRoot.querySelector('.item-native');
+    // document.querySelector('.datetime_picker').shadowRoot.querySelector('.item-native')
+    //   .setAttribute('style', 'background: rgba(0,0,0,.04);');
   }
 
   triggerFetchFoodItems(userFirebaseId: string) {
@@ -225,7 +252,9 @@ export class FoodEatPage implements OnInit, OnDestroy {
     this.newFoodIntakeSubs.push(this.foodService.finishedFoodItemsChanged
     .subscribe((foodItem: FoodItem[]) => {
       this.tableData = foodItem.filter(val => {
+        // tslint:disable-next-line: no-string-literal
         return val.date['seconds'] * 1000 >= this.startFilteredDay &&
+        // tslint:disable-next-line: no-string-literal
         val.date['seconds'] * 1000  <= this.endFilteredDay;
       });
       this.tableDataFilter = this.tableData;
@@ -345,8 +374,8 @@ export class FoodEatPage implements OnInit, OnDestroy {
               generalSearchInput: searchString,
               includeDataTypes: {
                 'Survey (FNDDS)': true,
-                'Foundation': true,
-                'Branded': branded
+                Foundation: true,
+                Branded: branded
               },
               requireAllWords: allWords,
               pageNumber: typeof page === 'undefined' ? 1 : page

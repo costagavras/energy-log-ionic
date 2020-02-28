@@ -5,7 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { environment, secondaryDb } from '../environments/environment';
+import { environment, myEnergyLog } from '../environments/environment';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
@@ -15,7 +15,7 @@ import { AppRoutingModule } from './app-routing.module';
 import * as firebase from 'firebase/app';
 
 firebase.initializeApp(environment.firebase);
-firebase.initializeApp(secondaryDb, 'secondary');
+firebase.initializeApp(myEnergyLog, 'myEnergy');
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,7 +25,7 @@ firebase.initializeApp(secondaryDb, 'secondary');
     HttpClientModule, IonicModule.forRoot(),
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase), // imports firebase/app needed for everything
-    AngularFireModule.initializeApp(secondaryDb, 'secondary'), // my-energy-log db
+    AngularFireModule.initializeApp(myEnergyLog, 'myEnergy'), // my-energy-log db
     AngularFirestoreModule, // imports firebase/firestore, only needed for database features
   ],
   providers: [

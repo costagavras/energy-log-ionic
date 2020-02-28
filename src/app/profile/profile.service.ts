@@ -76,6 +76,7 @@ private profileServiceSubs: Subscription[] = [];
         if (doc.payload.exists) {
           this.db.collection('users').doc(userData.userId).update(userData)
             .then(() => {
+              // tslint:disable-next-line: no-string-literal
               this.uiService.showToast(doc.payload.data()['name'] + ' successfully updated', 3000);
               this.dataSaved.next(true);
             });
@@ -92,16 +93,16 @@ private profileServiceSubs: Subscription[] = [];
   deleteProfile(user: UserProfile) {
 
     const collectionExRef = this.db.collection('users').doc(user.userId).collection('finishedExercises').ref;
-    this.deleteCollection(this.db, collectionExRef, 100);
+    this.deleteCollection(collectionExRef, 100);
 
     const collectionFoodRef = this.db.collection('users').doc(user.userId).collection('finishedFoodItems').ref;
-    this.deleteCollection(this.db, collectionFoodRef, 100);
+    this.deleteCollection(collectionFoodRef, 100);
 
     const collectionUserFoodRef = this.db.collection('users').doc(user.userId).collection('userFoodItems').ref;
-    this.deleteCollection(this.db, collectionUserFoodRef, 100);
+    this.deleteCollection(collectionUserFoodRef, 100);
 
     const collectionStampRef = this.db.collection('users').doc(user.userId).collection('userStamp').ref;
-    this.deleteCollection(this.db, collectionStampRef, 100);
+    this.deleteCollection(collectionStampRef, 100);
 
     this.db.collection('users').doc(user.userId).delete()
           .then(() => {
@@ -112,15 +113,15 @@ private profileServiceSubs: Subscription[] = [];
           });
   }
 
-  deleteCollection(db, collectionRef, batchSize) {
+  deleteCollection(collectionRef, batchSize) {
     const query = collectionRef.limit(batchSize);
 
     return new Promise((resolve, reject) => {
-        this.deleteQueryBatch(db, query, batchSize, resolve, reject);
+        this.deleteQueryBatch(query, resolve, reject);
     });
   }
 
-  deleteQueryBatch(db, query, batchSize, resolve, reject) {
+  deleteQueryBatch(query, resolve, reject) {
     query.get()
         .then(snapshot => {
             // When there are no documents left, we are done
@@ -128,11 +129,9 @@ private profileServiceSubs: Subscription[] = [];
                 return 0;
             }
 
-            // Delete documents in a batch
-            const batch = firebase.firestore().batch();
-            console.log(batch);
+            // changed firebase instance to 'myEnergy' initialized in app.module
+            const batch = firebase.app('myEnergy').firestore().batch();
             snapshot.docs.forEach(doc => {
-                console.log(doc);
                 batch.delete(doc.ref);
             });
 
@@ -147,7 +146,7 @@ private profileServiceSubs: Subscription[] = [];
 
         // Replacing Recurse on the next process tick, to avoid exploding the stack.
         setTimeout(() => {
-            this.deleteQueryBatch(db, query, batchSize, resolve, reject);
+            this.deleteQueryBatch(query, resolve, reject);
         }, 0);
     })
         .catch(reject);

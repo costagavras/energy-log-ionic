@@ -70,7 +70,14 @@ export class TrainingNewPage implements OnInit, OnDestroy {
         userProfileData => {
           this.loggedUserProfile = userProfileData;
           // this filters exercises done today
-          this.updateFilteredDate(this.loggedUserProfile.userId);
+          if (this.loggedUserProfile !== null) {
+            this.updateFilteredDate(this.loggedUserProfile.userId);
+            // this.colorDate()
+            //   .then(element => {
+            //     console.log(element);
+            //       element.setAttribute('style', 'background: rgba(0,0,0,.04);');
+            //   });
+          }
       })
     );
 
@@ -110,16 +117,30 @@ export class TrainingNewPage implements OnInit, OnDestroy {
           this.endFilteredDay = new Date(this.filteredDay).setHours(24, 0, 0, -1);
           this.updateFilteredDate(this.loggedUserProfile.userId);
         }
-        })
+      })
     );
 
+  }
+
+  async colorDate() {
+    while (!document.querySelector('.datetime_picker')) {
+        await new Promise(resolve => requestAnimationFrame(resolve));
+      }
+    while (!document.querySelector('.datetime_picker').shadowRoot.querySelector('.item-native')) {
+        await new Promise(resolve => requestAnimationFrame(resolve));
+      }
+    return document.querySelector('.datetime_picker').shadowRoot.querySelector('.item-native');
+    // document.querySelector('.datetime_picker').shadowRoot.querySelector('.item-native')
+    //   .setAttribute('style', 'background: rgba(0,0,0,.04);');
   }
 
   updateFilteredDate(userFirebaseId: string) {
     this.newTrainingSubs.push(this.trainingService.finishedExercisesChanged
     .subscribe((exercises: Exercise[]) => {
       this.tableData = exercises.filter(val => {
+        // tslint:disable-next-line: no-string-literal
         return val.date['seconds'] * 1000 >= this.startFilteredDay &&
+        // tslint:disable-next-line: no-string-literal
         val.date['seconds'] * 1000  <= this.endFilteredDay;
       });
       this.tableDataFilter = this.tableData;

@@ -10,10 +10,10 @@
     <ion-card class="main_card">
       <ion-card-header>
         <ion-card-subtitle class="ion-text-center">Date of meal</ion-card-subtitle>
-        <ion-item class="ion-text-center">
+        <ion-item class="ion-text-center datetime_picker" id="datetime-picker" #datetime_picker>
           <ion-datetime 
-            displayForion="DDDD, DD MMM, YYYY" 
-            picker-forion="DDD MMM YY"
+            displayFormat="DDDD, DD MMM, YYYY" 
+            picker-format="DDD MMM YY"
             placeholder="Select Date"
             [ngModel]="today"
             [max]="today"
@@ -24,9 +24,9 @@
         </ion-item>
         <ion-card-title class="ion-text-center">Completed Meal</ion-card-title>
         <ion-item>
-          <ion-label class="db_label" style="text-align: end;" [ngClass]="{'emphasis' : !db_toggle.checked}">Add from USDA database</ion-label>
+          <ion-label class="db_label" style="text-align: end;" [ngClass]="{'emphasis' : !db_toggle.checked}">USDA database</ion-label>
           <ion-toggle checked="false" #db_toggle></ion-toggle>
-          <ion-label class="db_label" [ngClass]="{'emphasis' : db_toggle.checked}">Add from app database</ion-label>
+          <ion-label class="db_label" [ngClass]="{'emphasis' : db_toggle.checked}">App database</ion-label>
         </ion-item>
       </ion-card-header>
 
@@ -118,7 +118,7 @@
         <ion-card *ngIf="!db_toggle.checked" class="usda_card">
           <ion-grid>
             <ion-row>
-              <ion-col size-xs="8" size-md="6" offset-sm="1" offset-xl="2">
+              <ion-col size-xs="9" size-lg="8" offset-lg="1">
                 <ion-searchbar aniioned showCancelButton="focus" inputmode="text" ngModel class="nameSearch" name="nameSearch" [required]="nameSearch.touched" #nameSearch="ngModel"></ion-searchbar>
               </ion-col>
               <ion-col size-xs="3" size-sm="2" offset-sm="1" class="ion-align-self-center">
@@ -130,14 +130,14 @@
                 <ion-label color="danger"><ion-icon name="information-circle"></ion-icon>&nbsp;Field must not be empty.</ion-label>
               </ion-col>
             </ion-row>
-            <ion-row class="ion-justify-content-around ion-padding-bottom">
-              <ion-item>
+            <ion-row class="ion-justify-content-around ion-padding-bottom options_row">
+              <ion-item class="usda_search_options">
                 <ion-label>Include branded items</ion-label>
-                <ion-checkbox class="usda_checkbox" name="branded" [(ngModel)]="branded" slot="start"></ion-checkbox>
+                <ion-checkbox name="branded" [(ngModel)]="branded" slot="start"></ion-checkbox>
               </ion-item>
-              <ion-item>
+              <ion-item class="usda_search_options">
                 <ion-label>Require all words</ion-label>
-                <ion-checkbox class="usda_checkbox" name="requireAllWords" [(ngModel)]="requireAllWords" slot="start"></ion-checkbox>
+                <ion-checkbox name="requireAllWords" [(ngModel)]="requireAllWords" slot="start"></ion-checkbox>
               </ion-item>
             </ion-row>
 
@@ -224,9 +224,7 @@
         placeholder="Filter by name..."
         (keyup)="doFilter($event.target.value)">
       </ion-input>
-      <ion-buttons slot="end">
-        <ion-button fill="solid" expand="block" (click)="switchStyle()">{{ tableStyle }}</ion-button>
-      </ion-buttons>
+        <ion-button slot="end" fill="solid" expand="block" (click)="switchStyle()">{{ tableStyle }}</ion-button>
     </ion-item>
     <ion-grid>
       <ion-row>
