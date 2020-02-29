@@ -1,0 +1,28 @@
+.contact_info {
+  display: flex;
+  justify-content: space-evenly;
+  & > p {
+    font-size: 15px;
+  }
+  p ion-icon {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+  }
+  p:hover ion-icon {
+    animation: rotate360 500ms;
+  }
+}
+
+@keyframes rotate360 {
+  from {
+    transform: rotateZ(0);
+  }
+  to {
+    transform: rotateZ(360deg);
+  }
+}
+
+form {
+  height: calc(100vh - 200px);
+}

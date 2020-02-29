@@ -1,42 +1,48 @@
 <ion-app>
   
-  <ion-menu *ngIf="isLoggedIn" side="start" contentId="my-content">
+  <ion-menu side="start" contentId="my-content">
     <ion-content>
       <ion-list>
-        <ion-menu-toggle>
+        <ion-menu-toggle *ngIf="isLoggedIn">
           <ion-item lines="none" routerLink="/home">
             <ion-icon name="home" slot="start"></ion-icon>
             <ion-label>Home</ion-label>
           </ion-item>
         </ion-menu-toggle>
-        <ion-menu-toggle>
+        <ion-menu-toggle *ngIf="isLoggedIn">
           <ion-item lines="none" routerLink="/profile">
             <ion-icon name="person" slot="start"></ion-icon>
             <ion-label>Profile</ion-label>
           </ion-item>
         </ion-menu-toggle>
-        <ion-menu-toggle>
+        <ion-menu-toggle *ngIf="loggedUserProfile">
           <ion-item lines="none" routerLink="/food">
             <ion-icon name="nutrition" slot="start"></ion-icon>
             <ion-label>Food</ion-label>
           </ion-item>
         </ion-menu-toggle>
-        <ion-menu-toggle>
+        <ion-menu-toggle *ngIf="loggedUserProfile">
           <ion-item lines="none" routerLink="/training">
             <ion-icon name="bicycle" slot="start"></ion-icon>
             <ion-label>Training</ion-label>
           </ion-item>
         </ion-menu-toggle>
-        <ion-menu-toggle >
+        <ion-menu-toggle *ngIf="loggedUserProfile">
           <ion-item lines="none" routerLink="/log">
             <ion-icon name="stats" slot="start"></ion-icon>
             <ion-label>Stats</ion-label>
           </ion-item>
         </ion-menu-toggle>
-        <ion-menu-toggle>
+        <ion-menu-toggle *ngIf="isLoggedIn">
           <ion-item lines="none" button (click)="onLogout()">
-            <ion-icon name="exit" slot="start"></ion-icon>
+            <ion-icon name="log-out" slot="start"></ion-icon>
             <ion-label>Logout</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        <ion-menu-toggle *ngIf="!isLoggedIn">
+          <ion-item lines="none" routerLink="/auth">
+            <ion-icon name="log-in" slot="start"></ion-icon>
+            <ion-label>Login/Signup</ion-label>
           </ion-item>
         </ion-menu-toggle>
       </ion-list>
@@ -46,22 +52,25 @@
   <ion-header class="first-header">
     <ion-toolbar color="primary" class="first-header-toolbar">
       <ion-buttons slot="start">
-        <ion-menu-button *ngIf="isLoggedIn" class="hamburger_menu"></ion-menu-button>
-        <ion-button fill="solid" routerLink="/home"><ion-icon name="home" style="padding-bottom: 3px;"></ion-icon>&nbsp; Ion Energy Log</ion-button>        
+        <ion-menu-button class="hamburger_menu"></ion-menu-button>
+        <ion-button fill="solid" routerLink="/home" id="home_button"><ion-icon name="home"></ion-icon>&nbsp; Ion Energy Log</ion-button>        
       </ion-buttons>
       <div>
-        <ion-chip color="primary" routerLink="/profile/user-profile">
+        <ion-chip color="primary" [routerLink]="isLoggedIn ? ['/profile/user-profile'] : []">
           <ion-icon name="contact"></ion-icon>
-          <ion-label>{{ isLoggedIn ? loggedUserProfile?.name || 'No Profile User' : 'Not Logged In'}}</ion-label>
+          <ion-label id="user_name">{{ isLoggedIn ? loggedUserProfile?.name || 'No Profile User' : 'Visitor'}}</ion-label>
         </ion-chip>
       </div>
       <ion-buttons slot="end" class="horiz-menu-buttons">
         <ion-button routerLink="/profile" *ngIf="isLoggedIn">Profile</ion-button>
-        <ion-button routerLink="/food" *ngIf="isLoggedIn">Food</ion-button>
-        <ion-button routerLink="/training" *ngIf="isLoggedIn">Training</ion-button>
-        <ion-button routerLink="/log" *ngIf="isLoggedIn">Stats</ion-button>
+        <ion-button routerLink="/food" *ngIf="isLoggedIn && loggedUserProfile">Food</ion-button>
+        <ion-button routerLink="/training" *ngIf="isLoggedIn && loggedUserProfile">Training</ion-button>
+        <ion-button routerLink="/log" *ngIf="isLoggedIn && loggedUserProfile">Stats</ion-button>
         <ion-button fill="outline" (click)="onLogout()" *ngIf="isLoggedIn">
           Logout
+        </ion-button>
+        <ion-button fill="outline" routerLink="/auth" *ngIf="!isLoggedIn">
+          Login/Signup
         </ion-button>
       </ion-buttons>
     </ion-toolbar>

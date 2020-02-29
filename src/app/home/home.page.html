@@ -14,7 +14,9 @@
       <p><img src="./assets/firebase-logo.png" alt="Firebase Firestore icon" class="homepage_icon ic3"><strong>Firebase Firestore</strong> storage and</p>
       <p><img src="./assets/usda-logo.svg" alt="USDA icon" class="homepage_icon ic4"><strong>USDA</strong> food database API</p>
     </div>
-    <ion-card class="profile-link" *ngIf="!loggedUserProfile?.activityLevel">
+    <!-- <p>isLogged: {{ !!loggedUser }}</p>
+    <p>isLoggedUserProfile: {{ !!loggedUserProfile }}</p> -->
+    <ion-card class="profile-link" *ngIf="loggedUser && !loggedUserProfile?.activityLevel">
       <ion-card-content>
         <ion-card-title class="ion-text-center"><h2>You are logged but your profile needs completing</h2></ion-card-title>
           <ion-button routerLink="/profile/user-settings">
